@@ -4,6 +4,8 @@ A gamified financial timeline: the user and her identical male twin run side by 
 retirement, shown as two gardens. Core message: **women don't invest worse, they invest less.
 Invest more, behave like you.** Never frame the fix as "invest like men".
 
+Product and modelling decisions live in `DECISIONS.md`; read it before changing behaviour.
+
 ## Commands
 
 - `npm run dev`: local dev server
