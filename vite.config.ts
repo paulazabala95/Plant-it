@@ -2,9 +2,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// base matches the GitHub Pages path: https://<user>.github.io/plant-it/
+// base matches the GitHub Pages path: https://<user>.github.io/Plant-it/
 export default defineConfig({
-  base: '/plant-it/',
+  base: '/Plant-it/',
   plugins: [react()],
   test: {
     include: ['src/**/*.test.ts'],
