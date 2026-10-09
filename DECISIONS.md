@@ -22,6 +22,20 @@ Product and modelling decisions agreed with the project owner. Read before chang
 - Retirement field: counts only contributions that are actually invested (e.g. NL employer
   pension). State pay-as-you-go pensions are excluded from both gardens and noted in the UI.
   Same mechanics in every country; no country-specific pension or tax rules.
+- Italy is the one exception to "no country-specific rules": onboarding asks Italian users one
+  yes/no question, whether their TFR goes to a pension fund. Yes: 7.41% of pay is invested
+  (1/13.5, Codice civile art. 2120). No: 0% (TFR kept with the employer is not invested).
+- Twin's investment mix: he starts from her savings split and moves (men's − women's share
+  investing in shares or funds, per country) of his savings from cash to the index fund, never more
+  than her cash. Source: EC "Wealth and Gender in Europe" (HFCS). Additive, so the twin still
+  invests a little when she invests nothing.
+
+## Data
+
+- Same-role pay gap: national figures where they exist (NL, DE, FR), Eurostat's decomposition for
+  ES, IT and IE. The mix is kept; those three show a note in the assumptions panel explaining that
+  Eurostat's method gives higher gaps everywhere, so the gap may look larger partly by method.
+- Promotion raise (+4%) and fatherhood premium (0%) are EU-wide (`eu-fallback`) for every country.
 
 ## Garden options
 
@@ -41,5 +55,6 @@ or crypto.
 
 - Life event cards: tap a card, then tap an age (drag on desktop is a nice-to-have).
 - Real-life units: years of rent and fully funded sabbatical years. No flights (no official
-  source). Rent is a yardstick only; housing and home ownership are not modelled (README limitation).
+  source). Rent = Eurostat rent of a 1-bed flat in the capital, labelled with the city; it is
+  deliberately a capital-city market rent (overstates a national average). Rent is a yardstick only; housing and home ownership are not modelled (README limitation).
 - "Plant it" action: to be decided with the owner before Milestone 7.

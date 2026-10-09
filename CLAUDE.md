@@ -47,11 +47,13 @@ ESLint (`no-restricted-imports`) enforces the engine and theme boundaries.
 - Each value is flagged `country` or `eu-fallback`. Countries: NL, ES, DE, FR, IT, IE + EU.
 - Pay gap = **adjusted** ("same role") gap, never the headline unadjusted figure (part-time,
   sector and promotions are modelled separately by cards; using the headline gap double counts).
-- Currency: EUR everywhere. No country-specific pension or tax rules.
+- Currency: EUR everywhere. No country-specific pension or tax rules (one exception: the Italy
+  TFR question, see `DECISIONS.md`).
 
 ## Product rules
 
 - Onboarding has exactly 5 inputs: age, country, gross salary, % saved monthly, savings split.
+  Only exception: Italian users get one yes/no follow-up (does your TFR go to a pension fund?).
 - Never ask about children or for numbers users are unlikely to know.
 - Career break copy is reason-neutral.
 - Main screens show almost no numbers; numbers live in the assumptions panel and ending.
