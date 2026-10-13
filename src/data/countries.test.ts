@@ -16,10 +16,12 @@ describe('country defaults', () => {
 
   it('keeps rates and shares between 0 and 1', () => {
     for (const c of all) {
-      for (const v of [c.samePayGap, c.childPenalty, c.twinInvestShift, c.promotionRaise]) {
+      for (const v of [c.samePayGap, c.twinInvestShift, c.promotionRaise]) {
         expect(v.value, c.code).toBeGreaterThanOrEqual(0)
         expect(v.value, c.code).toBeLessThan(1)
       }
+      expect(c.childPenalty.value.drop, c.code).toBeLessThan(1)
+      expect(c.childPenalty.value.years, c.code).toBeGreaterThan(0)
       const { women, men } = c.promotionRate.value
       expect(men, c.code).toBeGreaterThan(women)
     }

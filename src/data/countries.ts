@@ -35,6 +35,11 @@ export interface PartTime {
   men: number
 }
 
+export interface ChildPenalty {
+  drop: number
+  years: number
+}
+
 /** Yearly probability of being promoted. */
 export interface PromotionRate {
   women: number
@@ -60,8 +65,11 @@ export interface CountryDefaults {
   promotionRate: Sourced<PromotionRate>
   /** Pay rise on promotion, on top of normal wage growth. */
   promotionRaise: Sourced<number>
-  /** Long-run drop in a mother's earnings after her first child (fathers: fatherhoodPremium). */
-  childPenalty: Sourced<number>
+  /**
+   * Drop in a mother's earnings after her first child, for the years the study measured
+   * (fathers: fatherhoodPremium). Pay returns to full after `years`.
+   */
+  childPenalty: Sourced<ChildPenalty>
   /** Change in a man's earnings after becoming a father. */
   fatherhoodPremium: Sourced<number>
   /** Yardstick for "years of rent": monthly rent, 1-bedroom flat. */
@@ -147,7 +155,7 @@ export const EU: CountryDefaults = {
   promotionRaise,
   fatherhoodPremium,
   childPenalty: euFallback(
-    0.29,
+    { drop: 0.29, years: 10 },
     'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Europe: employment penalty 29%',
     'Employment, not earnings: a lower bound for the earnings drop.',
   ),
@@ -176,7 +184,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.46,
+      { drop: 0.46, years: 7 },
       'Rabaté & Rellstab (2021), CPB DP 424: earnings 46% lower 7 years after first child',
     ),
     monthlyRent: country(1800, `${SRC.rent} (The Hague, no Amsterdam figure)`),
@@ -199,7 +207,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.28,
+      { drop: 0.28, years: 10 },
       'de Quinto, Hospido & Sanz (2021), SERIEs 12: earnings 28% lower 10 years after birth',
     ),
     monthlyRent: country(1300, `${SRC.rent} (Madrid)`),
@@ -219,7 +227,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.61,
+      { drop: 0.61, years: 10 },
       'Kleven et al. (2019), Child Penalties Across Countries: earnings, years 5-10 after birth',
     ),
     monthlyRent: country(1350, `${SRC.rent} (Berlin)`),
@@ -239,7 +247,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.2,
+      { drop: 0.2, years: 5 },
       'Pora & Wilner (2019), Insee Analyses 48: labour earnings 20% lower 5 years after birth',
     ),
     monthlyRent: country(1550, `${SRC.rent} (Paris)`),
@@ -266,7 +274,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.43,
+      { drop: 0.43, years: 15 },
       'Casarico & Lattanzio (2021), CESifo WP 9155: 57 log points lower annual earnings 15 years after birth',
       'Compared with childless women, not fathers; 1 - e^-0.57 = 43%.',
     ),
@@ -295,7 +303,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     promotionRaise,
     fatherhoodPremium,
     childPenalty: country(
-      0.28,
+      { drop: 0.28, years: 10 },
       'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Ireland: employment penalty 28%',
       'No earnings estimate for all Irish mothers; employment is a lower bound for the earnings drop.',
     ),

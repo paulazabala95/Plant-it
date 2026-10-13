@@ -34,7 +34,8 @@ describe('herProfile', () => {
     const p = herProfile(inputs)
     expect(p.annualSalary).toBe(45_000)
     expect(p.retirementAge).toBe(nl.retirementAge.value)
-    expect(p.childPenalty).toBe(nl.childPenalty.value)
+    expect(p.childPenalty).toBe(nl.childPenalty.value.drop)
+    expect(p.childPenaltyYears).toBe(nl.childPenalty.value.years)
     expect(p.promotionRate).toBe(nl.promotionRate.value.women)
     expect(p.tradingDrag).toBe(0)
   })
@@ -120,8 +121,8 @@ describe('level the field', () => {
     expect(simulate({ ...twin, tradingDrag: 0 })).toEqual(simulate(her))
   })
 
-  it('leaves her ahead because the twin overtrades', () => {
-    expect(simulate(her).final.total).toBeGreaterThan(simulate(twin).final.total)
+  it('ends level: her best mix has no single stocks or crypto, so the drag costs nothing', () => {
+    expect(simulate(twin)).toEqual(simulate(her))
   })
 
   it('removes every structural factor for her', () => {

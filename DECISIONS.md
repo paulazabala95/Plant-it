@@ -18,7 +18,9 @@ Product and modelling decisions agreed with the project owner. Read before chang
   10%) kept in the greenhouse (high-yield savings), the rest invested across her chosen invested
   options (index fund if none), zero trading drag.
 - "Level the field": both twins use her "at her best" mix; all structural factors removed; the only
-  remaining difference is the twin's overtrading drag.
+  remaining difference is the twin's overtrading drag. Her best mix has no single stocks or crypto,
+  so the two gardens end equal: with the structural gaps gone and her choices, she ends exactly
+  where he does.
 - Retirement field: counts only contributions that are actually invested (e.g. NL employer
   pension). State pay-as-you-go pensions are excluded from both gardens and noted in the UI.
   Same mechanics in every country; no country-specific pension or tax rules.
@@ -48,17 +50,18 @@ Product and modelling decisions agreed with the project owner. Read before chang
 - Pay: her gross salary, growing each year by real wage growth + promotion rate × promotion raise
   (expected value, no randomness).
 - Life event cards change pay: career break = no pay; part-time = hours share; child = maternity
-  leave at the country's payment rate, then the child penalty for the rest of the career (applied
-  once, from the first child). **Open: the penalty is measured 5–15 years after birth; applying it
-  until retirement is an assumption.**
+  leave at the country's payment rate, then the child penalty only for the years the study
+  measured (NL 7, FR 5, DE/ES/IE/EU 10, IT 15), counted from the first birth; pay is full again
+  afterwards. The lost savings still cost compound growth until retirement (owner decision).
 - The twin lives the same life with the male value of every factor: pay without the same-role gap,
   male promotion rate, fatherhood premium instead of the child penalty, no maternity leave, no
   part-time or career-break cards (they are the structural gaps), the 3.8 pp invest shift and the
   overtrading drag.
 - Savings and invested pension contributions are a share of actual pay, so breaks and part-time
   cut both. The retirement field grows at the OECD funded-pension real return (2.5%).
-- Trading drag is charged on every traded option (index, sustainable, single stocks, crypto).
-  **Open: Barber & Odean measured stock-picking accounts; see the owner question below.**
+- The twin's overtrading drag applies only to single stocks and crypto, because Barber & Odean
+  measured accounts picking individual stocks (owner decision). Index and sustainable funds have
+  no drag for either twin.
 - Breakdown: exact Shapley values over 7 factors (structural: pay gap, promotions, child penalty,
   part-time, career break; choice: invest mix, trading drag). Shares sum to the full gap.
 - The engine never reads the clock: the UI passes the current year (needed for Ireland's

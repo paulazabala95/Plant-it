@@ -24,8 +24,10 @@ export interface Profile {
   promotionRate: number
   promotionRaise: number
   events: LifeEvent[]
-  /** Long-run earnings drop after the first child (negative = premium). */
+  /** Earnings drop after the first child (negative = premium). */
   childPenalty: number
+  /** Years after the first birth the drop lasts (what the study measured). */
+  childPenaltyYears: number
   maternityLeave: { weeks: number; paymentRate: number }
   /** Invested pension contributions, share of gross pay, by calendar year. */
   pension: PensionStep[]

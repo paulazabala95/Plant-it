@@ -12,13 +12,11 @@ export const GARDEN_OPTIONS = [
 
 export type GardenOption = (typeof GARDEN_OPTIONS)[number]
 
-/** Options that are bought and sold, so overtrading costs apply. */
-export const TRADED_OPTIONS: readonly GardenOption[] = [
-  'indexFund',
-  'sustainableFund',
-  'singleStocks',
-  'crypto',
-]
+/**
+ * Options where the twin's overtrading cost applies. Barber & Odean (2001) measured accounts
+ * picking individual stocks, so it is not applied to index or sustainable funds.
+ */
+export const OVERTRADED_OPTIONS: readonly GardenOption[] = ['singleStocks', 'crypto']
 
 /** Options "her at her best" may use. Never single stocks or crypto. */
 export const RECOMMENDED_OPTIONS: readonly GardenOption[] = ['indexFund', 'sustainableFund']

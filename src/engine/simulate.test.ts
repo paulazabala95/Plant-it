@@ -19,6 +19,7 @@ const base: Profile = {
   promotionRaise: 0,
   events: [],
   childPenalty: 0,
+  childPenaltyYears: 99,
   maternityLeave: { weeks: 0, paymentRate: 0 },
   pension: [{ fromYear: 2000, rate: 0 }],
   tradingDrag: 0,
@@ -59,12 +60,13 @@ describe('simulate', () => {
     expect(t.final.garden.cash).toBeCloseTo(annuity(100, -0.02), 6)
   })
 
-  it('charges trading drag on traded options only', () => {
-    const returns = { ...zeros, cash: 0.01, indexFund: 0.052 }
-    const half = { ...zeros, cash: 0.5, indexFund: 0.5 }
-    const t = run({ split: half, returns, tradingDrag: 0.0094 })
-    expect(t.final.garden.cash).toBeCloseTo(annuity(50, 0.01), 6)
-    expect(t.final.garden.indexFund).toBeCloseTo(annuity(50, 0.052 - 0.0094), 6)
+  it('charges trading drag on single stocks and crypto only', () => {
+    const returns = { ...zeros, indexFund: 0.052, singleStocks: 0.005, crypto: 0.01 }
+    const split = { ...zeros, indexFund: 0.5, singleStocks: 0.25, crypto: 0.25 }
+    const t = run({ split, returns, tradingDrag: 0.0094 })
+    expect(t.final.garden.indexFund).toBeCloseTo(annuity(50, 0.052), 6)
+    expect(t.final.garden.singleStocks).toBeCloseTo(annuity(25, 0.005 - 0.0094), 6)
+    expect(t.final.garden.crypto).toBeCloseTo(annuity(25, 0.01 - 0.0094), 6)
   })
 
   it('grows pay with wage growth plus expected promotions', () => {
@@ -101,6 +103,16 @@ describe('simulate', () => {
       childPenalty: 0.4,
     })
     expect(t.final.contributed).toBeCloseTo(6 * 50 + 6 * 60, 6)
+  })
+
+  it('applies the child penalty only for the years the study measured', () => {
+    const t = run({
+      retirementAge: 33,
+      events: [{ kind: 'child', age: 30 }],
+      childPenalty: 0.5,
+      childPenaltyYears: 2,
+    })
+    expect(t.points.map((p) => p.contributed)).toEqual([0, 600, 1200, 2400])
   })
 
   it('applies the child penalty once, from the first child', () => {

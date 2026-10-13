@@ -49,7 +49,8 @@ export function herProfile(inputs: HerInputs): Profile {
     promotionRate: c.promotionRate.value.women,
     promotionRaise: c.promotionRaise.value,
     events: inputs.events ?? [],
-    childPenalty: c.childPenalty.value,
+    childPenalty: c.childPenalty.value.drop,
+    childPenaltyYears: c.childPenalty.value.years,
     maternityLeave: c.maternityLeave.value,
     pension,
     tradingDrag: 0,
@@ -144,7 +145,8 @@ export const atHerBest = (inputs: HerInputs): Profile => ({
 
 /**
  * Level the field: both use her "at her best" mix and no structural factor applies, so the
- * only remaining difference is the twin's overtrading drag.
+ * only remaining difference is the twin's overtrading drag. Her best mix holds no single stocks
+ * or crypto, so the drag costs nothing and both gardens end equal.
  */
 export function levelTheField(inputs: HerInputs): { her: Profile; twin: Profile } {
   const her = applyFactors(atHerBest(inputs), STRUCTURAL_FACTORS, inputs)

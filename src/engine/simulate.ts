@@ -1,4 +1,4 @@
-import { GARDEN_OPTIONS, TRADED_OPTIONS, type GardenOption, type PensionStep } from '../data'
+import { GARDEN_OPTIONS, OVERTRADED_OPTIONS, type GardenOption, type PensionStep } from '../data'
 import type { LifeEvent, Profile, Split, Timeline, YearPoint } from './types'
 
 const monthlyRate = (yearly: number) => (1 + yearly) ** (1 / 12) - 1
@@ -12,7 +12,7 @@ export const pensionRate = (steps: PensionStep[], year: number): number =>
 /**
  * Share of full-time pay earned in month `m` (months since startAge).
  * Career break: nothing. Part-time: hours share. Maternity leave: payment rate.
- * From the first child on (after leave): 1 - child penalty.
+ * From the first child (after leave) for childPenaltyYears: 1 - child penalty.
  */
 const earningsFactor = (p: Profile, m: number): number => {
   const monthOf = (age: number) => Math.round((age - p.startAge) * 12)
@@ -36,7 +36,9 @@ const earningsFactor = (p: Profile, m: number): number => {
   if (onLeave) return factor * p.maternityLeave.paymentRate
 
   const firstChild = Math.min(...children.map((c) => monthOf(c.age)))
-  if (m >= firstChild) factor *= 1 - p.childPenalty
+  if (m >= firstChild && m < firstChild + Math.round(p.childPenaltyYears * 12)) {
+    factor *= 1 - p.childPenalty
+  }
 
   return factor
 }
@@ -48,7 +50,7 @@ export function simulate(p: Profile): Timeline {
   const rates = Object.fromEntries(
     GARDEN_OPTIONS.map((o) => [
       o,
-      monthlyRate(p.returns[o] - (TRADED_OPTIONS.includes(o) ? p.tradingDrag : 0)),
+      monthlyRate(p.returns[o] - (OVERTRADED_OPTIONS.includes(o) ? p.tradingDrag : 0)),
     ]),
   ) as Record<GardenOption, number>
   const pensionMonthly = monthlyRate(p.pensionReturn)

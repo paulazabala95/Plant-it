@@ -78,9 +78,11 @@ Notes:
 ### Child penalty by country
 
 The engine needs the drop in **earnings**. National event studies differ in horizon and comparison
-group, so the numbers are not perfectly comparable; each `source` string says which.
+group, so the numbers are not perfectly comparable; each `source` string says which. The engine
+applies each drop only for the years its study measured (`years` in `countries.ts`: NL 7, DE 10,
+ES 10, FR 5, IT 15, IE 10, EU 10; the Atlas estimates run to 10 years after birth).
 
-| Country | Earnings drop | Horizon / comparison                                    | Source                                                                                                                                                                                                          |
+| Country | Earnings drop | Horizon (= years applied) / comparison                  | Source                                                                                                                                                                                                          |
 | ------- | ------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | NL      | 46%           | 7 years after first child, vs own no-child path         | Rabaté & Rellstab (2021), CPB Discussion Paper 424. https://www.cpb.nl/sites/default/files/omnidownload/CPB-Discussion-Paper-424-The-Child-Penalty.pdf                                                          |
 | DE      | 61%           | years 5–10, mothers vs fathers                          | Kleven, Landais, Posch, Steinhauer & Zweimüller (2019), AEA P&P. https://www.nber.org/papers/w25524                                                                                                             |

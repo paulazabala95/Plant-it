@@ -57,8 +57,13 @@ describe('breakdown', () => {
     expect(b.factors.partTime).toBe(0)
   })
 
-  it('shows overtrading costs the twin, not her', () => {
-    expect(b.factors.tradingDrag).toBeLessThan(0)
+  it('charges no overtrading when she holds no single stocks or crypto', () => {
+    expect(b.factors.tradingDrag).toBe(0)
+  })
+
+  it('shows overtrading costs the twin, not her, on single stocks', () => {
+    const stocks = breakdown({ ...inputs, split: { ...zeros, cash: 0.7, singleStocks: 0.3 } })
+    expect(stocks.factors.tradingDrag).toBeLessThan(0)
   })
 
   it('reports shares of the gap that sum to 100%', () => {
