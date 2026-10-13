@@ -56,14 +56,14 @@ Notes:
 
 ## 5. Career events
 
-| Value                                                                                                                                                                                                                      | Flag        | Status     | Source                                                                                                                                                                                                                                                  |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Promotions: 81 women promoted to manager per 100 men → twin promoted ~1.23× as often                                                                                                                                       | eu-fallback | 🟡 US data | McKinsey & LeanIn.Org, Women in the Workplace 2024. https://www.mckinsey.com/featured-insights/diversity-and-inclusion/women-in-the-workplace-2024                                                                                                      |
-| Promotion raise: **+4%** on top of normal wage growth (in-firm promotion; +5.8% with an employer change)                                                                                                                   | eu-fallback | ✅         | Kauhanen & Napari (2012), _Career and Wage Dynamics_, ETLA DP 1244, Finnish linked employer-employee data, fixed effects. Context: Baker, Gibbs & Holmström (1994) 6% (US). https://www.etla.fi/wp-content/uploads/2012/09/dp1244.pdf                   |
-| Child penalty, long run: DE 61%, NL ~46% (7 yrs after birth)                                                                                                                                                               | country     | 🟡         | Kleven, Landais, Posch, Steinhauer & Zweimüller (2019), AEA P&P; Rabaté & Rellstab (2021). https://www.nber.org/papers/w25524                                                                                                                           |
-| Fatherhood premium: **0%**                                                                                                                                                                                                 | eu-fallback | ✅         | Kleven et al. (2019), event studies in 6 countries: "men are essentially unaffected" by the first child. https://www.nber.org/papers/w25524                                                                                                             |
-| Part-time share 2025, ages 20–64, women / men: NL 60.8/19.0, DE 48.7/11.6, IT 27.7/6.0, IE 26.5/8.6, FR 25.6/8.1, ES 20.9/6.3, EU 27.5/7.8                                                                                 | country     | ✅         | Eurostat lfsa_eppga (API). https://ec.europa.eu/eurostat/databrowser/view/lfsa_eppga/default/table                                                                                                                                                      |
-| Paid maternity leave (weeks, avg. payment): NL 16 @100%, DE 14 @100%, FR 16 @100%, IT 21.7 @80%, IE 26 @23.4% (flat €289/wk), ES 19 @100%, EU 21.5 @81% (derived: EU-27 mean full-rate-equivalent 17.5 weeks / 21.5 weeks) | country     | ✅         | OECD Family Database PF2.1, Table PF2.1.A (updated May 2026, rules as of April 2025). https://webfs.oecd.org/els-com/Family_Database/PF2_1_Parental_leave_systems.pdf . ES: Real Decreto-ley 9/2025, BOE-A-2025-15741 (16 → 19 weeks from 31 July 2025) |
+| Value                                                                                                                                                                                                                      | Flag        | Status | Source                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Promotion rate per year: **men 7.3%, women 4.9%** (1.5×) for the same background, incl. career breaks. Gap is largest early in careers (years 2–5: 8.5% vs 5.2%), smallest after 10 years (4.6% vs 3.7%)                   | eu-fallback | ✅     | Kauhanen & Napari (2011), _Gender Differences in Careers_, ETLA DP 1241, Table 3 (linear probability model, Finnish white-collar linked employer-employee data 1981–2006). Same data as the promotion raise. https://www.etla.fi/wp-content/uploads/2012/09/dp1241.pdf . Replaces McKinsey/LeanIn (US). |
+| Promotion raise: **+4%** on top of normal wage growth (in-firm promotion; +5.8% with an employer change)                                                                                                                   | eu-fallback | ✅     | Kauhanen & Napari (2012), _Career and Wage Dynamics_, ETLA DP 1244, Finnish linked employer-employee data, fixed effects. Context: Baker, Gibbs & Holmström (1994) 6% (US). https://www.etla.fi/wp-content/uploads/2012/09/dp1244.pdf                                                                   |
+| Child penalty (mothers' earnings, long run): NL 46%, DE 61%, ES 28%, FR 20%, IT 43%, IE 28%_, EU 29%_                                                                                                                      | country     | ✅     | See table below.                                                                                                                                                                                                                                                                                        |
+| Fatherhood premium: **0%**                                                                                                                                                                                                 | eu-fallback | ✅     | Kleven et al. (2019), event studies in 6 countries: "men are essentially unaffected" by the first child. https://www.nber.org/papers/w25524                                                                                                                                                             |
+| Part-time share 2025, ages 20–64, women / men: NL 60.8/19.0, DE 48.7/11.6, IT 27.7/6.0, IE 26.5/8.6, FR 25.6/8.1, ES 20.9/6.3, EU 27.5/7.8                                                                                 | country     | ✅     | Eurostat lfsa_eppga (API). https://ec.europa.eu/eurostat/databrowser/view/lfsa_eppga/default/table                                                                                                                                                                                                      |
+| Paid maternity leave (weeks, avg. payment): NL 16 @100%, DE 14 @100%, FR 16 @100%, IT 21.7 @80%, IE 26 @23.4% (flat €289/wk), ES 19 @100%, EU 21.5 @81% (derived: EU-27 mean full-rate-equivalent 17.5 weeks / 21.5 weeks) | country     | ✅     | OECD Family Database PF2.1, Table PF2.1.A (updated May 2026, rules as of April 2025). https://webfs.oecd.org/els-com/Family_Database/PF2_1_Parental_leave_systems.pdf . ES: Real Decreto-ley 9/2025, BOE-A-2025-15741 (16 → 19 weeks from 31 July 2025)                                                 |
 
 Notes:
 
@@ -75,32 +75,70 @@ Notes:
   stored separately from the primary Eurostat table (gap = women − men, e.g. NL 41.8 pp).
 - NL maternity pay is 100% up to the daily wage cap; payment rate is OECD's average.
 
+### Child penalty by country
+
+The engine needs the drop in **earnings**. National event studies differ in horizon and comparison
+group, so the numbers are not perfectly comparable; each `source` string says which.
+
+| Country | Earnings drop | Horizon / comparison                                    | Source                                                                                                                                                                                                          |
+| ------- | ------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| NL      | 46%           | 7 years after first child, vs own no-child path         | Rabaté & Rellstab (2021), CPB Discussion Paper 424. https://www.cpb.nl/sites/default/files/omnidownload/CPB-Discussion-Paper-424-The-Child-Penalty.pdf                                                          |
+| DE      | 61%           | years 5–10, mothers vs fathers                          | Kleven, Landais, Posch, Steinhauer & Zweimüller (2019), AEA P&P. https://www.nber.org/papers/w25524                                                                                                             |
+| ES      | 28%           | 10 years after birth, mothers vs fathers                | de Quinto, Hospido & Sanz (2021), _The child penalty: evidence from Spain_, SERIEs 12. https://www.bde.es/wbe/en/publicaciones/analisis-economico-investigacion/documentos-ocasionales/child-penalty-spain.html |
+| FR      | 20%           | 5 years after birth                                     | Pora & Wilner (2019), Insee Analyses No. 48. https://www.insee.fr/en/statistiques/4240363                                                                                                                       |
+| IT      | 43%           | 15 years after birth, vs childless women; 57 log points | Casarico & Lattanzio (2021), CESifo WP 9155 (published 2023, J. Population Economics). 1 − e^−0.57 = 43%. https://www.ifo.de/DocDL/cesifo1_wp9155.pdf                                                           |
+| IE \*   | 28%           | **employment**, not earnings (lower bound)              | Kleven, Landais & Leite-Mariante (2025), _The Child Penalty Atlas_, REStud. https://childpenaltyatlas.org (CSV export)                                                                                          |
+| EU \*   | 29%           | **employment**, Europe                                  | Same Atlas.                                                                                                                                                                                                     |
+
+Notes:
+
+- Ireland has no earnings estimate for all mothers. The only one (Doris, O'Neill & Sweetman, IZA
+  World of Labor) covers graduates: earnings fall 27% the year after birth and the drop grows. It
+  is consistent with 28%.
+- The Atlas gives one consistent **employment** penalty for all six (NL 20, FR 25, IE 28, IT 33,
+  ES 38, DE 41, Europe 29). Earnings penalties are larger because they also include hours and pay.
+- Fathers: 0% (see fatherhood premium).
+- Context for promotions (not used, double counts part-time and motherhood): Eurostat lfsa_egais
+  2025, share of employed aged 20–64 who are managers, men vs women: NL 8.7/4.2, DE 5.9/2.9,
+  IT 4.7/2.6, ES 5.0/3.3, FR 8.9/5.9, IE 11.3/8.2, EU 6.5/4.2.
+
 ## 6. Twin's investment mix ✅
 
-Rule (owner decision, see DECISIONS.md): the twin starts from her savings split and moves
-(men's − women's participation rate) of his savings from the seed packet (cash) to the oak tree
-(index fund), never more than her cash.
+Rule (see DECISIONS.md): the twin starts from her savings split and moves **3.8%** of his savings
+from the seed packet (cash) to the oak tree (index fund), never more than her cash. Same value for
+every country (`eu-fallback`).
 
-| Holds shares or mutual funds | NL   | ES   | DE   | FR   | IT   | IE          | EU15 |
-| ---------------------------- | ---- | ---- | ---- | ---- | ---- | ----------- | ---- |
-| Women                        | 17.3 | 9.7  | 16.7 | 16.2 | 6.1  | eu-fallback | 13.3 |
-| Men                          | 25.5 | 16.8 | 25.9 | 24.4 | 11.8 | eu-fallback | 20.8 |
-| Shift for the twin (pp)      | 8.2  | 7.1  | 9.2  | 8.2  | 5.7  | 7.5         | 7.5  |
+Source: Darvas & Ruer (2025), _Gender wealth inequality in the European Union: a distributional
+perspective_, Bruegel Working Paper 26/2025, Table 5. ECB HFCS **2021** (wave 4), 22 EU countries,
+single never-married adults aged 25–65 without children (8,817 people). Controlling for income,
+education, employment status, age, inheritance, risk attitude and country, single women are
+**3.8 percentage points** less likely than single men to hold risky financial assets (shares,
+mutual funds, bonds), significant at 10%.
+https://www.bruegel.org/working-paper/gender-wealth-inequality-european-union-distributional-perspective
 
-Source: European Commission, DG Justice (Sierminska 2017), _Wealth and Gender in Europe_, Table 2,
-participation by gender of the household's financially knowledgeable person, ECB HFCS wave 1
-(2010). Ireland was not in that wave. Caveat: the data are old (2010); no newer gender split of the
-HFCS is published. https://www.saage-network.eu/sites/default/files/media/publication/Wealth-and-Gender.pdf
+Why this replaces the 2010 per-country figures (Sierminska 2017, HFCS 2010, 6–9 pp):
 
-Supporting evidence:
+- Newer data (2021 vs 2010).
+- Like-for-like: same income, education and job, the same logic as the same-role pay gap. The twin
+  is identical apart from gender, so the raw gap would double count income effects that the engine
+  models separately.
+- It compares singles, so the answer is not mixed up with who in a couple holds the account.
+- The raw 2021 gaps among singles are small and mixed by country (Table 4, women/men holding mutual
+  funds: NL 18.4/18.2, DE 27.2/26.5, FR 7.1/10.3, IT 11.0/10.4, ES 7.1/7.0, IE 3.2/2.9; listed
+  shares: NL 6.4/12.5, DE 18.3/15.9, FR 8.3/12.2, IT 6.0/5.8, ES 11.0/11.4, IE 9.5/10.5). Per type
+  only, they cannot be combined into one "holds any" rate per country, so no per-country value.
+- Caveat: the model also controls for risk attitude, which is partly a behaviour. 3.8 pp is
+  therefore a conservative (low) estimate of the choice gap.
 
-- Same report, Table 10A: women hold about 0.58× men's share of wealth in shares and funds (EU15).
-- The gap is mainly a **participation** gap, not a lower risky share among those who invest
-  (Bacher 2024, **US data**, SCF 1989–2016). https://annikabacher.github.io/Bacher_GenderInvestmentGap.pdf
+Context only, not used:
+
+- Sierminska (2017) for the European Commission, _Wealth and Gender in Europe_, HFCS 2010:
+  holds shares or funds, women/men: NL 17.3/25.5, ES 9.7/16.8, DE 16.7/25.9, FR 16.2/24.4,
+  IT 6.1/11.8, EU15 13.3/20.8 (household's financially knowledgeable person, all households).
+  https://www.saage-network.eu/sites/default/files/media/publication/Wealth-and-Gender.pdf
 - 18% of women vs 31% of men invest regularly (ING 2024, via Funds Society, secondary).
-  https://www.fundssociety.com/en/opinion/the-370-billion-euro-question-why-do-women-invest-less-and-how-can-it-be-changed/
-- Context only, not used: household portfolios per country, HFCS wave 2023, Table D3 (% of
-  financial assets). https://www.ecb.europa.eu/stats/ecb_surveys/hfcs/html/index.en.html
+- Bacher (2024): the gap is mainly participation, not risky share (**US data**, SCF).
+- Household portfolios per country, HFCS wave 2023, Table D3 (% of financial assets):
 
   | Region    | Deposits | Mutual funds | Bonds | Listed shares | Vol. pension / life ins. | Other |
   | --------- | -------- | ------------ | ----- | ------------- | ------------------------ | ----- |

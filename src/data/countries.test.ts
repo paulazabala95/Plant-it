@@ -14,10 +14,14 @@ describe('country defaults', () => {
     }
   })
 
-  it('has men investing at least as often as women', () => {
+  it('keeps rates and shares between 0 and 1', () => {
     for (const c of all) {
-      const { women, men } = c.riskyAssetParticipation.value
-      expect(men, c.code).toBeGreaterThanOrEqual(women)
+      for (const v of [c.samePayGap, c.childPenalty, c.twinInvestShift, c.promotionRaise]) {
+        expect(v.value, c.code).toBeGreaterThanOrEqual(0)
+        expect(v.value, c.code).toBeLessThan(1)
+      }
+      const { women, men } = c.promotionRate.value
+      expect(men, c.code).toBeGreaterThan(women)
     }
   })
 

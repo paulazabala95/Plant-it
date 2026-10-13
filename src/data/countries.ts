@@ -35,8 +35,8 @@ export interface PartTime {
   men: number
 }
 
-/** Share of women and men (financial decision-maker of the household) holding shares or funds. */
-export interface RiskyAssetParticipation {
+/** Yearly probability of being promoted. */
+export interface PromotionRate {
   women: number
   men: number
 }
@@ -54,8 +54,12 @@ export interface CountryDefaults {
   partTime: Sourced<PartTime>
   /** Real (after inflation) wage growth per year. */
   realWageGrowth: Sourced<number>
+  /** Yearly promotion probability, women vs men with the same background. */
+  promotionRate: Sourced<PromotionRate>
   /** Pay rise on promotion, on top of normal wage growth. */
   promotionRaise: Sourced<number>
+  /** Long-run drop in a mother's earnings after her first child (fathers: fatherhoodPremium). */
+  childPenalty: Sourced<number>
   /** Change in a man's earnings after becoming a father. */
   fatherhoodPremium: Sourced<number>
   /** Yardstick for "years of rent": monthly rent, 1-bedroom flat. */
@@ -63,10 +67,10 @@ export interface CountryDefaults {
   /** Yardstick for "fully funded sabbatical years": one year of median net income. */
   sabbaticalYear: Sourced<number>
   /**
-   * Drives the twin's savings split: he moves (men - women) of his savings from cash to the
-   * index fund compared with her split (see DECISIONS.md).
+   * Share of his savings the twin moves from cash to the index fund compared with her split:
+   * the like-for-like gender gap in holding shares, funds or bonds (see DECISIONS.md).
    */
-  riskyAssetParticipation: Sourced<RiskyAssetParticipation>
+  twinInvestShift: Sourced<number>
 }
 
 const SRC = {
@@ -82,8 +86,10 @@ const SRC = {
     "Kleven et al. (2019), Child Penalties Across Countries: fathers' earnings essentially unaffected",
   rent: 'Eurostat prc_colc_rents, average rent of a 1-bedroom flat in the capital, 2025',
   income: 'Eurostat ilc_di03, median equivalised net income, EU-SILC 2025',
-  wealthGender:
-    'European Commission (Sierminska 2017), Wealth and Gender in Europe, Table 2 (ECB HFCS 2010)',
+  investGap:
+    'Darvas & Ruer (2025), Bruegel WP 26/2025, Table 5: single women 3.8 pp less likely to hold risky assets (HFCS 2021, EU22)',
+  promotionRate:
+    'Kauhanen & Napari (2011), ETLA DP 1241, Table 3: yearly promotion probability 7.3% men vs 4.9% women (Finnish linked data)',
 }
 
 const country = <T>(value: T, source: string, note?: string): Sourced<T> => ({
@@ -96,10 +102,11 @@ const country = <T>(value: T, source: string, note?: string): Sourced<T> => ({
 const EUROSTAT_METHOD_NOTE =
   "National same-role figures do not exist here, so this uses Eurostat. Eurostat's method gives higher gaps everywhere (NL 10.8%, DE 10.0%, FR 11.9%), so the gap looks larger partly because of the method."
 
-const euFallback = <T>(value: T, source: string): Sourced<T> => ({
+const euFallback = <T>(value: T, source: string, note?: string): Sourced<T> => ({
   value,
   coverage: 'eu-fallback',
   source,
+  ...(note && { note }),
 })
 
 const NO_INVESTED_PENSION = [{ fromYear: 2024, rate: 0 }]
@@ -107,6 +114,12 @@ const NO_INVESTED_PENSION = [{ fromYear: 2024, rate: 0 }]
 // Same EU-wide evidence for every country (no national figures).
 const promotionRaise = euFallback(0.04, SRC.promotion)
 const fatherhoodPremium = euFallback(0, SRC.fatherhood)
+const promotionRate = euFallback({ women: 0.049, men: 0.073 }, SRC.promotionRate)
+const twinInvestShift = euFallback(
+  0.038,
+  SRC.investGap,
+  'Compares single, never-married adults aged 25-65 without children, with the same income, education, job, age, inheritance and risk attitude.',
+)
 
 export const EU: CountryDefaults = {
   code: 'EU',
@@ -125,11 +138,17 @@ export const EU: CountryDefaults = {
   ),
   partTime: country({ women: 0.275, men: 0.078 }, `${SRC.partTime}, EU27`),
   realWageGrowth: country(0.014, `${SRC.ageing}, EU`),
+  promotionRate,
   promotionRaise,
   fatherhoodPremium,
+  childPenalty: euFallback(
+    0.29,
+    'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Europe: employment penalty 29%',
+    'Employment, not earnings: a lower bound for the earnings drop.',
+  ),
   monthlyRent: country(1150, `${SRC.rent}, median of the 27 EU capitals`),
   sabbaticalYear: country(22939, `${SRC.income}, EU27`),
-  riskyAssetParticipation: country({ women: 0.133, men: 0.208 }, `${SRC.wealthGender}, EU15`),
+  twinInvestShift,
 }
 
 export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
@@ -147,11 +166,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.608, men: 0.19 }, SRC.partTime),
     realWageGrowth: country(0.011, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.46,
+      'Rabaté & Rellstab (2021), CPB DP 424: earnings 46% lower 7 years after first child',
+    ),
     monthlyRent: country(1800, `${SRC.rent} (The Hague, no Amsterdam figure)`),
     sabbaticalYear: country(34466, SRC.income),
-    riskyAssetParticipation: country({ women: 0.173, men: 0.255 }, SRC.wealthGender),
+    twinInvestShift,
   },
   ES: {
     code: 'ES',
@@ -164,11 +188,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     partTime: country({ women: 0.209, men: 0.063 }, SRC.partTime),
     realWageGrowth: country(0.013, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.28,
+      'de Quinto, Hospido & Sanz (2021), SERIEs 12: earnings 28% lower 10 years after birth',
+    ),
     monthlyRent: country(1300, `${SRC.rent} (Madrid)`),
     sabbaticalYear: country(20367, SRC.income),
-    riskyAssetParticipation: country({ women: 0.097, men: 0.168 }, SRC.wealthGender),
+    twinInvestShift,
   },
   DE: {
     code: 'DE',
@@ -178,11 +207,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     maternityLeave: country({ weeks: 14, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.487, men: 0.116 }, SRC.partTime),
     realWageGrowth: country(0.013, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.61,
+      'Kleven et al. (2019), Child Penalties Across Countries: earnings, years 5-10 after birth',
+    ),
     monthlyRent: country(1350, `${SRC.rent} (Berlin)`),
     sabbaticalYear: country(28891, SRC.income),
-    riskyAssetParticipation: country({ women: 0.167, men: 0.259 }, SRC.wealthGender),
+    twinInvestShift,
   },
   FR: {
     code: 'FR',
@@ -192,11 +226,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.256, men: 0.081 }, SRC.partTime),
     realWageGrowth: country(0.01, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.2,
+      'Pora & Wilner (2019), Insee Analyses 48: labour earnings 20% lower 5 years after birth',
+    ),
     monthlyRent: country(1550, `${SRC.rent} (Paris)`),
     sabbaticalYear: country(26459, SRC.income),
-    riskyAssetParticipation: country({ women: 0.162, men: 0.244 }, SRC.wealthGender),
+    twinInvestShift,
   },
   IT: {
     code: 'IT',
@@ -213,11 +252,17 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     maternityLeave: country({ weeks: 21.7, paymentRate: 0.8 }, SRC.oecdLeave),
     partTime: country({ women: 0.277, men: 0.06 }, SRC.partTime),
     realWageGrowth: country(0.012, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.43,
+      'Casarico & Lattanzio (2021), CESifo WP 9155: 57 log points lower annual earnings 15 years after birth',
+      'Compared with childless women, not fathers; 1 - e^-0.57 = 43%.',
+    ),
     monthlyRent: country(1300, `${SRC.rent} (Rome)`),
     sabbaticalYear: country(22062, SRC.income),
-    riskyAssetParticipation: country({ women: 0.061, men: 0.118 }, SRC.wealthGender),
+    twinInvestShift,
   },
   IE: {
     code: 'IE',
@@ -235,13 +280,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     maternityLeave: country({ weeks: 26, paymentRate: 0.234 }, SRC.oecdLeave),
     partTime: country({ women: 0.265, men: 0.086 }, SRC.partTime),
     realWageGrowth: country(0.018, SRC.ageing),
+    promotionRate,
     promotionRaise,
     fatherhoodPremium,
+    childPenalty: country(
+      0.28,
+      'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Ireland: employment penalty 28%',
+      'No earnings estimate for all Irish mothers; employment is a lower bound for the earnings drop.',
+    ),
     monthlyRent: country(2000, `${SRC.rent} (Dublin)`),
     sabbaticalYear: country(35138, SRC.income),
-    riskyAssetParticipation: euFallback(
-      { women: 0.133, men: 0.208 },
-      `${SRC.wealthGender}, EU15 (IE not surveyed)`,
-    ),
+    twinInvestShift,
   },
 }

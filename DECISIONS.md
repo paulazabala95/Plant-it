@@ -25,17 +25,22 @@ Product and modelling decisions agreed with the project owner. Read before chang
 - Italy is the one exception to "no country-specific rules": onboarding asks Italian users one
   yes/no question, whether their TFR goes to a pension fund. Yes: 7.41% of pay is invested
   (1/13.5, Codice civile art. 2120). No: 0% (TFR kept with the employer is not invested).
-- Twin's investment mix: he starts from her savings split and moves (men's − women's share
-  investing in shares or funds, per country) of his savings from cash to the index fund, never more
-  than her cash. Source: EC "Wealth and Gender in Europe" (HFCS). Additive, so the twin still
-  invests a little when she invests nothing.
+- Twin's investment mix: he starts from her savings split and moves 3.8% of his savings from cash
+  to the index fund, never more than her cash. 3.8 pp = like-for-like gender gap in holding risky
+  assets (singles, same income, education, job; Bruegel 2025, HFCS 2021). Same for every country.
+  Additive, so the twin still invests a little when she invests nothing. Replaces the 2010
+  per-country gaps (6–9 pp), which were older and not like-for-like.
 
 ## Data
 
 - Same-role pay gap: national figures where they exist (NL, DE, FR), Eurostat's decomposition for
   ES, IT and IE. The mix is kept; those three show a note in the assumptions panel explaining that
   Eurostat's method gives higher gaps everywhere, so the gap may look larger partly by method.
-- Promotion raise (+4%) and fatherhood premium (0%) are EU-wide (`eu-fallback`) for every country.
+- Promotion rate (men 7.3% vs women 4.9% a year), promotion raise (+4%) and fatherhood premium
+  (0%) are EU-wide (`eu-fallback`) for every country (Finnish linked data; Kleven et al.).
+- Child penalty = drop in mothers' earnings from national event studies (horizons differ, noted in
+  each source). Ireland and the EU fallback use the Child Penalty Atlas employment penalty, a lower
+  bound, because no earnings estimate exists.
 
 ## Garden options
 
