@@ -1,3 +1,5 @@
 // Pure calculation engine. No UI, no theme, no browser APIs.
-// Implemented test-first in Milestone 2.
-export {}
+export * from './types'
+export { simulate, pensionRate } from './simulate'
+export * from './scenarios'
+export * from './breakdown'

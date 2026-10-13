@@ -52,6 +52,8 @@ export interface CountryDefaults {
   optionalPensionFund?: Sourced<PensionStep[]>
   maternityLeave: Sourced<MaternityLeave>
   partTime: Sourced<PartTime>
+  /** Age both twins stop working and the gardens are counted. */
+  retirementAge: Sourced<number>
   /** Real (after inflation) wage growth per year. */
   realWageGrowth: Sourced<number>
   /** Yearly promotion probability, women vs men with the same background. */
@@ -79,6 +81,8 @@ const SRC = {
   oecdPag: 'OECD Pensions at a Glance 2025, Table 8.1 (mandatory contributions, 2024)',
   oecdLeave: 'OECD Family Database PF2.1, Table PF2.1.A (entitlements as of April 2025)',
   partTime: 'Eurostat lfsa_eppga, part-time employment, ages 20-64, 2025',
+  retirement:
+    'OECD Pensions at a Glance 2025: future normal retirement age, full career from age 22 in 2024',
   ageing: 'European Commission 2024 Ageing Report, hourly labour productivity growth 2022-2070',
   promotion:
     'Kauhanen & Napari (2012), ETLA DP 1244: in-firm promotion raises wages by 4% (Finnish linked data)',
@@ -137,6 +141,7 @@ export const EU: CountryDefaults = {
     `${SRC.oecdLeave}, EU average; pay rate = mean full-rate weeks (17.5) / weeks (21.5)`,
   ),
   partTime: country({ women: 0.275, men: 0.078 }, `${SRC.partTime}, EU27`),
+  retirementAge: country(66.4, `${SRC.retirement}, OECD average (men; women 65.9)`),
   realWageGrowth: country(0.014, `${SRC.ageing}, EU`),
   promotionRate,
   promotionRaise,
@@ -165,6 +170,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.608, men: 0.19 }, SRC.partTime),
+    retirementAge: country(70, SRC.retirement),
     realWageGrowth: country(0.011, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -187,6 +193,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       'Real Decreto-ley 9/2025 (BOE 30 July 2025): 19 weeks per parent at 100%',
     ),
     partTime: country({ women: 0.209, men: 0.063 }, SRC.partTime),
+    retirementAge: country(65, SRC.retirement),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -206,6 +213,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     investedPension: country(NO_INVESTED_PENSION, `${SRC.oecdPag}: public pay-as-you-go only`),
     maternityLeave: country({ weeks: 14, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.487, men: 0.116 }, SRC.partTime),
+    retirementAge: country(67, SRC.retirement),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -225,6 +233,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     investedPension: country(NO_INVESTED_PENSION, `${SRC.oecdPag}: public pay-as-you-go only`),
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.256, men: 0.081 }, SRC.partTime),
+    retirementAge: country(65, SRC.retirement),
     realWageGrowth: country(0.01, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -251,6 +260,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 21.7, paymentRate: 0.8 }, SRC.oecdLeave),
     partTime: country({ women: 0.277, men: 0.06 }, SRC.partTime),
+    retirementAge: country(70, SRC.retirement),
     realWageGrowth: country(0.012, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -279,6 +289,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 26, paymentRate: 0.234 }, SRC.oecdLeave),
     partTime: country({ women: 0.265, men: 0.086 }, SRC.partTime),
+    retirementAge: country(66, SRC.retirement),
     realWageGrowth: country(0.018, SRC.ageing),
     promotionRate,
     promotionRaise,

@@ -167,6 +167,15 @@ invested**. State pay-as-you-go pensions are excluded from both gardens and note
 
 Source PDF: https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/11/pensions-at-a-glance-2025_76510fe4/e40274c1-en.pdf
 
+## 7b. Retirement age and pension growth ✅
+
+- Retirement age (both twins): OECD _Pensions at a Glance 2025_, future normal retirement age for a
+  full career from age 22 starting in 2024 (OECD data explorer DF_DPS, FRPLF22, same for men and
+  women): NL 70, IT 70, DE 67, IE 66, ES 65, FR 65. EU fallback: OECD average 66.4 (men; women 65.9).
+- Retirement field growth: **2.5% real**, OECD _Pensions at a Glance 2025_ base-case net real rate
+  of return on funded defined-contribution pensions (same report also assumes 1.25% real wage growth).
+  https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/11/pensions-at-a-glance-2025_76510fe4/e40274c1-en.pdf
+
 ## 8. Real wage growth ✅
 
 Hourly labour productivity growth, average 2022–2070, EC 2024 Ageing Report (Institutional Paper

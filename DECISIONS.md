@@ -42,6 +42,28 @@ Product and modelling decisions agreed with the project owner. Read before chang
   each source). Ireland and the EU fallback use the Child Penalty Atlas employment penalty, a lower
   bound, because no earnings estimate exists.
 
+## Engine model (Milestone 2)
+
+- One monthly simulation for any person (`simulate`); scenarios only build different profiles.
+- Pay: her gross salary, growing each year by real wage growth + promotion rate × promotion raise
+  (expected value, no randomness).
+- Life event cards change pay: career break = no pay; part-time = hours share; child = maternity
+  leave at the country's payment rate, then the child penalty for the rest of the career (applied
+  once, from the first child). **Open: the penalty is measured 5–15 years after birth; applying it
+  until retirement is an assumption.**
+- The twin lives the same life with the male value of every factor: pay without the same-role gap,
+  male promotion rate, fatherhood premium instead of the child penalty, no maternity leave, no
+  part-time or career-break cards (they are the structural gaps), the 3.8 pp invest shift and the
+  overtrading drag.
+- Savings and invested pension contributions are a share of actual pay, so breaks and part-time
+  cut both. The retirement field grows at the OECD funded-pension real return (2.5%).
+- Trading drag is charged on every traded option (index, sustainable, single stocks, crypto).
+  **Open: Barber & Odean measured stock-picking accounts; see the owner question below.**
+- Breakdown: exact Shapley values over 7 factors (structural: pay gap, promotions, child penalty,
+  part-time, career break; choice: invest mix, trading drag). Shares sum to the full gap.
+- The engine never reads the clock: the UI passes the current year (needed for Ireland's
+  auto-enrolment steps).
+
 ## Garden options
 
 | Option             | Metaphor                | Default real return                                       |
