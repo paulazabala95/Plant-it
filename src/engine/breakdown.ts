@@ -10,6 +10,7 @@ import {
   type HerInputs,
 } from './scenarios'
 import { simulate } from './simulate'
+import type { Timeline } from './types'
 
 const factorial = (n: number): number => (n <= 1 ? 1 : n * factorial(n - 1))
 
@@ -86,3 +87,7 @@ export function realLifeUnits(amount: number, region: Region) {
     sabbaticalYears: amount / c.sabbaticalYear.value,
   }
 }
+
+/** How much bigger the twin's garden ends than hers (negative when hers is bigger). */
+export const gardenGap = (her: Timeline, twin: Timeline): number =>
+  twin.final.total - her.final.total

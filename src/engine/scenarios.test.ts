@@ -131,3 +131,17 @@ describe('level the field', () => {
     }
   })
 })
+
+describe('onboarding helpers', () => {
+  it('turns weights into a split summing to 1', async () => {
+    const { splitFromWeights } = await import('./scenarios')
+    const s = splitFromWeights({ cash: 1, indexFund: 3 })
+    expect(s.cash).toBe(0.25)
+    expect(s.indexFund).toBe(0.75)
+    expect(splitFromWeights({}).cash).toBe(1)
+  })
+  it('gives monthly savings', async () => {
+    const { monthlySavings } = await import('./scenarios')
+    expect(monthlySavings(48_000, 0.1)).toBe(400)
+  })
+})

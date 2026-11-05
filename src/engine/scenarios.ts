@@ -152,3 +152,16 @@ export function levelTheField(inputs: HerInputs): { her: Profile; twin: Profile 
   const her = applyFactors(atHerBest(inputs), STRUCTURAL_FACTORS, inputs)
   return { her, twin: FACTORS.tradingDrag(her) }
 }
+
+/** What she puts aside each month today (for display in onboarding). */
+export const monthlySavings = (grossSalary: number, savingsRate: number): number =>
+  (grossSalary * savingsRate) / 12
+
+/** Turns relative weights per option into a split that sums to 1. */
+export function splitFromWeights(weights: Partial<Split>): Split {
+  const split = Object.fromEntries(Object.keys(REAL_RETURNS).map((o) => [o, 0])) as Split
+  const total = Object.values(weights).reduce((s, w) => s + (w ?? 0), 0)
+  if (total <= 0) return { ...split, cash: 1 }
+  for (const [o, w] of Object.entries(weights)) split[o as keyof Split] = (w ?? 0) / total
+  return split
+}

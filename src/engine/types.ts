@@ -1,5 +1,7 @@
 import type { GardenOption, PensionStep } from '../data'
 
+export type { GardenOption }
+
 export type Split = Record<GardenOption, number>
 
 /** Something that happens in her life, placed on the timeline with an event card. */
