@@ -10,8 +10,7 @@ import {
 } from '../data'
 import { defaultsFor } from '../engine'
 import { OPTION_LOOKS } from '../themes'
-import { money, pct } from './format'
-import { Sheet } from './Sheet'
+import { ageLabel, pct } from './format'
 
 interface Row {
   label: string
@@ -32,11 +31,9 @@ const fromSourced = <T,>(label: string, s: Sourced<T>, show: (v: T) => string): 
 export function Assumptions({
   country,
   italyTfrToFund,
-  onClose,
 }: {
   country: CountryCode
   italyTfrToFund?: boolean
-  onClose: () => void
 }) {
   const c = defaultsFor(country)
   const pension =
@@ -72,11 +69,15 @@ export function Assumptions({
         .join(' → '),
     ),
     fromSourced('Real wage growth', c.realWageGrowth, (v) => `${pct(v, 1)} a year`),
-    fromSourced('Retirement age', c.retirementAge, (v) => String(v)),
-    fromSourced('Rent, 1-bed flat', c.monthlyRent, (v) => `${money(v)} a month`),
-    fromSourced('A sabbatical year', c.sabbaticalYear, (v) => money(v)),
+    fromSourced('Retirement age', c.retirementAge, (v) => ageLabel(v)),
+    fromSourced('Years of retirement', c.lifeExpectancy, (v) => `${v} years on average`),
+    fromSourced("Partner's paid leave", c.partnerLeave, (v) =>
+      v.paymentRate === undefined
+        ? `${v.weeks} weeks`
+        : `${v.weeks} weeks at ${pct(v.paymentRate)} pay`,
+    ),
     ...GARDEN_OPTIONS.map((o) => ({
-      label: OPTION_LOOKS[o].name,
+      label: OPTION_LOOKS[o].plain,
       value: `${pct(REAL_RETURNS[o], 1)} a year after inflation`,
       source: ASSUMPTION_SOURCES[o],
     })),
@@ -98,8 +99,8 @@ export function Assumptions({
   ]
 
   return (
-    <Sheet title={`Assumptions · ${c.name}`} onClose={onClose}>
-      <p className="muted">
+    <div className="numbers">
+      <p className="muted" style={{ gridColumn: '1 / -1' }}>
         All amounts in today's money. State pay-as-you-go pensions are left out of both gardens.
       </p>
       {rows.map((r) => (
@@ -119,6 +120,6 @@ export function Assumptions({
           <p className="source">{r.source}</p>
         </div>
       ))}
-    </Sheet>
+    </div>
   )
 }

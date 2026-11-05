@@ -1,4 +1,4 @@
-import type { Region } from '../data'
+import { PENSION_REAL_RETURN, type Region } from '../data'
 import {
   ALL_FACTORS,
   CHOICE_FACTORS,
@@ -79,13 +79,15 @@ export function breakdown(inputs: HerInputs): Breakdown {
   }
 }
 
-/** An amount in the real-life units shown in the UI. */
-export function realLifeUnits(amount: number, region: Region) {
-  const c = defaultsFor(region)
-  return {
-    yearsOfRent: amount / (c.monthlyRent.value * 12),
-    sabbaticalYears: amount / c.sabbaticalYear.value,
-  }
+/**
+ * An amount at retirement as an equal monthly payout for the rest of an average life
+ * (Eurostat life expectancy at the retirement age), with what is left still growing at the
+ * pension real return.
+ */
+export function monthlyIncome(amount: number, region: Region): number {
+  const months = Math.round(defaultsFor(region).lifeExpectancy.value * 12)
+  const m = (1 + PENSION_REAL_RETURN) ** (1 / 12) - 1
+  return (amount * m) / (1 - (1 + m) ** -months)
 }
 
 /** How much bigger the twin's garden ends than hers (negative when hers is bigger). */

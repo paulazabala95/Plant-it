@@ -56,12 +56,22 @@ export function simulate(p: Profile): Timeline {
   const pensionMonthly = monthlyRate(p.pensionReturn)
 
   const garden = emptySplit()
+  const paidIn = emptySplit()
   let retirement = 0
+  let retirementPaidIn = 0
   let contributed = 0
 
   const point = (age: number): YearPoint => {
     const gardenTotal = GARDEN_OPTIONS.reduce((sum, o) => sum + garden[o], 0)
-    return { age, garden: { ...garden }, retirement, total: gardenTotal + retirement, contributed }
+    return {
+      age,
+      garden: { ...garden },
+      paidIn: { ...paidIn },
+      retirement,
+      retirementPaidIn,
+      total: gardenTotal + retirement,
+      contributed,
+    }
   }
   const points: YearPoint[] = [point(p.startAge)]
 
@@ -73,8 +83,10 @@ export function simulate(p: Profile): Timeline {
 
     for (const o of GARDEN_OPTIONS) {
       garden[o] = garden[o] * (1 + rates[o]) + saved * p.split[o]
+      paidIn[o] += saved * p.split[o]
     }
     retirement = retirement * (1 + pensionMonthly) + pensionIn
+    retirementPaidIn += pensionIn
     contributed += saved + pensionIn
 
     if ((m + 1) % 12 === 0 && m + 1 < months) points.push(point(p.startAge + (m + 1) / 12))

@@ -5,11 +5,13 @@ export function Welcome({ onStart }: { onStart: () => void }) {
   return (
     <>
       <section className="card pink stack" style={{ paddingTop: 28, paddingBottom: 28 }}>
-        <p className="eyebrow">Welcome to your garden</p>
-        <h1 className="display xl">PLANT IT</h1>
+        <p className="eyebrow">Plant it</p>
+        <h1 className="display l">
+          Have you ever pictured your life with, and without, investing?
+        </h1>
         <div className="row" style={{ alignItems: 'flex-end', position: 'relative' }}>
           <div className="grow">
-            <Blob color={PEOPLE.her.color} shape="drop" stage={3} title="You" />
+            <Blob color={PEOPLE.her.color} shape="drop" stage={2} title="You" />
           </div>
           <div className="grow">
             <Blob color={PEOPLE.twin.color} shape="bean" stage={4} mood="wow" title="Your twin" />
@@ -21,20 +23,21 @@ export function Welcome({ onStart }: { onStart: () => void }) {
             hey, twin!
           </span>
         </div>
-        <h2 className="display m">Same life. Same job. One difference.</h2>
-        <p>
-          Meet your identical twin brother. Watch your two gardens grow side by side until you
-          retire, and see what really makes his bigger.
+        <p style={{ fontSize: 17 }}>
+          Meet your <b>identical twin brother</b>. Same job, same savings, same life. The only
+          difference: he's a man.
+        </p>
+        <p style={{ fontSize: 17 }}>
+          See whose money grows more by the time you both retire, and what you can do about it.
         </p>
       </section>
 
-      <section className="card lime stack">
+      <section className="card lime">
         <p className="display m">Women don't invest worse. They invest less.</p>
-        <p className="muted">Five quick questions. No sign-up, nothing leaves your phone.</p>
       </section>
 
       <button className="btn block" onClick={onStart}>
-        Plant my garden →
+        Show me the difference
       </button>
     </>
   )

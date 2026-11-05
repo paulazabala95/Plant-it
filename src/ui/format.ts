@@ -17,3 +17,10 @@ export const compactMoney = (x: number) =>
 export const pct = (x: number, digits = 0) => `${(x * 100).toFixed(digits)}%`
 
 export const years = (x: number) => `${x.toFixed(1)} ${Math.abs(x) === 1 ? 'year' : 'years'}`
+
+/** 67.25 -> "67 years and 3 months", 64 -> "64". */
+export const ageLabel = (age: number) => {
+  const whole = Math.floor(age)
+  const months = Math.round((age - whole) * 12)
+  return months === 0 ? String(whole) : `${whole} years and ${months} months`
+}

@@ -83,8 +83,24 @@ or crypto.
 
 ## UI
 
+- Website first (not a native app): mobile-first, and on wide screens the two gardens sit side by
+  side. Forest green (#1F4D3A) ink on pink, lilac, yellow and lime.
+- Flow: hook question ("Have you ever pictured your life with, and without, investing?"), "How your
+  garden grows" (every euro is a seed, one plant per option, fruit = growth), then the questions.
+  "Next" on every question, "See my garden" on the last. Country = where you pay income tax.
+- Ten savings options with plain names first: cash, savings account, government bonds, index fund or
+  ETF, actively managed fund, sustainable fund, single stocks, crypto, life-insurance savings, plus
+  the workplace pension filled in from the country.
+- Garden: one drawn scene per twin; plants per option from the engine (one plant per round euro
+  unit, at least one if anything is there), fruit = growth, wilted sunflowers when worth less than
+  paid in; an age slider to watch both grow; life events show in the scene and each card says what
+  it costs. Tabs: "Your path", "Your best path", "A fair world", each explained in one line.
+- A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
+  share leave, the dip is temporary), as things to consider, not advice.
+- Owner rule: propose changes and get agreement before building them.
+
 - Life event cards: tap a card, then tap an age (drag on desktop is a nice-to-have).
-- Real-life units: years of rent and fully funded sabbatical years. No flights (no official
-  source). Rent = Eurostat rent of a 1-bed flat in the capital, labelled with the city; it is
-  deliberately a capital-city market rent (overstates a national average). Rent is a yardstick only; housing and home ownership are not modelled (README limitation).
+- Real-life unit (owner decision, replaces years of rent and sabbatical years): **extra money a month
+  in retirement**, paying the gap out over average life expectancy at retirement. Rent data is kept
+  in `src/data` but no longer shown. Housing and home ownership are not modelled; housing and home ownership are not modelled (README limitation).
 - "Plant it" action: to be decided with the owner before Milestone 7.

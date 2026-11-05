@@ -9,9 +9,9 @@
   --blue: #3b3fd8;
   --green: #1f4d3a;
   --cream: #fff8ee;
-  --ink: #3a1020;
-  --ink-soft: #6b4a57;
-  --line: #3a1020;
+  --ink: #1f4d3a;
+  --ink-soft: #4d6b5e;
+  --line: #1f4d3a;
   --radius: 28px;
   --display: 'Bricolage Grotesque', 'Arial Rounded MT Bold', system-ui, sans-serif;
   --body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -229,7 +229,7 @@ input[type='range'] {
   height: 8px;
   flex: 1;
   border-radius: 99px;
-  background: rgba(58, 16, 32, 0.15);
+  background: rgba(31, 77, 58, 0.15);
 }
 .dot.on {
   background: var(--ink);
@@ -356,7 +356,7 @@ input[type='range'] {
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(58, 16, 32, 0.45);
+  background: rgba(31, 77, 58, 0.45);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -444,4 +444,58 @@ input[type='range'] {
   font-size: 12px;
   text-align: center;
   color: var(--ink-soft);
+}
+
+/* Wide garden page */
+.app:has(.page) {
+  max-width: 1120px;
+}
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.explain {
+  font-size: 15px;
+  text-align: center;
+  margin-top: -6px;
+}
+.scenes {
+  display: grid;
+  gap: 12px;
+}
+.scene-card {
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.split {
+  display: grid;
+  gap: 24px;
+}
+.numbers {
+  display: grid;
+  gap: 10px;
+}
+.tips {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+@media (min-width: 900px) {
+  .scenes,
+  .split {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .numbers {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .page .tabs {
+    max-width: 640px;
+    width: 100%;
+    align-self: center;
+  }
 }

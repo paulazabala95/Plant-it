@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { COUNTRIES, GARDEN_OPTIONS, type CountryCode } from '../data'
 import { monthlySavings, splitFromWeights } from '../engine'
 import { OPTION_LOOKS } from '../themes'
+import { PlotIcon } from './Scene'
 import { Blob } from './Blob'
 import type { Answers } from './answers'
 import { money, pct } from './format'
@@ -86,8 +87,11 @@ export function Onboarding({
 
         {step === 'country' && (
           <>
-            <h1 className="display l">Where do you work?</h1>
-            <p>Pay gaps, pensions and leave are different in every country.</p>
+            <h1 className="display l">Where do you pay income tax?</h1>
+            <p>
+              Usually the country where you live. Pay gaps, pensions and leave differ in every
+              country.
+            </p>
             <div className="stack">
               {(Object.keys(COUNTRIES) as CountryCode[]).map((c) => (
                 <button
@@ -179,8 +183,8 @@ export function Onboarding({
 
         {step === 'split' && (
           <>
-            <h1 className="display l">Where does it go?</h1>
-            <p>Tap what you use, then slide how much of your savings goes to each.</p>
+            <h1 className="display l">Where do your savings go?</h1>
+            <p>Tap everything you use, then slide roughly how much goes to each.</p>
             <div className="chips">
               {GARDEN_OPTIONS.map((o) => (
                 <button
@@ -193,16 +197,24 @@ export function Onboarding({
                     set({ weights })
                   }}
                 >
-                  {OPTION_LOOKS[o].short}
+                  {OPTION_LOOKS[o].plain}
                 </button>
               ))}
             </div>
             <div className="stack">
               {GARDEN_OPTIONS.filter((o) => a.weights[o]).map((o) => (
                 <div key={o} className="assumption" style={{ background: OPTION_LOOKS[o].color }}>
-                  <div className="row between">
-                    <b>{OPTION_LOOKS[o].name}</b>
-                    <b>{pct(split[o])}</b>
+                  <div className="row" style={{ gap: 10 }}>
+                    <PlotIcon plot={o} />
+                    <div className="grow">
+                      <div className="row between">
+                        <b>{OPTION_LOOKS[o].plain}</b>
+                        <b>{pct(split[o])}</b>
+                      </div>
+                      <p style={{ fontSize: 13 }}>
+                        {OPTION_LOOKS[o].metaphor} · {OPTION_LOOKS[o].meaning}
+                      </p>
+                    </div>
                   </div>
                   <input
                     type="range"
@@ -212,7 +224,7 @@ export function Onboarding({
                     onChange={(e) =>
                       set({ weights: { ...a.weights, [o]: Number(e.target.value) } })
                     }
-                    aria-label={`${OPTION_LOOKS[o].short} share`}
+                    aria-label={`${OPTION_LOOKS[o].plain} share`}
                   />
                 </div>
               ))}
@@ -222,7 +234,7 @@ export function Onboarding({
       </section>
 
       <button className="btn block" onClick={next} disabled={!canNext}>
-        {i === steps.length - 1 ? 'Grow my garden 🌱' : 'Next →'}
+        {i === steps.length - 1 ? 'See my garden' : 'Next'}
       </button>
     </>
   )

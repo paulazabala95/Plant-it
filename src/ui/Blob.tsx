@@ -1,6 +1,6 @@
 import type { GrowthStage } from '../themes'
 
-const INK = '#3A1020'
+const INK = '#1F4D3A'
 const LEAF = '#D4F06B'
 const LEAF_DARK = '#1F4D3A'
 

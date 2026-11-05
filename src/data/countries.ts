@@ -59,6 +59,10 @@ export interface CountryDefaults {
   partTime: Sourced<PartTime>
   /** Age both twins stop working and the gardens are counted. */
   retirementAge: Sourced<number>
+  /** Years left to live at retirement age (both twins use the same figure). */
+  lifeExpectancy: Sourced<number>
+  /** Paid leave a partner can take for a new baby (fathers' entitlement). */
+  partnerLeave: Sourced<{ weeks: number; paymentRate?: number }>
   /** Real (after inflation) wage growth per year. */
   realWageGrowth: Sourced<number>
   /** Yearly promotion probability, women vs men with the same background. */
@@ -72,6 +76,10 @@ export interface CountryDefaults {
   childPenalty: Sourced<ChildPenalty>
   /** Change in a man's earnings after becoming a father. */
   fatherhoodPremium: Sourced<number>
+  /** Country name inside a sentence ("in the Netherlands"). */
+  inName?: string
+  /** City the rent figure is for (shown with "years of rent"). */
+  rentCity: string
   /** Yardstick for "years of rent": monthly rent, 1-bedroom flat. */
   monthlyRent: Sourced<number>
   /** Yardstick for "fully funded sabbatical years": one year of median net income. */
@@ -90,7 +98,9 @@ const SRC = {
   oecdLeave: 'OECD Family Database PF2.1, Table PF2.1.A (entitlements as of April 2025)',
   partTime: 'Eurostat lfsa_eppga, part-time employment, ages 20-64, 2025',
   retirement:
-    'OECD Pensions at a Glance 2025: future normal retirement age, full career from age 22 in 2024',
+    'Finnish Centre for Pensions, retirement ages 2026: general age set in law, incl. scheduled rises',
+  lifeExpectancy: 'Eurostat demo_mlexpec, life expectancy at retirement age, men and women, 2024',
+  partnerLeave: 'OECD Family Database PF2.1, Table PF2.1.B: paid leave for fathers (April 2025)',
   ageing: 'European Commission 2024 Ageing Report, hourly labour productivity growth 2022-2070',
   promotion:
     'Kauhanen & Napari (2012), ETLA DP 1244: in-firm promotion raises wages by 4% (Finnish linked data)',
@@ -149,7 +159,12 @@ export const EU: CountryDefaults = {
     `${SRC.oecdLeave}, EU average; pay rate = mean full-rate weeks (17.5) / weeks (21.5)`,
   ),
   partTime: country({ women: 0.275, men: 0.078 }, `${SRC.partTime}, EU27`),
-  retirementAge: country(66.4, `${SRC.retirement}, OECD average (men; women 65.9)`),
+  retirementAge: country(
+    66.4,
+    'OECD Pensions at a Glance 2025: average future normal retirement age (men; women 65.9)',
+  ),
+  lifeExpectancy: country(19.4, `${SRC.lifeExpectancy}, EU27 at 66`),
+  partnerLeave: country({ weeks: 13.3 }, `${SRC.partnerLeave}, EU average`),
   realWageGrowth: country(0.014, `${SRC.ageing}, EU`),
   promotionRate,
   promotionRaise,
@@ -159,6 +174,7 @@ export const EU: CountryDefaults = {
     'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Europe: employment penalty 29%',
     'Employment, not earnings: a lower bound for the earnings drop.',
   ),
+  rentCity: 'an EU capital',
   monthlyRent: country(1150, `${SRC.rent}, median of the 27 EU capitals`),
   sabbaticalYear: country(22939, `${SRC.income}, EU27`),
   twinInvestShift,
@@ -168,6 +184,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
   NL: {
     code: 'NL',
     name: 'Netherlands',
+    inName: 'the Netherlands',
     samePayGap: country(
       0.061,
       'CBS Monitor Loonverschillen 2024, private sector, corrected hourly wage gap',
@@ -178,7 +195,13 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.608, men: 0.19 }, SRC.partTime),
-    retirementAge: country(70, SRC.retirement),
+    retirementAge: country(
+      67.25,
+      SRC.retirement,
+      'Rises to 67 years and 3 months in 2028, then follows life expectancy.',
+    ),
+    lifeExpectancy: country(18.3, `${SRC.lifeExpectancy}, at 67`),
+    partnerLeave: country({ weeks: 15, paymentRate: 0.755 }, SRC.partnerLeave),
     realWageGrowth: country(0.011, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -187,6 +210,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       { drop: 0.46, years: 7 },
       'Rabaté & Rellstab (2021), CPB DP 424: earnings 46% lower 7 years after first child',
     ),
+    rentCity: 'The Hague',
     monthlyRent: country(1800, `${SRC.rent} (The Hague, no Amsterdam figure)`),
     sabbaticalYear: country(34466, SRC.income),
     twinInvestShift,
@@ -201,7 +225,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       'Real Decreto-ley 9/2025 (BOE 30 July 2025): 19 weeks per parent at 100%',
     ),
     partTime: country({ women: 0.209, men: 0.063 }, SRC.partTime),
-    retirementAge: country(65, SRC.retirement),
+    retirementAge: country(
+      67,
+      SRC.retirement,
+      '66 years 10 months in 2026, 67 from 2027. 65 with 38.5 years of contributions.',
+    ),
+    lifeExpectancy: country(20.2, `${SRC.lifeExpectancy}, at 67`),
+    partnerLeave: country(
+      { weeks: 19, paymentRate: 1 },
+      'Real Decreto-ley 9/2025: 19 weeks for each parent at 100%',
+    ),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -210,6 +243,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       { drop: 0.28, years: 10 },
       'de Quinto, Hospido & Sanz (2021), SERIEs 12: earnings 28% lower 10 years after birth',
     ),
+    rentCity: 'Madrid',
     monthlyRent: country(1300, `${SRC.rent} (Madrid)`),
     sabbaticalYear: country(20367, SRC.income),
     twinInvestShift,
@@ -221,7 +255,9 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     investedPension: country(NO_INVESTED_PENSION, `${SRC.oecdPag}: public pay-as-you-go only`),
     maternityLeave: country({ weeks: 14, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.487, men: 0.116 }, SRC.partTime),
-    retirementAge: country(67, SRC.retirement),
+    retirementAge: country(67, SRC.retirement, '66 years 4 months in 2026, rising to 67 by 2031.'),
+    lifeExpectancy: country(18.1, `${SRC.lifeExpectancy}, at 67`),
+    partnerLeave: country({ weeks: 8.7, paymentRate: 0.553 }, SRC.partnerLeave),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -230,6 +266,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       { drop: 0.61, years: 10 },
       'Kleven et al. (2019), Child Penalties Across Countries: earnings, years 5-10 after birth',
     ),
+    rentCity: 'Berlin',
     monthlyRent: country(1350, `${SRC.rent} (Berlin)`),
     sabbaticalYear: country(28891, SRC.income),
     twinInvestShift,
@@ -241,7 +278,13 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     investedPension: country(NO_INVESTED_PENSION, `${SRC.oecdPag}: public pay-as-you-go only`),
     maternityLeave: country({ weeks: 16, paymentRate: 1 }, SRC.oecdLeave),
     partTime: country({ women: 0.256, men: 0.081 }, SRC.partTime),
-    retirementAge: country(65, SRC.retirement),
+    retirementAge: country(
+      64,
+      SRC.retirement,
+      '64 for anyone born in 1969 or later. The 2025 suspension (LFSS 2026) only freezes 62 years 9 months for people born 1964-1968.',
+    ),
+    lifeExpectancy: country(22.7, `${SRC.lifeExpectancy}, at 64`),
+    partnerLeave: country({ weeks: 30.2, paymentRate: 0.256 }, SRC.partnerLeave),
     realWageGrowth: country(0.01, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -250,6 +293,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       { drop: 0.2, years: 5 },
       'Pora & Wilner (2019), Insee Analyses 48: labour earnings 20% lower 5 years after birth',
     ),
+    rentCity: 'Paris',
     monthlyRent: country(1550, `${SRC.rent} (Paris)`),
     sabbaticalYear: country(26459, SRC.income),
     twinInvestShift,
@@ -268,7 +312,13 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 21.7, paymentRate: 0.8 }, SRC.oecdLeave),
     partTime: country({ women: 0.277, men: 0.06 }, SRC.partTime),
-    retirementAge: country(70, SRC.retirement),
+    retirementAge: country(
+      67,
+      SRC.retirement,
+      'Follows life expectancy, reviewed every two years.',
+    ),
+    lifeExpectancy: country(19.7, `${SRC.lifeExpectancy}, at 67`),
+    partnerLeave: country({ weeks: 15, paymentRate: 0.393 }, SRC.partnerLeave),
     realWageGrowth: country(0.012, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -278,6 +328,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       'Casarico & Lattanzio (2021), CESifo WP 9155: 57 log points lower annual earnings 15 years after birth',
       'Compared with childless women, not fathers; 1 - e^-0.57 = 43%.',
     ),
+    rentCity: 'Rome',
     monthlyRent: country(1300, `${SRC.rent} (Rome)`),
     sabbaticalYear: country(22062, SRC.income),
     twinInvestShift,
@@ -297,7 +348,9 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     maternityLeave: country({ weeks: 26, paymentRate: 0.234 }, SRC.oecdLeave),
     partTime: country({ women: 0.265, men: 0.086 }, SRC.partTime),
-    retirementAge: country(66, SRC.retirement),
+    retirementAge: country(66, SRC.retirement, 'Flexible from 66 to 70.'),
+    lifeExpectancy: country(20.2, `${SRC.lifeExpectancy}, at 66`),
+    partnerLeave: country({ weeks: 9, paymentRate: 0.234 }, SRC.partnerLeave),
     realWageGrowth: country(0.018, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -307,6 +360,7 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       'Kleven, Landais & Leite-Mariante (2025), Child Penalty Atlas, Ireland: employment penalty 28%',
       'No earnings estimate for all Irish mothers; employment is a lower bound for the earnings drop.',
     ),
+    rentCity: 'Dublin',
     monthlyRent: country(2000, `${SRC.rent} (Dublin)`),
     sabbaticalYear: country(35138, SRC.income),
     twinInvestShift,

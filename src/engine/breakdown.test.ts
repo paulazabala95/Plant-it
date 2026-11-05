@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { COUNTRIES, GARDEN_OPTIONS } from '../data'
-import { breakdown, realLifeUnits, shapley } from './breakdown'
+import { breakdown, monthlyIncome, shapley } from './breakdown'
 import { herProfile, twinProfile, type HerInputs } from './scenarios'
 import { simulate } from './simulate'
 import type { Split } from './types'
@@ -71,12 +71,17 @@ describe('breakdown', () => {
   })
 })
 
-describe('realLifeUnits', () => {
-  it('converts an amount into years of rent and sabbatical years', () => {
-    const nl = COUNTRIES.NL
-    const amount = nl.monthlyRent.value * 12 * 3
-    const u = realLifeUnits(amount, 'NL')
-    expect(u.yearsOfRent).toBeCloseTo(3, 9)
-    expect(u.sabbaticalYears).toBeCloseTo(amount / nl.sabbaticalYear.value, 9)
+describe('monthlyIncome', () => {
+  it('pays an amount out evenly over life expectancy, still growing at the pension return', () => {
+    const years = COUNTRIES.NL.lifeExpectancy.value
+    const m = 1.025 ** (1 / 12) - 1
+    const n = Math.round(years * 12)
+    const expected = (100_000 * m) / (1 - (1 + m) ** -n)
+    expect(monthlyIncome(100_000, 'NL')).toBeCloseTo(expected, 6)
+  })
+
+  it('is more than a plain split over the months, because the rest keeps growing', () => {
+    const n = Math.round(COUNTRIES.NL.lifeExpectancy.value * 12)
+    expect(monthlyIncome(100_000, 'NL')).toBeGreaterThan(100_000 / n)
   })
 })

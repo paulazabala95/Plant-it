@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Garden } from './Garden'
+import { HowItWorks } from './HowItWorks'
 import { DEFAULT_ANSWERS, type Answers } from './answers'
 import { Onboarding } from './Onboarding'
 import { Welcome } from './Welcome'
 
-type Screen = 'welcome' | 'onboarding' | 'garden'
+type Screen = 'welcome' | 'how' | 'onboarding' | 'garden'
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('welcome')
@@ -12,11 +13,14 @@ export default function App() {
 
   return (
     <main className="app">
-      {screen === 'welcome' && <Welcome onStart={() => setScreen('onboarding')} />}
+      {screen === 'welcome' && <Welcome onStart={() => setScreen('how')} />}
+      {screen === 'how' && (
+        <HowItWorks onNext={() => setScreen('onboarding')} onBack={() => setScreen('welcome')} />
+      )}
       {screen === 'onboarding' && (
         <Onboarding
           initial={answers}
-          onBack={() => setScreen('welcome')}
+          onBack={() => setScreen('how')}
           onDone={(a) => {
             setAnswers(a)
             setScreen('garden')

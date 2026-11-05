@@ -43,8 +43,12 @@ export interface Profile {
 export interface YearPoint {
   age: number
   garden: Split
+  /** Paid into each option so far, without growth. */
+  paidIn: Split
   /** Invested pension pot (the retirement field). */
   retirement: number
+  /** Paid into the retirement field so far, without growth. */
+  retirementPaidIn: number
   total: number
   /** Total paid in so far (savings + pension), without growth. */
   contributed: number

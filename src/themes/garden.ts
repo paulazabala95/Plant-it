@@ -1,26 +1,94 @@
-// Garden theme: how engine output looks. No React, no maths on money beyond picking a stage.
-import type { GardenOption } from '../engine'
+// Garden theme: how engine output looks. No React, no maths on money.
+import type { GardenOption, Plot } from '../engine'
 
-export interface OptionLook {
-  name: string
-  short: string
-  /** Fill colour of the option's blob character. */
+export interface PlotLook {
+  /** Plain financial name, shown first. */
+  plain: string
+  /** The garden metaphor. */
+  metaphor: string
+  /** One line that explains the metaphor. */
+  meaning: string
   color: string
 }
 
-export const OPTION_LOOKS: Record<GardenOption, OptionLook> = {
-  cash: { name: 'Seed packet in a drawer', short: 'Cash', color: '#F4E3C3' },
-  greenhouse: { name: 'Greenhouse seed tray', short: 'Savings account', color: '#BFE9F2' },
-  indexFund: { name: 'Oak tree', short: 'Index fund', color: '#D4F06B' },
-  sustainableFund: { name: 'Wildflower meadow', short: 'Sustainable fund', color: '#FFB3D9' },
-  singleStocks: { name: 'Sunflowers', short: 'Single stocks', color: '#F7D55C' },
-  crypto: { name: 'Mushrooms', short: 'Crypto', color: '#FF9A5C' },
+export const PLOT_LOOKS: Record<Plot, PlotLook> = {
+  cash: {
+    plain: 'Cash',
+    metaphor: 'Seeds in a drawer',
+    meaning: 'They never sprout. Prices rise, so they slowly lose value.',
+    color: '#F4E3C3',
+  },
+  greenhouse: {
+    plain: 'Savings account',
+    metaphor: 'Greenhouse seedlings',
+    meaning: 'Safe and sheltered, but they barely grow.',
+    color: '#BFE9F2',
+  },
+  governmentBonds: {
+    plain: 'Government bonds',
+    metaphor: 'A hedge',
+    meaning: 'You lend to a country. Steady and slow, grows a little each year.',
+    color: '#CFE8D8',
+  },
+  indexFund: {
+    plain: 'Index fund or ETF',
+    metaphor: 'Oak trees',
+    meaning: 'Thousands of companies in one, at a low fee. Slow and steady, huge after decades.',
+    color: '#D4F06B',
+  },
+  activeFund: {
+    plain: 'Actively managed fund',
+    metaphor: 'Fruit bushes',
+    meaning:
+      'A manager picks companies for you. Similar to the oak, but higher fees eat the fruit.',
+    color: '#FFD3B5',
+  },
+  sustainableFund: {
+    plain: 'Sustainable fund',
+    metaphor: 'Wildflower meadow',
+    meaning: 'Grows like the oak, with greener companies.',
+    color: '#FFB3D9',
+  },
+  singleStocks: {
+    plain: 'Single stocks',
+    metaphor: 'Sunflowers',
+    meaning: 'A few shoot up, most wilt. Picking winners is hard.',
+    color: '#F7D55C',
+  },
+  lifeInsurance: {
+    plain: 'Life-insurance savings',
+    metaphor: 'Vines',
+    meaning: 'Assurance-vie or unit-linked plans. Sheltered, so they climb slowly.',
+    color: '#E6D7F7',
+  },
+  crypto: {
+    plain: 'Crypto',
+    metaphor: 'Mushrooms',
+    meaning: 'Pop up overnight. Nobody knows how long they last.',
+    color: '#FF9A5C',
+  },
+  pension: {
+    plain: 'Workplace pension',
+    metaphor: 'Fruit orchard',
+    meaning: 'Planted for you from your pay every month. You pick the fruit when you retire.',
+    color: '#C8F0C0',
+  },
 }
 
+/** Kept for onboarding chips. */
+export const OPTION_LOOKS: Record<GardenOption, PlotLook> = PLOT_LOOKS
+
 export const PEOPLE = {
-  her: { label: 'You', color: '#F4A6D7' },
-  twin: { label: 'Your twin', color: '#B9A6F5' },
+  her: { label: 'You', color: '#F4A6D7', sky: '#FBD3EC' },
+  twin: { label: 'Your twin', color: '#B9A6F5', sky: '#E3DAFC' },
 } as const
+
+/** Fruit to hang on one plant: more growth, more fruit (0 to 5). */
+export const fruitFor = (growth: number): number =>
+  growth <= 0 ? 0 : Math.min(5, Math.round(growth * 2))
+
+/** A plant looks wilted when it is worth less than what was put in. */
+export const isWilted = (growth: number): boolean => growth < 0
 
 /** 0 = seed, 4 = in full bloom. */
 export type GrowthStage = 0 | 1 | 2 | 3 | 4
@@ -33,12 +101,4 @@ export function growthStage(total: number, biggest: number): GrowthStage {
   if (share < 0.7) return 2
   if (share < 0.97) return 3
   return 4
-}
-
-export const STAGE_WORDS: Record<GrowthStage, string> = {
-  0: 'a seed',
-  1: 'a sprout',
-  2: 'a young plant',
-  3: 'growing strong',
-  4: 'in full bloom',
 }

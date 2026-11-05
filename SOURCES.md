@@ -11,16 +11,20 @@ Values flagged `eu-fallback` are used for countries without their own figure.
 | ----------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | 2.0% / year | all countries (euro area) | ECB monetary policy strategy, symmetric 2% medium-term target (2021 review, confirmed 2025). https://www.bis.org/review/r210722a.pdf |
 
-## 2. Expected real returns (after inflation) per garden option
+## 2. Expected real returns (after inflation) per garden option ✅
 
-| Option                               | Default (real, / year)                   | Status    | Source / reasoning                                                                                                                                                                                                                                                                                     |
-| ------------------------------------ | ---------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Seed packet in a drawer (cash)       | −2.0%                                    | ✅        | 0% nominal interest minus 2% inflation (row 1)                                                                                                                                                                                                                                                         |
-| Greenhouse (high-yield savings)      | −0.2%                                    | ✅        | Euro-area household deposits with agreed maturity, new business, ~1.81% nominal (Oct 2025), ECB MFI interest rate statistics. https://www.banque-france.fr/system/files/2025-12/Statistiques_relatives_taux_interet_banques_zone_euro_octobre_2025.pdf                                                 |
-| Oak tree (global index fund)         | 5.2%                                     | ✅        | World equities, annualised real return 1900–2024. UBS Global Investment Returns Yearbook 2025 (Dimson, Marsh, Staunton). https://www.jbs.cam.ac.uk/2025/report-stocks-have-far-outperformed-over-the-past-125-years/                                                                                   |
-| Wildflower meadow (sustainable fund) | 5.2%                                     | 🟡        | No consistent long-run evidence of under- or out-performance vs conventional funds (Morningstar 2020, 10-year study of 4,900 funds). Default = same as index. https://global.morningstar.com/en-gb/sustainable-investing/do-sustainable-funds-beat-their-rivals                                        |
-| Sunflowers (single stocks)           | 0.5% (proposed: typical stock ≈ T-bills) | 🟡        | Selectable in onboarding, never recommended by "her at her best" or swaps. Bessembinder (2018, JFE): 58% of US stocks underperformed T-bills over their lifetime; 4% of stocks created all net wealth. https://wpcarey.asu.edu/department-finance/faculty-research/do-stocks-outperform-treasury-bills |
-| Mushrooms (crypto)                   | 0.0%                                     | ✅ agreed | No credible long-run expected-return estimate exists; editable, labelled as such.                                                                                                                                                                                                                      |
+| Option (plant)                              | Real / year | Source                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cash (seeds in a drawer)                    | −2.0%       | 0% nominal minus 2% inflation                                                                                                                                                                                                                                                                                                      |
+| Savings account / term deposit (greenhouse) | −0.2%       | ECB MFI interest rate statistics, euro-area deposits ~1.81% nominal (Oct 2025). https://www.banque-france.fr/system/files/2025-12/Statistiques_relatives_taux_interet_banques_zone_euro_octobre_2025.pdf                                                                                                                           |
+| Government bonds (hedge)                    | 1.7%        | UBS Global Investment Returns Yearbook 2025: world bonds, real, 1900–2024. https://www.jbs.cam.ac.uk/2025/report-stocks-have-far-outperformed-over-the-past-125-years/                                                                                                                                                             |
+| Index fund or ETF (oak trees)               | 5.0%        | World equities 5.2% real (same Yearbook) minus 0.21% ETF ongoing cost (ESMA, _Costs and Performance of EU Retail Investment Products 2025_, MR-CP.14, equity UCITS 2024). https://www.esma.europa.eu/sites/default/files/2026-03/ESMA50-1949966494-4065_Market_Report_-_Costs_and_Performance_of_EU_Retail_Investment_Products.pdf |
+| Actively managed fund (fruit bushes)        | 3.9%        | World equities 5.2% minus 1.28% active equity ongoing cost (ESMA 2025, MR-CP.14). Context: 10-year net returns 7.6% active vs 9.3% ETFs.                                                                                                                                                                                           |
+| Sustainable fund or ETF (wildflowers)       | 5.0% 🟡     | Same as index; Morningstar (2020) finds no consistent long-run gap. https://global.morningstar.com/en-gb/sustainable-investing/do-sustainable-funds-beat-their-rivals                                                                                                                                                              |
+| Single stocks (sunflowers)                  | 0.5% 🟡     | Typical stock ≈ T-bills: Bessembinder (2018, JFE). Never recommended. https://wpcarey.asu.edu/department-finance/faculty-research/do-stocks-outperform-treasury-bills                                                                                                                                                              |
+| Crypto (mushrooms)                          | 0.0%        | No credible long-run estimate; labelled as such.                                                                                                                                                                                                                                                                                   |
+| Life-insurance savings (vines)              | 0.6%        | ACPR, _Revalorisation 2025_ (Analyses et synthèses 180): French euro funds 2.63% net of fees, minus 2% inflation. https://acpr.banque-france.fr/system/files/2026-06/20260630_AS180_revalorisation_2025.pdf                                                                                                                        |
+| Workplace pension (fruit orchard)           | 2.5%        | See 7b.                                                                                                                                                                                                                                                                                                                            |
 
 ## 3. Trading behaviour ✅
 
@@ -169,14 +173,29 @@ invested**. State pay-as-you-go pensions are excluded from both gardens and note
 
 Source PDF: https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/11/pensions-at-a-glance-2025_76510fe4/e40274c1-en.pdf
 
-## 7b. Retirement age and pension growth ✅
+## 7b. Retirement age, years of retirement and pension growth ✅
 
-- Retirement age (both twins): OECD _Pensions at a Glance 2025_, future normal retirement age for a
-  full career from age 22 starting in 2024 (OECD data explorer DF_DPS, FRPLF22, same for men and
-  women): NL 70, IT 70, DE 67, IE 66, ES 65, FR 65. EU fallback: OECD average 66.4 (men; women 65.9).
-- Retirement field growth: **2.5% real**, OECD _Pensions at a Glance 2025_ base-case net real rate
-  of return on funded defined-contribution pensions (same report also assumes 1.25% real wage growth).
-  https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/11/pensions-at-a-glance-2025_76510fe4/e40274c1-en.pdf
+- Retirement age (both twins), owner decision: the general age **set in law, including rises
+  already legislated**. Finnish Centre for Pensions, _Retirement ages_ comparison (updated to 2026).
+  https://www.etk.fi/en/international-affairs/international-comparisons/retirement-ages/
+
+  | NL                                                   | ES        | DE        | FR              | IT                             | IE                  |
+  | ---------------------------------------------------- | --------- | --------- | --------------- | ------------------------------ | ------------------- |
+  | 67 y 3 m (from 2028, then linked to life expectancy) | 67 (2027) | 67 (2031) | 64 (born 1969+) | 67 (linked to life expectancy) | 66 (flexible 66–70) |
+
+  France: the LFSS 2026 (law no. 2025-1403, art. 105) freezes 62 y 9 m only for people born
+  1964–1968; anyone born 1969 or later retires at 64. https://www.ofce.fr/blog2024/fr/2026/20260129_MD/
+  EU fallback: OECD average future normal retirement age 66.4 (men; women 65.9), PaG 2025.
+
+- Years of retirement: Eurostat demo_mlexpec, life expectancy at the retirement age, both sexes,
+  2024: NL 18.3 (at 67), ES 20.2 (67), DE 18.1 (67), FR 22.7 (64), IT 19.7 (67), IE 20.2 (66),
+  EU 19.4 (66). Same figure for both twins.
+- Monthly income in retirement (replaces "years of rent", owner decision): the amount paid out in
+  equal monthly instalments over those years, the rest still growing at the pension return.
+- Retirement field growth: **2.5% real**, OECD _Pensions at a Glance 2025_ base case.
+- Partner's paid leave (baby planning card): OECD PF2.1 Table PF2.1.B, total paid leave earmarked
+  for fathers: NL 15 wks at 75.5%, DE 8.7 at 55.3%, FR 30.2 at 25.6%, IT 15 at 39.3%, IE 9 at
+  23.4%, EU 13.3 wks; ES 19 wks at 100% (Real Decreto-ley 9/2025).
 
 ## 8. Real wage growth ✅
 

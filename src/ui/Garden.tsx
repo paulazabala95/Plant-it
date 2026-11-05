@@ -1,28 +1,50 @@
 import { useMemo, useState } from 'react'
 import {
   atHerBest,
-  breakdown,
   defaultsFor,
+  eventImpact,
   gardenGap,
   herProfile,
   levelTheField,
-  realLifeUnits,
+  monthlyIncome,
+  plantCounts,
+  plantUnit,
   simulate,
   splitFromWeights,
   twinProfile,
   type HerInputs,
   type LifeEvent,
-  type Timeline,
+  type Profile,
 } from '../engine'
-import { PEOPLE, STAGE_WORDS, growthStage } from '../themes'
 import { Assumptions } from './Assumptions'
-import { Blob, LifeIcon } from './Blob'
-import { Breakdown } from './Breakdown'
-import { years } from './format'
+import { LifeIcon } from './Blob'
+import { BabyPlanning } from './BabyPlanning'
+import { WhySection } from './WhySection'
+import { ageLabel, compactMoney, money } from './format'
 import type { Answers } from './answers'
+import { Scene } from './Scene'
 
-type Scenario = 'today' | 'best' | 'level'
+type Scenario = 'today' | 'best' | 'fair'
 type Kind = LifeEvent['kind']
+
+const SCENARIOS: { key: Scenario; label: string; explain: string }[] = [
+  {
+    key: 'today',
+    label: 'Your path',
+    explain: 'You keep saving and investing exactly as you do today.',
+  },
+  {
+    key: 'best',
+    label: 'Your best path',
+    explain:
+      'Same pay, same savings. You keep 10% as a cash buffer and plant the rest in index or sustainable funds.',
+  },
+  {
+    key: 'fair',
+    label: 'A fair world',
+    explain: 'No pay gap, no motherhood penalty, the same promotions. You both use your best path.',
+  },
+]
 
 const CARDS: { kind: Kind; title: string; text: string; color: string }[] = [
   { kind: 'child', title: 'A baby', text: 'You become a parent', color: 'pink' },
@@ -37,13 +59,26 @@ const describe = (e: LifeEvent) =>
       ? `${Math.round(e.hoursShare * 5)} days a week, ${e.fromAge}–${e.toAge}`
       : `Break at ${e.fromAge}, ${e.years} yr`
 
+/** Signs to show in a garden at an age, from the events in that person's profile. */
+const signsAt = (p: Profile, age: number) => {
+  const signs: string[] = []
+  for (const e of p.events) {
+    if (e.kind === 'careerBreak' && age >= e.fromAge && age < e.fromAge + e.years)
+      signs.push('Break: no new seeds')
+    if (e.kind === 'partTime' && age >= e.fromAge && age < e.toAge) signs.push('Part-time')
+  }
+  return signs
+}
+const babyAt = (p: Profile, age: number) => p.events.some((e) => e.kind === 'child' && age >= e.age)
+
 export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => void }) {
   const [scenario, setScenario] = useState<Scenario>('today')
   const [events, setEvents] = useState<LifeEvent[]>([])
   const [picking, setPicking] = useState<Kind | null>(null)
   const [days, setDays] = useState(4)
   const [length, setLength] = useState(2)
-  const [sheet, setSheet] = useState<'why' | 'assumptions' | null>(null)
+  const [step, setStep] = useState<number | null>(null)
+  const [showNumbers, setShowNumbers] = useState(false)
 
   const inputs: HerInputs = useMemo(
     () => ({
@@ -61,33 +96,39 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const country = defaultsFor(answers.country)
   const retirementAge = country.retirementAge.value
 
-  const { her, twin } = useMemo((): { her: Timeline; twin: Timeline } => {
-    if (scenario === 'level') {
+  const { herP, twinP } = useMemo((): { herP: Profile; twinP: Profile } => {
+    if (scenario === 'fair') {
       const l = levelTheField(inputs)
-      return { her: simulate(l.her), twin: simulate(l.twin) }
+      return { herP: l.her, twinP: l.twin }
     }
-    const herP = scenario === 'best' ? atHerBest(inputs) : herProfile(inputs)
-    return { her: simulate(herP), twin: simulate(twinProfile(inputs)) }
+    return {
+      herP: scenario === 'best' ? atHerBest(inputs) : herProfile(inputs),
+      twinP: twinProfile(inputs),
+    }
   }, [inputs, scenario])
+  const her = useMemo(() => simulate(herP), [herP])
+  const twin = useMemo(() => simulate(twinP), [twinP])
+
+  const last = her.points.length - 1
+  const i = step === null || step > last ? last : step
+  const herNow = her.points[i]
+  const twinNow = twin.points[i]
+  const unit = plantUnit(Math.max(her.final.total, twin.final.total))
 
   const gap = gardenGap(her, twin)
-  const rentYears = realLifeUnits(Math.abs(gap), answers.country).yearsOfRent
-  const biggest = Math.max(her.final.total, twin.final.total)
-  const herStage = growthStage(her.final.total, biggest)
-  const twinStage = growthStage(twin.final.total, biggest)
-  const level = rentYears < 0.05
-
+  const perMonth = monthlyIncome(Math.abs(gap), answers.country)
+  const level = Math.abs(gap) < 500
+  const atAge = `At ${ageLabel(retirementAge)}, the retirement age in ${country.inName ?? country.name}`
   const headline = level
     ? 'You end exactly level.'
     : gap > 0
-      ? `His garden ends ${years(rentYears)} of rent bigger.`
-      : `Yours ends ${years(rentYears)} of rent bigger.`
-  const sub =
-    scenario === 'today'
-      ? 'Same life, same job. Tap "Why?" to see what makes the difference.'
-      : scenario === 'best'
-        ? 'Same pay, same savings: just a small cash buffer and the rest planted in funds.'
-        : 'Remove every structural gap and use your best mix. This is what is left.'
+      ? `His garden is worth ${compactMoney(gap)} more than yours.`
+      : `Your garden is worth ${compactMoney(-gap)} more than his.`
+  const income = level
+    ? 'With the gaps removed and your own choices, you retire with the same garden as him.'
+    : gap > 0
+      ? `That's about ${money(perMonth)} more for him every month of his retirement.`
+      : `That's about ${money(perMonth)} more for you every month of your retirement.`
 
   const ages = Array.from(
     { length: Math.floor(retirementAge) - answers.age },
@@ -109,10 +150,11 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     setEvents([...events, e])
     setPicking(null)
   }
-  const usedAges = new Set(events.map((e) => (e.kind === 'child' ? e.age : e.fromAge)))
+  const markers = new Set(events.map((e) => (e.kind === 'child' ? e.age : e.fromAge)))
+  const thinking = picking === 'child' || events.some((e) => e.kind === 'child')
 
   return (
-    <>
+    <div className="page">
       <div className="row between">
         <span className="display" style={{ fontSize: 22 }}>
           PLANT IT
@@ -123,145 +165,176 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       </div>
 
       <div className="tabs" role="tablist">
-        {(
-          [
-            ['today', 'You today'],
-            ['best', 'At your best'],
-            ['level', 'Level the field'],
-          ] as const
-        ).map(([key, label]) => (
+        {SCENARIOS.map((s) => (
           <button
-            key={key}
+            key={s.key}
             role="tab"
-            aria-selected={scenario === key}
-            className={`tab ${scenario === key ? 'on' : ''}`}
-            onClick={() => setScenario(key)}
+            aria-selected={scenario === s.key}
+            className={`tab ${scenario === s.key ? 'on' : ''}`}
+            onClick={() => setScenario(s.key)}
           >
-            {label}
+            {s.label}
           </button>
         ))}
       </div>
+      <p className="explain">{SCENARIOS.find((s) => s.key === scenario)!.explain}</p>
 
       <section className="card yellow stack">
-        <p className="eyebrow">At {retirementAge}</p>
+        <p className="eyebrow">{atAge}</p>
         <h1 className="display l">{headline}</h1>
-        <p>{sub}</p>
+        <p style={{ fontSize: 17 }}>{income}</p>
+        <p className="muted" style={{ fontSize: 13 }}>
+          All amounts in today's money, after inflation.
+        </p>
       </section>
 
-      <div className="gardens">
-        <div className="garden pink">
-          <Blob color="#FFF8EE" shape="drop" stage={herStage} title="Your garden" />
-          <b>{PEOPLE.her.label}</b>
-          <span className="muted" style={{ fontSize: 13 }}>
-            {STAGE_WORDS[herStage]}
-          </span>
-        </div>
-        <div className="garden lilac">
-          <Blob color="#FFF8EE" shape="bean" stage={twinStage} title="Your twin's garden" />
-          <b>{PEOPLE.twin.label}</b>
-          <span className="muted" style={{ fontSize: 13 }}>
-            {STAGE_WORDS[twinStage]}
-          </span>
-        </div>
+      <div className="scenes">
+        {(
+          [
+            ['her', 'Your garden', herNow, herP, 'pink'],
+            ['twin', "Your twin's garden", twinNow, twinP, 'lilac'],
+          ] as const
+        ).map(([who, title, point, profile, color]) => (
+          <section key={who} className={`scene-card ${color}`}>
+            <div className="row between" style={{ padding: '12px 16px' }}>
+              <b>{title}</b>
+              <span className="display" style={{ fontSize: 20 }}>
+                {compactMoney(point.total)}
+              </span>
+            </div>
+            <Scene
+              person={who}
+              counts={plantCounts(point, unit)}
+              signs={signsAt(profile, point.age)}
+              baby={babyAt(profile, point.age)}
+            />
+          </section>
+        ))}
       </div>
 
-      <div className="row">
-        <button className="btn grow" onClick={() => setSheet('why')}>
-          Why?
-        </button>
-        <button className="btn light grow" onClick={() => setSheet('assumptions')}>
-          Assumptions
-        </button>
-      </div>
-
-      <section className="stack">
+      <section className="card white stack">
         <div className="row between">
-          <h2 className="display m">Life happens</h2>
-          <span className="eyebrow muted">tap a card, then an age</span>
+          <b>Watch them grow</b>
+          <span className="display" style={{ fontSize: 20 }}>
+            Age {Math.floor(herNow.age)}
+          </span>
         </div>
-        <div className="scroller">
-          {CARDS.map((c) => (
-            <button
-              key={c.kind}
-              className={`life-card ${c.color} ${picking === c.kind ? 'on' : ''}`}
-              onClick={() => setPicking(picking === c.kind ? null : c.kind)}
-            >
-              <LifeIcon kind={c.kind} />
-              <b>{c.title}</b>
-              <span style={{ fontSize: 13 }}>{c.text}</span>
-            </button>
-          ))}
+        <input
+          type="range"
+          min={0}
+          max={last}
+          value={i}
+          onChange={(e) => setStep(Number(e.target.value))}
+          aria-label="Age"
+        />
+        <div className="row between muted" style={{ fontSize: 13 }}>
+          <span>Today, {answers.age}</span>
+          <span>1 plant ≈ {compactMoney(unit)} · fruit = growth</span>
+          <span>{Math.floor(retirementAge)}</span>
         </div>
+      </section>
 
-        {picking === 'partTime' && (
-          <div className="chips">
-            {[3, 4].map((d) => (
+      <div className="split">
+        <section className="stack">
+          <div>
+            <h2 className="display m">Life happens</h2>
+            <p className="muted">
+              Tap a card, then the age it happens. See what it does to your garden.
+            </p>
+          </div>
+          <div className="scroller">
+            {CARDS.map((c) => (
               <button
-                key={d}
-                className={`chip ${days === d ? 'on' : ''}`}
-                onClick={() => setDays(d)}
+                key={c.kind}
+                className={`life-card ${c.color} ${picking === c.kind ? 'on' : ''}`}
+                onClick={() => setPicking(picking === c.kind ? null : c.kind)}
               >
-                {d} days a week
+                <LifeIcon kind={c.kind} />
+                <b>{c.title}</b>
+                <span style={{ fontSize: 13 }}>{c.text}</span>
               </button>
             ))}
           </div>
-        )}
-        {(picking === 'partTime' || picking === 'careerBreak') && (
-          <div className="chips">
-            {(picking === 'partTime' ? [2, 5, 10] : [1, 2, 3]).map((y) => (
+          {picking === 'partTime' && (
+            <div className="chips">
+              {[3, 4].map((d) => (
+                <button
+                  key={d}
+                  className={`chip ${days === d ? 'on' : ''}`}
+                  onClick={() => setDays(d)}
+                >
+                  {d} days a week
+                </button>
+              ))}
+            </div>
+          )}
+          {(picking === 'partTime' || picking === 'careerBreak') && (
+            <div className="chips">
+              {(picking === 'partTime' ? [2, 5, 10] : [1, 2, 3]).map((y) => (
+                <button
+                  key={y}
+                  className={`chip ${length === y ? 'on' : ''}`}
+                  onClick={() => setLength(y)}
+                >
+                  {y} {y === 1 ? 'year' : 'years'}
+                </button>
+              ))}
+            </div>
+          )}
+          {picking && (
+            <div className="ages" aria-label="Pick an age">
+              {ages.map((age) => (
+                <button
+                  key={age}
+                  className={`age ${markers.has(age) ? 'has' : ''}`}
+                  onClick={() => place(age)}
+                >
+                  {age}
+                </button>
+              ))}
+            </div>
+          )}
+          {events.map((e, k) => (
+            <div key={k} className="assumption row between" style={{ flexDirection: 'row' }}>
+              <div>
+                <b>{describe(e)}</b>
+                <p style={{ fontSize: 14 }}>
+                  Your garden ends <b>{compactMoney(eventImpact(inputs, e))}</b> smaller at{' '}
+                  {Math.floor(retirementAge)}
+                  {e.kind === 'child' ? '. His stays the same.' : '.'}
+                </p>
+              </div>
               <button
-                key={y}
-                className={`chip ${length === y ? 'on' : ''}`}
-                onClick={() => setLength(y)}
-              >
-                {y} {y === 1 ? 'year' : 'years'}
-              </button>
-            ))}
-          </div>
-        )}
-        {picking && (
-          <div className="ages" aria-label="Pick an age">
-            {ages.map((age) => (
-              <button
-                key={age}
-                className={`age ${usedAges.has(age) ? 'has' : ''}`}
-                onClick={() => place(age)}
-              >
-                {age}
-              </button>
-            ))}
-          </div>
-        )}
-        {events.length > 0 && (
-          <div className="placed">
-            {events.map((e, k) => (
-              <button
-                key={k}
                 className="chip"
                 onClick={() => setEvents(events.filter((_, j) => j !== k))}
                 aria-label={`Remove ${describe(e)}`}
               >
-                {describe(e)} ✕
+                ✕
               </button>
-            ))}
-          </div>
+            </div>
+          ))}
+          {thinking && <BabyPlanning country={answers.country} />}
+        </section>
+
+        <WhySection inputs={inputs} />
+      </div>
+
+      <section className="stack">
+        <div className="row between">
+          <h2 className="display m">Where do these numbers come from?</h2>
+        </div>
+        <p className="muted">
+          Every number is from a public source: national statistics offices, Eurostat, the OECD and
+          academic studies. Each one says whether it is for {country.inName ?? country.name} or an
+          EU average.
+        </p>
+        <button className="btn light" onClick={() => setShowNumbers(!showNumbers)}>
+          {showNumbers ? 'Hide the numbers' : 'Show all the numbers'}
+        </button>
+        {showNumbers && (
+          <Assumptions country={answers.country} italyTfrToFund={answers.italyTfrToFund} />
         )}
       </section>
-
-      {sheet === 'why' && (
-        <Breakdown
-          result={breakdown(inputs)}
-          country={answers.country}
-          onClose={() => setSheet(null)}
-        />
-      )}
-      {sheet === 'assumptions' && (
-        <Assumptions
-          country={answers.country}
-          italyTfrToFund={answers.italyTfrToFund}
-          onClose={() => setSheet(null)}
-        />
-      )}
-    </>
+    </div>
   )
 }
