@@ -89,6 +89,39 @@ describe('breakdown', () => {
   })
 })
 
+describe('investingVsTwin', () => {
+  const inputs: HerInputs = {
+    age: 30,
+    country: 'NL',
+    grossSalary: 40_000,
+    savingsRate: 0.1,
+    split: { ...zeros, greenhouse: 1 },
+    startYear: 2026,
+  }
+
+  it('compares her invested garden with the typical-man twin, and the twin with her mix', async () => {
+    const { investingVsTwin } = await import('./breakdown')
+    const { atHerBest } = await import('./scenarios')
+    const best = atHerBest(inputs)
+    const her = simulate(best).final
+    const twin = simulate(twinProfile(inputs)).final
+    const twinLikeHer = simulate({ ...twinProfile(inputs), split: best.split }).final
+    const r = investingVsTwin(inputs)
+    expect(r.herPaidIn).toBeCloseTo(her.contributed, 6)
+    expect(r.twinPaidIn).toBeCloseTo(twin.contributed, 6)
+    expect(r.herTotal).toBeCloseTo(her.total, 6)
+    expect(r.twinTotal).toBeCloseTo(twin.total, 6)
+    expect(r.twinLikeHer).toBeCloseTo(twinLikeHer.total, 6)
+  })
+
+  it('shows the gaps are still there: he puts in more, and with her mix he ends ahead', async () => {
+    const { investingVsTwin } = await import('./breakdown')
+    const r = investingVsTwin(inputs)
+    expect(r.twinPaidIn).toBeGreaterThan(r.herPaidIn)
+    expect(r.twinLikeHer).toBeGreaterThan(r.herTotal)
+  })
+})
+
 describe('monthlyIncome', () => {
   it('pays an amount out evenly over life expectancy, still growing at the pension return', () => {
     const years = COUNTRIES.NL.lifeExpectancy.value

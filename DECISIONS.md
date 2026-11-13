@@ -41,6 +41,13 @@ Product and modelling decisions agreed with the project owner. Read before chang
   Tapping a tab stops the automatic story. "A fair world" is no longer a tab: it is one line in
   "Why is his garden bigger?" (how much bigger her garden would be with no pay gap, motherhood
   penalty or promotion gap). The engine keeps `levelTheField` and its test.
+- Investing result (owner decision): a "Why do you end up ahead of him?" card. She puts in less
+  (pay and promotion gaps), he keeps most of his savings in a savings account like a typical man in
+  her country, and invested money grows faster. It ends with what the twin would have if he
+  invested like her (`investingVsTwin`): the gaps remain, investing outgrows them.
+- Garden key (owner decision): a "What do the plants mean?" button ("Garden key" on phones) opens
+  a key with golden seeds, only the plants in the two gardens, fruit, wilting, the sky and the euro
+  value of one plant.
 
 ## Data
 

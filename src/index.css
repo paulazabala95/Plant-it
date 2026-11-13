@@ -865,3 +865,147 @@ input[type='range'] {
   font-size: 14px;
   align-self: center;
 }
+
+/* Top bar links */
+.bar > .bar-links {
+  display: flex;
+  height: auto;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Investing: why you end up ahead */
+.ahead {
+  text-align: left;
+  background: #f3f7ea;
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin-top: 4px;
+}
+.ahead h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.ahead ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+.ahead-note {
+  margin: 8px 0 0;
+  font-size: 14px;
+  padding-top: 8px;
+  border-top: 1px solid #dfe8cc;
+}
+
+/* Garden key */
+.key-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(47, 66, 32, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+.garden-key {
+  background: #fff;
+  border-radius: 26px;
+  padding: 20px 22px;
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100svh - 32px);
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+  animation: rise 0.3s ease;
+}
+.key-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.key-head h2 {
+  margin: 0;
+  font-size: 22px;
+}
+.key-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.key-list li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.key-list li > svg {
+  justify-self: center;
+}
+.key-list b {
+  display: block;
+  font-size: 15px;
+}
+.key-list span {
+  font-size: 14px;
+}
+.key-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  justify-self: center;
+}
+.key-dot.seed {
+  width: 14px;
+  height: 14px;
+  background: var(--pollen, #f6c94d);
+  box-shadow: 0 0 10px #f6c94d;
+}
+.key-dot.fruit {
+  background:
+    radial-gradient(circle at 35% 35%, #e4568b 0 6px, transparent 7px),
+    radial-gradient(circle at 65% 60%, #e4568b 0 6px, transparent 7px), #5d7b3d;
+}
+.key-dot.wilt {
+  background: #b8a07a;
+  transform: rotate(25deg);
+  border-radius: 50% 50% 50% 0;
+}
+.key-dot.sky {
+  background: linear-gradient(90deg, #a7c7e4, #f6c94d, #e4568b);
+}
+.key-dot.count {
+  background: #e6f0da;
+  border: 2px dashed #5d7b3d;
+}
+
+@media (max-width: 640px) {
+  .bar > .bar-links {
+    gap: 12px;
+    font-size: 13px;
+  }
+  .ahead ul,
+  .ahead-note {
+    font-size: 13px;
+  }
+}
+
+/* Keep the page at phone width: grid children may shrink below their content. */
+.below > * {
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .life-card {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 10px;
+  }
+}

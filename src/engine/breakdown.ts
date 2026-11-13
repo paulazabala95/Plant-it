@@ -4,8 +4,10 @@ import {
   CHOICE_FACTORS,
   STRUCTURAL_FACTORS,
   applyFactors,
+  atHerBest,
   defaultsFor,
   herProfile,
+  twinProfile,
   type Factor,
   type HerInputs,
 } from './scenarios'
@@ -64,6 +66,33 @@ export function fairWorldGain(inputs: HerInputs): number {
   return (
     simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.total - simulate(her).final.total
   )
+}
+
+export interface InvestingVsTwin {
+  /** Money she puts in over her career (savings and invested pension), today's money. */
+  herPaidIn: number
+  twinPaidIn: number
+  /** Her garden at retirement when she invests ("her at her best"). */
+  herTotal: number
+  /** The typical-man twin's garden at retirement. */
+  twinTotal: number
+  /** The twin's garden if he invested with her mix: the structural gaps stay. */
+  twinLikeHer: number
+}
+
+/** Why she can end ahead of the typical-man twin when she invests, and why the gaps remain. */
+export function investingVsTwin(inputs: HerInputs): InvestingVsTwin {
+  const best = atHerBest(inputs)
+  const twinP = twinProfile(inputs)
+  const her = simulate(best).final
+  const twin = simulate(twinP).final
+  return {
+    herPaidIn: her.contributed,
+    twinPaidIn: twin.contributed,
+    herTotal: her.total,
+    twinTotal: twin.total,
+    twinLikeHer: simulate({ ...twinP, split: best.split }).final.total,
+  }
 }
 
 /** Splits the gap between her and her twin into structural factors and her own choices. */

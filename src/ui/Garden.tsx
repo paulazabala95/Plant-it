@@ -8,6 +8,7 @@ import {
   gardenGap,
   herProfile,
   investedShare,
+  investingVsTwin,
   notInvesting,
   monthlyIncome,
   plantCounts,
@@ -21,12 +22,15 @@ import {
   type Factor,
   type HerInputs,
   type LifeEvent,
+  type Plot,
   type Profile,
 } from '../engine'
+import { REAL_RETURNS } from '../data'
 import { PALETTE, lookAtAge } from '../themes'
 import { Assumptions } from './Assumptions'
 import { LifeIcon } from './art'
 import { BabyPlanning } from './BabyPlanning'
+import { GardenKey } from './GardenKey'
 import { WhySection } from './WhySection'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
@@ -102,6 +106,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const [playing, setPlaying] = useState(true)
   const [phase, setPhase] = useState<Phase>('growing')
   const [showNumbers, setShowNumbers] = useState(false)
+  const [showKey, setShowKey] = useState(false)
 
   const inputs: HerInputs = useMemo(
     () => ({
@@ -133,6 +138,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const twin = useMemo(() => simulate(twinP), [twinP])
   const why = useMemo(() => breakdown({ ...inputs, split: herP.split }), [inputs, herP])
   const without = useMemo(() => simulate(notInvesting(inputs)), [inputs])
+  const vsTwin = useMemo(() => investingVsTwin(inputs), [inputs])
   const last = her.points.length - 1
 
   // Replay the time-lapse whenever the scenario or the life events change.
@@ -141,7 +147,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     setPhase('growing')
     setPlaying(true)
   }
-  useEffect(replay, [scenario, events])
+  useEffect(replay, [events])
 
   useEffect(() => {
     if (!playing) return
@@ -163,13 +169,23 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   // Story: after the "Not investing" result, replant the same money invested.
   useEffect(() => {
     if (!story || scenario !== 'none' || phase !== 'result') return
-    const t = setTimeout(() => setScenario('investing'), 5000)
+    const t = setTimeout(() => {
+      setScenario('investing')
+      setStep(0)
+      setPhase('growing')
+      setPlaying(true)
+    }, 5000)
     return () => clearTimeout(t)
   }, [story, scenario, phase])
 
+  // Reset the time-lapse in the same update, so the old result never flashes.
+  function changeScenario(key: Scenario) {
+    setScenario(key)
+    replay()
+  }
   const pickTab = (key: Scenario) => {
     setStory(false)
-    setScenario(key)
+    changeScenario(key)
   }
 
   const i = Math.min(step, last)
@@ -180,6 +196,11 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const unit = plantUnit(Math.max(her.final.total, twin.final.total), 42)
   const herCounts = plantCounts(herNow, unit)
   const twinCounts = plantCounts(twinNow, unit)
+  const plots = [
+    ...new Set<Plot>(
+      [...plantCounts(her.final, unit), ...plantCounts(twin.final, unit)].map((k) => k.plot),
+    ),
+  ]
   const gap = gardenGap(her, twin)
   const perMonth = monthlyIncome(Math.abs(gap), answers.country)
 
@@ -368,13 +389,48 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     </div>
   )
 
+  // Investing: why she can end ahead of a twin who never faced the gaps.
+  const twinInSavings = twinP.split.cash + twinP.split.greenhouse
+  const aheadCard = gap < 0 && (
+    <div className="ahead">
+      <h3>Why do you end up ahead of him?</h3>
+      <ul>
+        <li>
+          You put in less: <b>{compactMoney(vsTwin.herPaidIn)}</b> vs his{' '}
+          <b>{compactMoney(vsTwin.twinPaidIn)}</b>, because of the gaps in pay and promotions
+          {events.length > 0 ? ' and your life events' : ''}.
+        </li>
+        <li>
+          He keeps <b>{pct(twinInSavings)}</b> of his savings in a savings account, like a typical
+          man in {c.inName ?? c.name}. You invest <b>{pct(investedShare(herP.split))}</b>.
+        </li>
+        <li>
+          Invested money grows about <b>{pct(REAL_RETURNS.indexFund)}</b> a year above prices. A
+          savings account doesn't keep up.
+        </li>
+      </ul>
+      {vsTwin.twinLikeHer > vsTwin.herTotal && (
+        <p className="ahead-note">
+          If he invested like you, he'd end with <b>{compactMoney(vsTwin.twinLikeHer)}</b>, still{' '}
+          {compactMoney(vsTwin.twinLikeHer - vsTwin.herTotal)} ahead. Investing doesn't remove the
+          gaps, it outgrows them.
+        </p>
+      )}
+    </div>
+  )
+
   const hudTop = (
     <div className="hud-top">
       <div className="bar">
         <span className="logo">Plant it</span>
-        <button className="link" onClick={onEdit}>
-          Edit answers
-        </button>
+        <span className="bar-links">
+          <button className="link" onClick={() => setShowKey(true)}>
+            {phone ? 'Garden key' : 'What do the plants mean?'}
+          </button>
+          <button className="link" onClick={onEdit}>
+            Edit answers
+          </button>
+        </span>
       </div>
       <div className="tabs" role="tablist">
         {SCENARIOS.map((s) => (
@@ -383,7 +439,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
             role="tab"
             aria-selected={scenario === s.key}
             className={`tab ${scenario === s.key ? 'on' : ''}`}
-            onClick={() => setScenario(s.key)}
+            onClick={() => pickTab(s.key)}
           >
             {s.label}
           </button>
@@ -406,6 +462,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           </p>
           <h1>{headline}</h1>
           <p>{sub}</p>
+          {scenario === 'investing' && aheadCard}
           {scenario !== 'investing' && gap > 0 && (
             <button className="link" onClick={() => setPhase('reveal')}>
               Why is his garden bigger?
@@ -472,6 +529,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           {hudBottom}
         </section>
       )}
+
+      {showKey && <GardenKey plots={plots} unit={unit} onClose={() => setShowKey(false)} />}
 
       <div className="below">
         <section className="panel stack">
