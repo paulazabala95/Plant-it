@@ -273,7 +273,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       tags.push({
         at: answers.age,
         title: 'Pay gap',
-        text: `Same job, but he's paid ${pct(c.samePayGap.value, 1)} more. More seeds every month, from day one.`,
+        text: `Same job, but you're paid ${pct(c.samePayGap.value, 1)} less. Fewer seeds every month, from day one.`,
         sources: src.payGap,
       })
     if (f.investMix > 0)

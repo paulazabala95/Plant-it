@@ -73,6 +73,9 @@ Product and modelling decisions agreed with the project owner. Read before chang
   leave at the country's payment rate, then the child penalty only for the years the study
   measured (NL 7, FR 5, DE/ES/IE/EU 10, IT 15), counted from the first birth; pay is full again
   afterwards. The lost savings still cost compound growth until retirement (owner decision).
+- Baby and part-time never stack (owner decision): the child penalty studies measure earnings,
+  which already include mothers working fewer hours. In the years a part-time card overlaps the
+  child penalty, the bigger of the two cuts applies, not both.
 - The twin lives the same life with the male value of every factor: pay without the same-role gap,
   male promotion rate, fatherhood premium instead of the child penalty, no maternity leave, no
   part-time or career-break cards (they are the structural gaps), the 3.8 pp invest shift and the

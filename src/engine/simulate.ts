@@ -13,7 +13,8 @@ export const pensionRate = (steps: PensionStep[], year: number): number =>
 /**
  * Share of full-time pay earned in month `m` (months since startAge).
  * Career break: nothing. Part-time: hours share. Maternity leave: payment rate.
- * From the first child (after leave) for childPenaltyYears: 1 - child penalty.
+ * From the first child (after leave) for childPenaltyYears: 1 - child penalty, or the part-time
+ * share if that is the bigger cut (they never stack).
  */
 const earningsFactor = (p: Profile, m: number): number => {
   const monthOf = (age: number) => Math.round((age - p.startAge) * 12)
@@ -36,9 +37,12 @@ const earningsFactor = (p: Profile, m: number): number => {
   const onLeave = children.some((c) => m >= monthOf(c.age) && m < monthOf(c.age) + leaveMonths)
   if (onLeave) return factor * p.maternityLeave.paymentRate
 
+  // The child penalty already includes mothers working fewer hours, so it never stacks with a
+  // part-time card: in the years they overlap, the bigger cut applies.
   const firstChild = Math.min(...children.map((c) => monthOf(c.age)))
   if (m >= firstChild && m < firstChild + Math.round(p.childPenaltyYears * 12)) {
-    factor *= 1 - p.childPenalty
+    const afterPenalty = 1 - p.childPenalty
+    return p.childPenalty >= 0 ? Math.min(factor, afterPenalty) : factor * afterPenalty
   }
 
   return factor

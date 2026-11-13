@@ -129,6 +129,21 @@ describe('simulate', () => {
     expect(t.points.map((p) => p.contributed)).toEqual([0, 600, 1200, 2400])
   })
 
+  it('uses the bigger cut, not both, when part-time overlaps the child penalty', () => {
+    // The child penalty already includes mothers working fewer hours, so the two never stack.
+    const child = { kind: 'child', age: 30 } as const
+    const partTime = { kind: 'partTime', fromAge: 30, toAge: 31, hoursShare: 0.8 } as const
+    // Penalty 46% is the bigger cut: pay is 54% of full pay, as with the baby alone.
+    const bigPenalty = run({ childPenalty: 0.46, events: [child, partTime] })
+    expect(bigPenalty.final.total).toBeCloseTo(1200 * 0.54, 6)
+    // Part-time at 60% of hours is the bigger cut when the penalty is only 10%.
+    const smallPenalty = run({
+      childPenalty: 0.1,
+      events: [child, { ...partTime, hoursShare: 0.6 }],
+    })
+    expect(smallPenalty.final.total).toBeCloseTo(1200 * 0.6, 6)
+  })
+
   it('applies the child penalty once, from the first child', () => {
     const t = run({
       retirementAge: 33,
