@@ -455,12 +455,20 @@ input[type='range'] {
 .tag.choice b {
   color: var(--leaf);
 }
-.hud-bottom {
+.hud-dock {
   position: absolute;
   bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
   width: min(760px, calc(100% - 32px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hud-bottom {
+  width: 100%;
+  box-sizing: border-box;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 24px;
@@ -714,7 +722,7 @@ input[type='range'] {
     height: auto;
     display: block;
   }
-  .garden-page .hud-bottom {
+  .garden-page .hud-dock {
     position: fixed;
     bottom: 12px;
     z-index: 5;
@@ -866,61 +874,39 @@ input[type='range'] {
   align-self: center;
 }
 
-/* Top bar links */
-.bar > .bar-links {
-  display: flex;
-  height: auto;
-  gap: 18px;
-  align-items: center;
-}
-
-/* Investing: why you end up ahead */
-.ahead {
-  text-align: left;
-  background: #f3f7ea;
-  border-radius: 18px;
-  padding: 12px 16px;
-  margin-top: 4px;
-}
-.ahead h3 {
-  font-size: 17px;
-  margin: 0 0 6px;
-}
-.ahead ul {
-  margin: 0;
-  padding-left: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
-}
-.ahead-note {
-  margin: 8px 0 0;
-  font-size: 14px;
-  padding-top: 8px;
-  border-top: 1px solid #dfe8cc;
-}
-
 /* Garden key */
-.key-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(47, 66, 32, 0.35);
+.key-box {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+}
+.key-box.closed {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px 6px 8px;
+  font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 16px;
-  z-index: 50;
+  gap: 8px;
 }
-.garden-key {
-  background: #fff;
-  border-radius: 26px;
-  padding: 20px 22px;
+.key-icons {
+  display: flex;
+  background: #f3f7ea;
+  border-radius: 999px;
+  padding: 0 6px;
+}
+.key-chevron {
+  font-size: 12px;
+}
+.key-box.open {
   width: 100%;
-  max-width: 520px;
-  max-height: calc(100svh - 32px);
+  box-sizing: border-box;
+  border-radius: 24px;
+  padding: 14px 18px;
+  max-height: min(52vh, 460px);
   overflow-y: auto;
-  box-shadow: var(--shadow);
   animation: rise 0.3s ease;
 }
 .key-head {
@@ -931,19 +917,19 @@ input[type='range'] {
 }
 .key-head h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 19px;
 }
 .key-list {
   list-style: none;
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 10px 18px;
 }
 .key-list li {
   display: grid;
-  grid-template-columns: 44px 1fr;
+  grid-template-columns: 36px 1fr;
   gap: 12px;
   align-items: center;
 }
@@ -952,10 +938,10 @@ input[type='range'] {
 }
 .key-list b {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
 }
 .key-list span {
-  font-size: 14px;
+  font-size: 13px;
 }
 .key-dot {
   width: 30px;
@@ -988,10 +974,6 @@ input[type='range'] {
 }
 
 @media (max-width: 640px) {
-  .bar > .bar-links {
-    gap: 12px;
-    font-size: 13px;
-  }
   .ahead ul,
   .ahead-note {
     font-size: 13px;
@@ -1008,4 +990,15 @@ input[type='range'] {
     min-width: 0;
     padding: 12px 10px;
   }
+}
+
+.tag-source {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.source .eu {
+  font-style: normal;
+  font-weight: 600;
 }

@@ -9,10 +9,12 @@ import {
   type HerInputs,
 } from '../engine'
 import { compactMoney, money, pct } from './format'
+import { factorSources } from './sources'
 
 export function WhySection({ inputs }: { inputs: HerInputs }) {
   const r = breakdown(inputs)
   const c = defaultsFor(inputs.country)
+  const sources = factorSources(c)
   const explain: Record<Factor, { name: string; text: string; kind: 'structural' | 'choice' }> = {
     payGap: {
       name: 'Same-role pay gap',
@@ -96,6 +98,20 @@ export function WhySection({ inputs }: { inputs: HerInputs }) {
                   />
                 </div>
                 <p style={{ fontSize: 14 }}>{explain[f].text}</p>
+                {sources[f] ? (
+                  <p className="source">
+                    Source:{' '}
+                    {sources[f].map((s, k) => (
+                      <span key={k}>
+                        {k > 0 && '; '}
+                        {s.text}
+                        {s.euAverage && <em className="eu"> (same for every country)</em>}
+                      </span>
+                    ))}
+                  </p>
+                ) : (
+                  <p className="source">From the life event you added.</p>
+                )}
               </div>
             ))}
           </div>

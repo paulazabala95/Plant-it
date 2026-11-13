@@ -31,6 +31,7 @@ import { Assumptions } from './Assumptions'
 import { LifeIcon } from './art'
 import { BabyPlanning } from './BabyPlanning'
 import { GardenKey } from './GardenKey'
+import { factorSources, shortSource, type SourceLine } from './sources'
 import { WhySection } from './WhySection'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
@@ -106,7 +107,6 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const [playing, setPlaying] = useState(true)
   const [phase, setPhase] = useState<Phase>('growing')
   const [showNumbers, setShowNumbers] = useState(false)
-  const [showKey, setShowKey] = useState(false)
 
   const inputs: HerInputs = useMemo(
     () => ({
@@ -258,14 +258,22 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   }
 
   // "Why" tags, shown while the gardens grow on your path.
-  const tags: { at: number; title: string; text: string; choice?: boolean }[] = []
+  const tags: {
+    at: number
+    title: string
+    text: string
+    choice?: boolean
+    sources?: SourceLine[]
+  }[] = []
   if (scenario !== 'investing') {
     const f = why.factors
+    const src = factorSources(c)
     if (f.payGap > 0)
       tags.push({
         at: answers.age,
         title: 'Pay gap',
         text: `Same job, but he's paid ${pct(c.samePayGap.value, 1)} more. More seeds every month, from day one.`,
+        sources: src.payGap,
       })
     if (f.investMix > 0)
       tags.push({
@@ -273,18 +281,21 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         title: 'Investing',
         text: `He invests ${pct(investedShare(twinP.split))} of his savings, like a typical man in ${c.inName ?? c.name}. You invest ${pct(investedShare(herP.split))}.`,
         choice: true,
+        sources: src.investMix,
       })
     if (child && f.childPenalty > 0)
       tags.push({
         at: child.age,
         title: 'Motherhood penalty',
         text: `Baby at ${child.age}: your pay drops ${pct(c.childPenalty.value.drop)} for ${c.childPenalty.value.years} years. His doesn't change.`,
+        sources: src.childPenalty,
       })
     if (f.promotions > 0 && twinPromos.length)
       tags.push({
         at: twinPromos[0],
         title: 'Promotions',
         text: `Each year he's more likely to be promoted (${pct(c.promotionRate.value.men, 1)} vs ${pct(c.promotionRate.value.women, 1)}).`,
+        sources: src.promotions,
       })
     for (const e of herP.events) {
       if (e.kind === 'partTime')
@@ -423,14 +434,9 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     <div className="hud-top">
       <div className="bar">
         <span className="logo">Plant it</span>
-        <span className="bar-links">
-          <button className="link" onClick={() => setShowKey(true)}>
-            {phone ? 'Garden key' : 'What do the plants mean?'}
-          </button>
-          <button className="link" onClick={onEdit}>
-            Edit answers
-          </button>
-        </span>
+        <button className="link" onClick={onEdit}>
+          Edit answers
+        </button>
       </div>
       <div className="tabs" role="tablist">
         {SCENARIOS.map((s) => (
@@ -484,30 +490,36 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         <div key={t.title} className={`tag ${t.choice ? 'choice' : ''}`}>
           <b>{t.title}</b>
           {t.text}
+          {t.sources && (
+            <span className="tag-source">Source: {t.sources.map(shortSource).join('; ')}</span>
+          )}
         </div>
       ))}
     </div>
   )
 
   const hudBottom = (
-    <div className="hud-bottom">
-      <button className="play" onClick={replay} aria-label="Replay the time-lapse">
-        ↻
-      </button>
-      <span className="age">{Math.floor(age)}</span>
-      <input
-        type="range"
-        min={0}
-        max={last}
-        value={i}
-        onChange={(e) => {
-          const v = Number(e.target.value)
-          setPlaying(false)
-          setStep(v)
-          setPhase(v === last ? 'result' : 'growing')
-        }}
-        aria-label="Age"
-      />
+    <div className="hud-dock">
+      <GardenKey plots={plots} unit={unit} />
+      <div className="hud-bottom">
+        <button className="play" onClick={replay} aria-label="Replay the time-lapse">
+          ↻
+        </button>
+        <span className="age">{Math.floor(age)}</span>
+        <input
+          type="range"
+          min={0}
+          max={last}
+          value={i}
+          onChange={(e) => {
+            const v = Number(e.target.value)
+            setPlaying(false)
+            setStep(v)
+            setPhase(v === last ? 'result' : 'growing')
+          }}
+          aria-label="Age"
+        />
+      </div>
     </div>
   )
 
@@ -529,8 +541,6 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           {hudBottom}
         </section>
       )}
-
-      {showKey && <GardenKey plots={plots} unit={unit} onClose={() => setShowKey(false)} />}
 
       <div className="below">
         <section className="panel stack">

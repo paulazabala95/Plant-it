@@ -45,9 +45,13 @@ Product and modelling decisions agreed with the project owner. Read before chang
   (pay and promotion gaps), he keeps most of his savings in a savings account like a typical man in
   her country, and invested money grows faster. It ends with what the twin would have if he
   invested like her (`investingVsTwin`): the gaps remain, investing outgrows them.
-- Garden key (owner decision): a "What do the plants mean?" button ("Garden key" on phones) opens
-  a key with golden seeds, only the plants in the two gardens, fruit, wilting, the sky and the euro
-  value of one plant.
+- Garden key (owner decision): a small folded "What do the plants mean?" box inside the garden,
+  just above the age slider; tap to open it in place. It lists golden seeds, only the plants in the
+  two gardens, fruit, wilting, the sky and the euro value of one plant.
+- Sources in context (owner decision): every row of "Why is his garden bigger?" ends with its
+  source (marked "same for every country" when not national), and the boxes that appear while the
+  garden grows show a short source line. Part-time and career breaks come from her own life
+  events, so they say so instead.
 
 ## Data
 
