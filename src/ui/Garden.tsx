@@ -395,7 +395,10 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           <strong>{pct(why.choiceShare)}</strong>your choices
         </div>
       </div>
-      <button className="link" onClick={() => setPhase('result')}>
+      <button className="ask back" onClick={() => setPhase('result')}>
+        <span className="ask-badge" aria-hidden>
+          ←
+        </span>
         See the result
       </button>
     </div>
@@ -441,7 +444,10 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           remove the gaps, it outgrows them.
         </p>
       )}
-      <button className="link" onClick={() => setPhase('result')}>
+      <button className="ask back" onClick={() => setPhase('result')}>
+        <span className="ask-badge" aria-hidden>
+          ←
+        </span>
         See the result
       </button>
     </div>
@@ -451,8 +457,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     <div className="hud-top">
       <div className="bar">
         <span className="logo">Plant it</span>
-        <button className="link" onClick={onEdit}>
-          Edit answers
+        <button className="edit-pill" onClick={onEdit}>
+          <span aria-hidden>✎</span> Edit answers
         </button>
       </div>
       <div className="tabs" role="tablist">
@@ -486,13 +492,25 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           <h1>{headline}</h1>
           <p>{sub}</p>
           {scenario === 'investing' && gap < 0 && (
-            <button className="link" onClick={() => setPhase('reveal')}>
+            <button className="ask green" onClick={() => setPhase('reveal')}>
+              <span className="ask-badge" aria-hidden>
+                ?
+              </span>
               Why do you end up ahead of him?
+              <span className="ask-arrow" aria-hidden>
+                →
+              </span>
             </button>
           )}
           {scenario !== 'investing' && gap > 0 && (
-            <button className="link" onClick={() => setPhase('reveal')}>
+            <button className="ask pink" onClick={() => setPhase('reveal')}>
+              <span className="ask-badge" aria-hidden>
+                ?
+              </span>
               Why is his garden bigger?
+              <span className="ask-arrow" aria-hidden>
+                →
+              </span>
             </button>
           )}
           {scenario !== 'investing' && !story && (

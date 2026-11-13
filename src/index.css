@@ -1055,3 +1055,88 @@ input[type='range'] {
   font-style: normal;
   font-weight: 600;
 }
+
+/* Questions in the garden: soft pills, never underlined */
+.ask {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 16px 7px 7px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.ask:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 66, 32, 0.14);
+}
+.ask:focus-visible {
+  outline: 3px solid var(--pollen);
+  outline-offset: 2px;
+}
+.ask-badge {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+.ask-arrow {
+  font-size: 16px;
+  transition: transform 0.15s ease;
+}
+.ask:hover .ask-arrow {
+  transform: translateX(3px);
+}
+.ask.pink {
+  background: #fbe3ec;
+}
+.ask.pink .ask-badge {
+  background: var(--petal);
+}
+.ask.green {
+  background: #eaf3d6;
+}
+.ask.green .ask-badge {
+  background: var(--leaf);
+}
+.ask.back {
+  background: #f3eef1;
+  padding-right: 18px;
+  margin-top: 4px;
+}
+.ask.back .ask-badge {
+  background: var(--ink);
+}
+
+.edit-pill {
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  box-shadow: 0 4px 12px rgba(47, 66, 32, 0.12);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.edit-pill:hover {
+  background: #fff;
+}

@@ -134,6 +134,9 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- Questions on the garden screen are soft pills, never underlined links (owner decision): a round
+  "?" badge, the question, an arrow; blush on "Not investing", light green on "Investing";
+  "See the result" uses the same pill with a back arrow; "Edit answers" is a small white pill.
 
 - Life event cards: tap a card, then tap an age (drag on desktop is a nice-to-have).
 - Real-life unit (owner decision, replaces years of rent and sabbatical years): **extra money a month
