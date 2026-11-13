@@ -58,6 +58,14 @@ export interface Breakdown {
   choiceShare: number
 }
 
+/** How much bigger her garden ends with every structural gap removed (her own choices kept). */
+export function fairWorldGain(inputs: HerInputs): number {
+  const her = herProfile(inputs)
+  return (
+    simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.total - simulate(her).final.total
+  )
+}
+
 /** Splits the gap between her and her twin into structural factors and her own choices. */
 export function breakdown(inputs: HerInputs): Breakdown {
   const her = herProfile(inputs)

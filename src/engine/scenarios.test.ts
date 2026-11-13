@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { COUNTRIES, GARDEN_OPTIONS, TWIN_TRADING_DRAG } from '../data'
+import { COUNTRIES, GARDEN_OPTIONS, PASSIVE_FUND_SHARE, TWIN_TRADING_DRAG } from '../data'
 import {
   FACTORS,
   STRUCTURAL_FACTORS,
@@ -7,6 +7,7 @@ import {
   bestSplit,
   herProfile,
   levelTheField,
+  notInvesting,
   twinProfile,
   type HerInputs,
 } from './scenarios'
@@ -66,17 +67,20 @@ describe('twinProfile', () => {
     expect(twin.events).toEqual([{ kind: 'child', age: 33 }])
   })
 
-  it('moves the invest shift from cash to the index fund', () => {
+  it('invests like a typical man in her country, whatever she picks', () => {
+    const m = nl.typicalMix.value
     const shift = nl.twinInvestShift.value
-    expect(twin.split.cash).toBeCloseTo(0.6 - shift, 9)
-    expect(twin.split.indexFund).toBeCloseTo(0.2 + shift, 9)
-    expect(twin.split.singleStocks).toBe(0.2)
+    expect(twin.split.greenhouse).toBeCloseTo(m.deposits - shift, 9)
+    expect(twin.split.indexFund).toBeCloseTo(m.mutualFunds * PASSIVE_FUND_SHARE + shift, 9)
+    expect(twin.split.activeFund).toBeCloseTo(m.mutualFunds * (1 - PASSIVE_FUND_SHARE), 9)
+    expect(twin.split.singleStocks).toBeCloseTo(m.listedShares, 9)
+    expect(twin.split.lifeInsurance).toBeCloseTo(m.lifeAndPension, 9)
+    const other = twinProfile({ ...inputs, split: { ...zeros, crypto: 1 } })
+    expect(other.split).toEqual(twin.split)
   })
 
-  it('never moves more than her cash', () => {
-    const t = twinProfile({ ...inputs, split: { ...zeros, cash: 0.01, greenhouse: 0.99 } })
-    expect(t.split.cash).toBe(0)
-    expect(t.split.indexFund).toBeCloseTo(0.01, 9)
+  it('has a split that sums to 1', () => {
+    expect(Object.values(twin.split).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 9)
   })
 
   it('pays the overtrading drag', () => {
@@ -139,5 +143,21 @@ describe('onboarding helpers', () => {
     expect(s.cash).toBe(0.25)
     expect(s.indexFund).toBe(0.75)
     expect(splitFromWeights({}).cash).toBe(1)
+  })
+})
+
+describe('not investing', () => {
+  it('keeps all her savings in a savings account, everything else the same', () => {
+    const p = notInvesting(inputs)
+    expect(p).toEqual({ ...herProfile(inputs), split: { ...zeros, greenhouse: 1 } })
+  })
+})
+
+describe('investedShare', () => {
+  it('counts everything except cash and savings accounts', async () => {
+    const { investedShare } = await import('./scenarios')
+    expect(
+      investedShare({ ...zeros, cash: 0.2, greenhouse: 0.3, indexFund: 0.4, crypto: 0.1 }),
+    ).toBeCloseTo(0.5, 12)
   })
 })

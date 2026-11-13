@@ -110,9 +110,20 @@ Notes:
 
 ## 6. Twin's investment mix ✅
 
-Rule (see DECISIONS.md): the twin starts from her savings split and moves **3.8%** of his savings
-from the seed packet (cash) to the oak tree (index fund), never more than her cash. Same value for
-every country (`eu-fallback`).
+Rule (see DECISIONS.md): the twin is the typical man in her country. Three sources, combined in
+`typicalManSplit` (src/engine/scenarios.ts):
+
+1. **Typical household mix** (`country`): ECB HFCS 2023 wave, Statistical Tables (June 2026),
+   Table D3, shares of financial asset types in total financial assets; "other" excluded and the
+   rest renormalised. Deposits → savings account, mutual funds → funds, bonds → government bonds,
+   listed shares → single stocks, voluntary pension and whole life insurance → life-insurance
+   savings. EU = euro area.
+   https://www.ecb.europa.eu/home/pdf/research/hfcn/HFCS_Statistical_Tables_Wave_2023_June_2026.pdf
+2. **Index vs active funds** (`eu-fallback`): passive funds and ETFs were **41%** of equity UCITS
+   at 4Q24 (ESMA, _Costs and Performance of EU Retail Investment Products 2025_), so 41% of mutual
+   funds go to the index fund and 59% to active funds.
+3. **Men's extra investing** (`eu-fallback`): **3.8%** of his savings move from the savings account
+   to the index fund, never more than his deposits (below).
 
 Source: Darvas & Ruer (2025), _Gender wealth inequality in the European Union: a distributional
 perspective_, Bruegel Working Paper 26/2025, Table 5. ECB HFCS **2021** (wave 4), 22 EU countries,

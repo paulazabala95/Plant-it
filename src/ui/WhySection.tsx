@@ -1,4 +1,13 @@
-import { breakdown, defaultsFor, monthlyIncome, type Factor, type HerInputs } from '../engine'
+import {
+  breakdown,
+  defaultsFor,
+  fairWorldGain,
+  investedShare,
+  monthlyIncome,
+  typicalManSplit,
+  type Factor,
+  type HerInputs,
+} from '../engine'
 import { compactMoney, money, pct } from './format'
 
 export function WhySection({ inputs }: { inputs: HerInputs }) {
@@ -31,8 +40,11 @@ export function WhySection({ inputs }: { inputs: HerInputs }) {
       kind: 'structural',
     },
     investMix: {
-      name: 'Investing less',
-      text: `With the same income and job, men are ${pct(c.twinInvestShift.value, 1)} points more likely to invest, so he plants a bit more in funds.`,
+      name: r.factors.investMix >= 0 ? 'Investing less' : 'You invest more',
+      text:
+        r.factors.investMix >= 0
+          ? `He invests ${pct(investedShare(typicalManSplit(inputs.country)))} of his savings, like a typical man in ${c.inName ?? c.name}. You invest ${pct(investedShare(inputs.split))}.`
+          : `You invest more of your savings than a typical man in ${c.inName ?? c.name}, so this shrinks the gap.`,
       kind: 'choice',
     },
     tradingDrag: {
@@ -87,6 +99,12 @@ export function WhySection({ inputs }: { inputs: HerInputs }) {
               </div>
             ))}
           </div>
+          {fairWorldGain(inputs) > 500 && (
+            <p className="note">
+              <b>In a fair world</b>, with no pay gap, no motherhood penalty and the same
+              promotions, your garden would end {compactMoney(fairWorldGain(inputs))} bigger.
+            </p>
+          )}
           <p className="muted" style={{ fontSize: 13 }}>
             Each share is averaged over every order the differences could be added, so they add up
             to the whole gap.

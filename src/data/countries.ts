@@ -46,6 +46,15 @@ export interface ChildPenalty {
   years: number
 }
 
+/** Typical household financial assets (shares of financial assets, 'other' left out). */
+export interface HouseholdMix {
+  deposits: number
+  mutualFunds: number
+  bonds: number
+  listedShares: number
+  lifeAndPension: number
+}
+
 /** Yearly probability of being promoted. */
 export interface PromotionRate {
   women: number
@@ -98,6 +107,8 @@ export interface CountryDefaults {
    * the like-for-like gender gap in holding shares, funds or bonds (see DECISIONS.md).
    */
   twinInvestShift: Sourced<number>
+  /** Typical savings mix in the country; the twin's starting point (see DECISIONS.md). */
+  typicalMix: Sourced<HouseholdMix>
 }
 
 const SRC = {
@@ -110,6 +121,7 @@ const SRC = {
     'Finnish Centre for Pensions, retirement ages 2026: general age set in law, incl. scheduled rises',
   lifeExpectancy: 'Eurostat demo_mlexpec, life expectancy at retirement age, men and women, 2024',
   partnerLeave: 'OECD Family Database PF2.1, Table PF2.1.B: paid leave for fathers (April 2025)',
+  hfcs: 'ECB Household Finance and Consumption Survey 2023, Table D3: typical household financial assets',
   tax: 'OECD Taxing Wages 2025: net personal average tax rate, single, no children, 67/100/167% of average wage',
   ageing: 'European Commission 2024 Ageing Report, hourly labour productivity growth 2022-2070',
   promotion:
@@ -196,6 +208,10 @@ export const EU: CountryDefaults = {
   monthlyRent: country(1150, `${SRC.rent}, median of the 27 EU capitals`),
   sabbaticalYear: country(22939, `${SRC.income}, EU27`),
   twinInvestShift,
+  typicalMix: country(
+    { deposits: 0.499, mutualFunds: 0.15, bonds: 0.034, listedShares: 0.11, lifeAndPension: 0.207 },
+    `${SRC.hfcs}, euro area`,
+  ),
 }
 
 export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
@@ -240,6 +256,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(1800, `${SRC.rent} (The Hague, no Amsterdam figure)`),
     sabbaticalYear: country(34466, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.684,
+        mutualFunds: 0.173,
+        bonds: 0.0,
+        listedShares: 0.061,
+        lifeAndPension: 0.082,
+      },
+      SRC.hfcs,
+    ),
   },
   ES: {
     code: 'ES',
@@ -281,6 +307,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(1300, `${SRC.rent} (Madrid)`),
     sabbaticalYear: country(20367, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.604,
+        mutualFunds: 0.163,
+        bonds: 0.01,
+        listedShares: 0.11,
+        lifeAndPension: 0.113,
+      },
+      SRC.hfcs,
+    ),
   },
   DE: {
     code: 'DE',
@@ -312,6 +348,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(1350, `${SRC.rent} (Berlin)`),
     sabbaticalYear: country(28891, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.444,
+        mutualFunds: 0.17,
+        bonds: 0.037,
+        listedShares: 0.136,
+        lifeAndPension: 0.213,
+      },
+      SRC.hfcs,
+    ),
   },
   FR: {
     code: 'FR',
@@ -347,6 +393,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(1550, `${SRC.rent} (Paris)`),
     sabbaticalYear: country(26459, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.431,
+        mutualFunds: 0.097,
+        bonds: 0.004,
+        listedShares: 0.093,
+        lifeAndPension: 0.375,
+      },
+      SRC.hfcs,
+    ),
   },
   IT: {
     code: 'IT',
@@ -390,6 +446,16 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(1300, `${SRC.rent} (Rome)`),
     sabbaticalYear: country(22062, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.519,
+        mutualFunds: 0.138,
+        bonds: 0.136,
+        listedShares: 0.129,
+        lifeAndPension: 0.078,
+      },
+      SRC.hfcs,
+    ),
   },
   IE: {
     code: 'IE',
@@ -430,5 +496,15 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     monthlyRent: country(2000, `${SRC.rent} (Dublin)`),
     sabbaticalYear: country(35138, SRC.income),
     twinInvestShift,
+    typicalMix: country(
+      {
+        deposits: 0.45,
+        mutualFunds: 0.099,
+        bonds: 0.025,
+        listedShares: 0.099,
+        lifeAndPension: 0.326,
+      },
+      SRC.hfcs,
+    ),
   },
 }

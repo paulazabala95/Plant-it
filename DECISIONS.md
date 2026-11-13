@@ -27,11 +27,20 @@ Product and modelling decisions agreed with the project owner. Read before chang
 - Italy is the one exception to "no country-specific rules": onboarding asks Italian users one
   yes/no question, whether their TFR goes to a pension fund. Yes: 7.41% of pay is invested
   (1/13.5, Codice civile art. 2120). No: 0% (TFR kept with the employer is not invested).
-- Twin's investment mix: he starts from her savings split and moves 3.8% of his savings from cash
-  to the index fund, never more than her cash. 3.8 pp = like-for-like gender gap in holding risky
-  assets (singles, same income, education, job; Bruegel 2025, HFCS 2021). Same for every country.
-  Additive, so the twin still invests a little when she invests nothing. Replaces the 2010
-  per-country gaps (6–9 pp), which were older and not like-for-like.
+- Twin's investment mix (owner decision, replaces "he starts from her split"): the twin is a
+  fixed benchmark, the typical man in her country, and never copies her answers. His mix starts
+  from the typical household's financial assets in her country (ECB HFCS 2023, Table D3; "other"
+  excluded, renormalised); mutual funds are split 41% index / 59% active (ESMA 2025: passive funds
+  and ETFs were 41% of equity funds); then 3.8% of his savings move from the savings account to the
+  index fund (single men vs single women holding risky assets, like-for-like; Bruegel 2025,
+  HFCS 2021). Listed shares count as single stocks, so his overtrading drag applies to them.
+- Story (owner decision, main goal: show women why they need to invest): the garden opens on "Not
+  investing" (all her savings in a savings account) against the typical-man twin, plays the
+  reveal, then automatically replays as "Investing" (her at her best: the same euros a month,
+  invested). Tabs: "Not investing", "Your mix today", "Investing", each explained in one line.
+  Tapping a tab stops the automatic story. "A fair world" is no longer a tab: it is one line in
+  "Why is his garden bigger?" (how much bigger her garden would be with no pay gap, motherhood
+  penalty or promotion gap). The engine keeps `levelTheField` and its test.
 
 ## Data
 
@@ -110,7 +119,7 @@ or crypto.
 - Garden: one drawn scene per twin; plants per option from the engine (one plant per round euro
   unit, at least one if anything is there), fruit = growth, wilted sunflowers when worth less than
   paid in; an age slider to watch both grow; life events show in the scene and each card says what
-  it costs. Tabs: "Your path", "Your best path", "A fair world", each explained in one line.
+  it costs. Tabs: see "Story" above.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.

@@ -53,12 +53,19 @@ describe('breakdown', () => {
     expect(b.structural + b.choice).toBeCloseTo(gap, 6)
   })
 
+  it('counts her choices against his: investing more than him shrinks the gap', () => {
+    const investor = breakdown({ ...inputs, split: { ...zeros, indexFund: 1 } })
+    expect(investor.factors.investMix).toBeLessThan(0)
+    const saver = breakdown({ ...inputs, split: { ...zeros, greenhouse: 1 } })
+    expect(saver.factors.investMix).toBeGreaterThan(0)
+  })
+
   it('gives zero to cards she did not place', () => {
     expect(b.factors.partTime).toBe(0)
   })
 
-  it('charges no overtrading when she holds no single stocks or crypto', () => {
-    expect(b.factors.tradingDrag).toBe(0)
+  it('charges his overtrading on the single stocks he holds', () => {
+    expect(b.factors.tradingDrag).toBeLessThan(0)
   })
 
   it('shows overtrading costs the twin, not her, on single stocks', () => {
@@ -68,6 +75,17 @@ describe('breakdown', () => {
 
   it('reports shares of the gap that sum to 100%', () => {
     expect(b.structuralShare + b.choiceShare).toBeCloseTo(1, 9)
+  })
+
+  describe('fairWorldGain', () => {
+    it('is how much bigger her garden ends without the structural gaps', async () => {
+      const { fairWorldGain } = await import('./breakdown')
+      const { applyFactors, STRUCTURAL_FACTORS } = await import('./scenarios')
+      const her = herProfile(inputs)
+      const fair = simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.total
+      expect(fairWorldGain(inputs)).toBeCloseTo(fair - simulate(her).final.total, 6)
+      expect(fairWorldGain(inputs)).toBeGreaterThan(0)
+    })
   })
 })
 

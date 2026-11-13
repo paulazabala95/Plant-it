@@ -27,7 +27,7 @@ ESLint (`no-restricted-imports`) enforces the engine and theme boundaries.
 - The engine is pure functions: inputs in, timeline out. Deterministic, no randomness,
   no `Date.now()`.
 - Monthly compounding. All values the user sees are in today's money (inflation-adjusted).
-- Every scenario (her today, her at her best, twin, level the field, swaps) is computed by the
+- Every scenario (not investing, her today, her at her best, typical-man twin, level the field) is computed by the
   engine from inputs. Nothing is hardcoded in the UI.
 - The theme maps engine output to visuals (plant type, growth stage, season). A new theme must
   be addable without touching the engine.

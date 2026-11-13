@@ -2,6 +2,8 @@ import {
   COUNTRIES,
   DEFAULT_CASH_BUFFER,
   EU,
+  GARDEN_OPTIONS,
+  PASSIVE_FUND_SHARE,
   PENSION_REAL_RETURN,
   REAL_RETURNS,
   RECOMMENDED_OPTIONS,
@@ -61,10 +63,23 @@ export function herProfile(inputs: HerInputs): Profile {
   }
 }
 
-/** Her split with the twin's invest shift moved from cash to the index fund. */
-export function twinSplit(split: Split, shift: number): Split {
-  const moved = Math.min(shift, split.cash)
-  return { ...split, cash: split.cash - moved, indexFund: split.indexFund + moved }
+/**
+ * How a typical man in the country saves: the country's typical household mix (ECB HFCS) with
+ * funds split into index and active (ESMA passive share), then the men's investing gap moved
+ * from deposits into index funds. The same whatever she picks.
+ */
+export function typicalManSplit(region: Region): Split {
+  const c = defaultsFor(region)
+  const m = c.typicalMix.value
+  const shift = Math.min(c.twinInvestShift.value, m.deposits)
+  const split = Object.fromEntries(GARDEN_OPTIONS.map((o) => [o, 0])) as Split
+  split.greenhouse = m.deposits - shift
+  split.indexFund = m.mutualFunds * PASSIVE_FUND_SHARE + shift
+  split.activeFund = m.mutualFunds * (1 - PASSIVE_FUND_SHARE)
+  split.governmentBonds = m.bonds
+  split.singleStocks = m.listedShares
+  split.lifeInsurance = m.lifeAndPension
+  return split
 }
 
 /**
@@ -112,10 +127,7 @@ export const FACTORS = {
     events: p.events.filter((e) => e.kind !== 'careerBreak'),
   }),
   // Choice
-  investMix: (p: Profile, i: HerInputs): Profile => ({
-    ...p,
-    split: twinSplit(i.split, defaultsFor(i.country).twinInvestShift.value),
-  }),
+  investMix: (p: Profile, i: HerInputs): Profile => ({ ...p, split: typicalManSplit(i.country) }),
   tradingDrag: (p: Profile): Profile => ({ ...p, tradingDrag: TWIN_TRADING_DRAG }),
 }
 
@@ -137,6 +149,12 @@ export const applyFactors = (p: Profile, factors: Iterable<Factor>, i: HerInputs
 /** Her identical male twin: her life with every factor switched to the male value. */
 export const twinProfile = (inputs: HerInputs): Profile =>
   applyFactors(herProfile(inputs), ALL_FACTORS, inputs)
+
+/** Not investing: the same savings, all kept in a savings account. */
+export const notInvesting = (inputs: HerInputs): Profile => ({
+  ...herProfile(inputs),
+  split: { ...(Object.fromEntries(GARDEN_OPTIONS.map((o) => [o, 0])) as Split), greenhouse: 1 },
+})
 
 /** Her at her best: same pay and savings rate, better mix, no trading drag. */
 export const atHerBest = (inputs: HerInputs): Profile => ({
@@ -163,3 +181,6 @@ export function splitFromWeights(weights: Partial<Split>): Split {
   for (const [o, w] of Object.entries(weights)) split[o as keyof Split] = (w ?? 0) / total
   return split
 }
+
+/** Share of savings that is invested (everything except cash and savings accounts). */
+export const investedShare = (split: Split): number => 1 - split.cash - split.greenhouse

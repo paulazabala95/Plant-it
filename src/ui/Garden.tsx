@@ -7,7 +7,8 @@ import {
   eventImpact,
   gardenGap,
   herProfile,
-  levelTheField,
+  investedShare,
+  notInvesting,
   monthlyIncome,
   plantCounts,
   plantUnit,
@@ -32,26 +33,25 @@ import { ageLabel, compactMoney, money, pct } from './format'
 import type { Answers } from './answers'
 import { useIsPhone } from './useIsPhone'
 
-type Scenario = 'today' | 'best' | 'fair'
+type Scenario = 'none' | 'today' | 'investing'
 type Phase = 'growing' | 'reveal' | 'result'
 type Kind = LifeEvent['kind']
 
 const SCENARIOS: { key: Scenario; label: string; explain: string }[] = [
   {
+    key: 'none',
+    label: 'Not investing',
+    explain: 'All your savings stay in a savings account. Nothing is invested.',
+  },
+  {
     key: 'today',
-    label: 'Your path',
-    explain: 'You keep saving and investing exactly as you do today.',
+    label: 'Your mix today',
+    explain: 'Your savings split exactly as you told us.',
   },
   {
-    key: 'best',
-    label: 'Your best path',
-    explain:
-      'Same pay, same savings. A 10% cash buffer, the rest planted in index or sustainable funds.',
-  },
-  {
-    key: 'fair',
-    label: 'A fair world',
-    explain: 'No pay gap, no motherhood penalty, the same promotions. You both use your best path.',
+    key: 'investing',
+    label: 'Investing',
+    explain: 'The same money: a 10% cash buffer, the rest in index or sustainable funds.',
   },
 ]
 
@@ -91,7 +91,9 @@ const STEP_MS = 300
 
 export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => void }) {
   const phone = useIsPhone()
-  const [scenario, setScenario] = useState<Scenario>('today')
+  const [scenario, setScenario] = useState<Scenario>('none')
+  // The story plays "Not investing" then "Investing" until she picks a tab herself.
+  const [story, setStory] = useState(true)
   const [events, setEvents] = useState<LifeEvent[]>([])
   const [picking, setPicking] = useState<Kind | null>(null)
   const [days, setDays] = useState(4)
@@ -117,19 +119,20 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const c = defaultsFor(answers.country)
   const retirementAge = c.retirementAge.value
 
-  const { herP, twinP } = useMemo((): { herP: Profile; twinP: Profile } => {
-    if (scenario === 'fair') {
-      const l = levelTheField(inputs)
-      return { herP: l.her, twinP: l.twin }
-    }
-    return {
-      herP: scenario === 'best' ? atHerBest(inputs) : herProfile(inputs),
-      twinP: twinProfile(inputs),
-    }
-  }, [inputs, scenario])
+  const herP: Profile = useMemo(
+    () =>
+      scenario === 'none'
+        ? notInvesting(inputs)
+        : scenario === 'investing'
+          ? atHerBest(inputs)
+          : herProfile(inputs),
+    [inputs, scenario],
+  )
+  const twinP = useMemo(() => twinProfile(inputs), [inputs])
   const her = useMemo(() => simulate(herP), [herP])
   const twin = useMemo(() => simulate(twinP), [twinP])
-  const why = useMemo(() => breakdown(inputs), [inputs])
+  const why = useMemo(() => breakdown({ ...inputs, split: herP.split }), [inputs, herP])
+  const without = useMemo(() => simulate(notInvesting(inputs)), [inputs])
   const last = her.points.length - 1
 
   // Replay the time-lapse whenever the scenario or the life events change.
@@ -144,7 +147,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     if (!playing) return
     if (step >= last) {
       setPlaying(false)
-      setPhase(scenario === 'today' && gardenGap(her, twin) > 0 ? 'reveal' : 'result')
+      setPhase(scenario !== 'investing' && gardenGap(her, twin) > 0 ? 'reveal' : 'result')
       return
     }
     const t = setTimeout(() => setStep((s) => s + 1), STEP_MS)
@@ -156,6 +159,18 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     const t = setTimeout(() => setPhase('result'), 9000)
     return () => clearTimeout(t)
   }, [phase])
+
+  // Story: after the "Not investing" result, replant the same money invested.
+  useEffect(() => {
+    if (!story || scenario !== 'none' || phase !== 'result') return
+    const t = setTimeout(() => setScenario('investing'), 5000)
+    return () => clearTimeout(t)
+  }, [story, scenario, phase])
+
+  const pickTab = (key: Scenario) => {
+    setStory(false)
+    setScenario(key)
+  }
 
   const i = Math.min(step, last)
   const herNow = her.points[i]
@@ -223,7 +238,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
 
   // "Why" tags, shown while the gardens grow on your path.
   const tags: { at: number; title: string; text: string; choice?: boolean }[] = []
-  if (scenario === 'today') {
+  if (scenario !== 'investing') {
     const f = why.factors
     if (f.payGap > 0)
       tags.push({
@@ -235,7 +250,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       tags.push({
         at: answers.age + 1,
         title: 'Investing',
-        text: `He plants ${pct(c.twinInvestShift.value, 1)} more of his savings in index funds.`,
+        text: `He invests ${pct(investedShare(twinP.split))} of his savings, like a typical man in ${c.inName ?? c.name}. You invest ${pct(investedShare(herP.split))}.`,
         choice: true,
       })
     if (child && f.childPenalty > 0)
@@ -268,18 +283,33 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   }
   const visibleTags = phase === 'growing' ? tags.filter((t) => age >= t.at) : []
 
-  const headline =
+  const amount = money(answers.monthlySavings)
+  const investGain = gardenGap(without, her)
+  const twinLine =
     Math.abs(gap) < 500
-      ? 'You end exactly level.'
+      ? 'You end level with your twin.'
       : gap > 0
-        ? `His garden is worth ${compactMoney(gap)} more than yours.`
-        : `Your garden is worth ${compactMoney(-gap)} more than his.`
-  const sub =
-    Math.abs(gap) < 500
-      ? 'With the gaps removed and your own choices, you retire with the same garden as him.'
-      : gap > 0
-        ? `That's about ${money(perMonth)} more for him every month of his retirement.`
-        : `That's about ${money(perMonth)} more for you every month of your retirement.`
+        ? `Your twin still ends ${compactMoney(gap)} ahead.`
+        : `You end ${compactMoney(-gap)} ahead of your twin.`
+  let headline: string
+  let sub: string
+  if (scenario === 'investing') {
+    headline = `Investing the same ${amount} a month gives you ${compactMoney(investGain)} more.`
+    sub = `That's about ${money(monthlyIncome(investGain, answers.country))} more every month of your retirement. ${twinLine}`
+  } else {
+    headline =
+      Math.abs(gap) < 500
+        ? 'You end level with your twin.'
+        : gap > 0
+          ? `${scenario === 'none' ? 'Not investing, his' : 'His'} garden ends ${compactMoney(gap)} bigger than yours.`
+          : `Your garden ends ${compactMoney(-gap)} bigger than his.`
+    sub =
+      gap > 0 ? `That's about ${money(perMonth)} more for him every month of his retirement.` : ''
+    const better = gardenGap(her, simulate(atHerBest(inputs)))
+    if (story && scenario === 'none')
+      sub += ` Now watch what happens if you plant the same ${amount}.`
+    else if (better > 500) sub += ` Investing the same money would add ${compactMoney(better)}.`
+  }
 
   const ages = Array.from(
     { length: Math.floor(retirementAge) - answers.age },
@@ -360,6 +390,9 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         ))}
       </div>
       <p className="explain">{SCENARIOS.find((s) => s.key === scenario)!.explain}</p>
+      {phase === 'growing' && story && scenario === 'investing' && (
+        <div className="banner">Now plant the same {amount} a month</div>
+      )}
       {phase === 'growing' && (
         <div className="pill">
           Watching {Math.round(retirementAge - answers.age)} years · age {Math.floor(age)}
@@ -373,9 +406,14 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           </p>
           <h1>{headline}</h1>
           <p>{sub}</p>
-          {scenario === 'today' && gap > 0 && (
+          {scenario !== 'investing' && gap > 0 && (
             <button className="link" onClick={() => setPhase('reveal')}>
               Why is his garden bigger?
+            </button>
+          )}
+          {scenario !== 'investing' && !story && (
+            <button className="btn small" onClick={() => pickTab('investing')}>
+              Plant it: see it invested
             </button>
           )}
         </div>

@@ -64,4 +64,9 @@ export const ASSUMPTION_SOURCES = {
   tradingDrag: 'Barber & Odean (2001), Boys Will Be Boys: men 2.65 pp vs women 1.72 pp a year',
   pensionReturn: 'OECD Pensions at a Glance 2025: funded pensions, base case',
   cashBuffer: 'Plant It default, editable',
+  passiveShare:
+    'ESMA 2025 costs and performance report: passive funds and ETFs were 41% of equity funds (4Q24)',
 } as const
+
+/** Share of equity funds that are passive (index funds and ETFs), ESMA 2025: 41% in 4Q24. */
+export const PASSIVE_FUND_SHARE = 0.41
