@@ -41,16 +41,16 @@ Product and modelling decisions agreed with the project owner. Read before chang
   Tapping a tab stops the automatic story. "A fair world" is no longer a tab: it is one line in
   "Why is his garden bigger?" (how much bigger her garden would be with no pay gap, motherhood
   penalty or promotion gap). The engine keeps `levelTheField` and its test.
-- Investing result (owner decision): a "Why do you end up ahead of him?" card. She puts in less
-  (pay and promotion gaps), he keeps most of his savings in a savings account like a typical man in
-  her country, and invested money grows faster. It ends with what the twin would have if he
-  invested like her (`investingVsTwin`): the gaps remain, investing outgrows them.
+- Investing result (owner decision): the same box as the other tabs (headline, one line, a link).
+  "Why do you end up ahead of him?" opens the same style of box as "Here's why": what she put in vs
+  him, how much each keeps in a savings account, growth invested vs saved, and what he would have
+  if he invested like her (`investingVsTwin`): the gaps remain, investing outgrows them.
 - Garden key (owner decision): a small folded "What do the plants mean?" box inside the garden,
   just above the age slider; tap to open it in place. It lists golden seeds, only the plants in the
   two gardens, fruit, wilting, the sky and the euro value of one plant.
-- Sources in context (owner decision): every row of "Why is his garden bigger?" ends with its
-  source (marked "same for every country" when not national), and the boxes that appear while the
-  garden grows show a short source line. Part-time and career breaks come from her own life
+- Sources in context (owner decision): every row of "Why is his garden bigger?" shows a short
+  source name with an (i) that unfolds the full citation (marked "same for every country" when
+  not national); the boxes that appear while the garden grows show only "(i) Source" until tapped. Part-time and career breaks come from her own life
   events, so they say so instead.
 
 ## Data

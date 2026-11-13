@@ -31,7 +31,8 @@ import { Assumptions } from './Assumptions'
 import { LifeIcon } from './art'
 import { BabyPlanning } from './BabyPlanning'
 import { GardenKey } from './GardenKey'
-import { factorSources, shortSource, type SourceLine } from './sources'
+import { SourceNote } from './SourceNote'
+import { factorSources, type SourceLine } from './sources'
 import { WhySection } from './WhySection'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
@@ -161,10 +162,10 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   }, [playing, step, last, scenario, her, twin])
 
   useEffect(() => {
-    if (phase !== 'reveal') return
+    if (phase !== 'reveal' || scenario === 'investing') return
     const t = setTimeout(() => setPhase('result'), 9000)
     return () => clearTimeout(t)
-  }, [phase])
+  }, [phase, scenario])
 
   // Story: after the "Not investing" result, replant the same money invested.
   useEffect(() => {
@@ -402,31 +403,47 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
 
   // Investing: why she can end ahead of a twin who never faced the gaps.
   const twinInSavings = twinP.split.cash + twinP.split.greenhouse
-  const aheadCard = gap < 0 && (
-    <div className="ahead">
-      <h3>Why do you end up ahead of him?</h3>
-      <ul>
-        <li>
-          You put in less: <b>{compactMoney(vsTwin.herPaidIn)}</b> vs his{' '}
-          <b>{compactMoney(vsTwin.twinPaidIn)}</b>, because of the gaps in pay and promotions
-          {events.length > 0 ? ' and your life events' : ''}.
-        </li>
-        <li>
-          He keeps <b>{pct(twinInSavings)}</b> of his savings in a savings account, like a typical
-          man in {c.inName ?? c.name}. You invest <b>{pct(investedShare(herP.split))}</b>.
-        </li>
-        <li>
-          Invested money grows about <b>{pct(REAL_RETURNS.indexFund)}</b> a year above prices. A
-          savings account doesn't keep up.
-        </li>
-      </ul>
+  const herInSavings = herP.split.cash + herP.split.greenhouse
+  const aheadRows: { color: string; name: string; value: string }[] = [
+    {
+      color: PALETTE.goldenPollen,
+      name: 'You put in less: you vs him',
+      value: `${compactMoney(vsTwin.herPaidIn)} vs ${compactMoney(vsTwin.twinPaidIn)}`,
+    },
+    {
+      color: PALETTE.eveningSky,
+      name: 'Kept in a savings account: him vs you',
+      value: `${pct(twinInSavings)} vs ${pct(herInSavings)}`,
+    },
+    {
+      color: PALETTE.leaflitGreen,
+      name: 'Growth a year: invested vs saved',
+      value: `${pct(REAL_RETURNS.indexFund)} vs ${pct(REAL_RETURNS.greenhouse, 1)}`,
+    },
+  ]
+  const aheadLegend = (
+    <div className="legend">
+      <h3>You end {compactMoney(-gap)} ahead. Here's why:</h3>
+      {aheadRows.map((r) => (
+        <div key={r.name} className="legend-row">
+          <span>
+            <span className="swatch" style={{ background: r.color }} />
+            {r.name}
+          </span>
+          <b>{r.value}</b>
+        </div>
+      ))}
       {vsTwin.twinLikeHer > vsTwin.herTotal && (
-        <p className="ahead-note">
-          If he invested like you, he'd end with <b>{compactMoney(vsTwin.twinLikeHer)}</b>, still{' '}
-          {compactMoney(vsTwin.twinLikeHer - vsTwin.herTotal)} ahead. Investing doesn't remove the
-          gaps, it outgrows them.
+        <p className="legend-note">
+          You put in less because of the pay and promotion gaps. He keeps more in savings, like a
+          typical man in {c.inName ?? c.name}. If he invested like you, he'd end{' '}
+          {compactMoney(vsTwin.twinLikeHer - vsTwin.herTotal)} ahead of you. Investing doesn't
+          remove the gaps, it outgrows them.
         </p>
       )}
+      <button className="link" onClick={() => setPhase('result')}>
+        See the result
+      </button>
     </div>
   )
 
@@ -460,7 +477,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           Watching {Math.round(retirementAge - answers.age)} years · age {Math.floor(age)}
         </div>
       )}
-      {phase === 'reveal' && legend}
+      {phase === 'reveal' && (scenario === 'investing' ? aheadLegend : legend)}
       {phase === 'result' && (
         <div className="headline">
           <p className="eyebrow">
@@ -468,7 +485,11 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           </p>
           <h1>{headline}</h1>
           <p>{sub}</p>
-          {scenario === 'investing' && aheadCard}
+          {scenario === 'investing' && gap < 0 && (
+            <button className="link" onClick={() => setPhase('reveal')}>
+              Why do you end up ahead of him?
+            </button>
+          )}
           {scenario !== 'investing' && gap > 0 && (
             <button className="link" onClick={() => setPhase('reveal')}>
               Why is his garden bigger?
@@ -490,9 +511,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         <div key={t.title} className={`tag ${t.choice ? 'choice' : ''}`}>
           <b>{t.title}</b>
           {t.text}
-          {t.sources && (
-            <span className="tag-source">Source: {t.sources.map(shortSource).join('; ')}</span>
-          )}
+          {t.sources && <SourceNote sources={t.sources} compact />}
         </div>
       ))}
     </div>

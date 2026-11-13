@@ -29,5 +29,5 @@ export function factorSources(c: CountryDefaults): Partial<Record<Factor, Source
   }
 }
 
-/** Short form for the time-lapse boxes: the reference before any detail after a colon. */
-export const shortSource = (s: SourceLine): string => s.text.split(':')[0]
+/** Short form: the reference before any detail (first comma or colon). */
+export const shortSource = (s: SourceLine): string => s.text.split(/[,:]/)[0].trim()

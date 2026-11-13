@@ -9,6 +9,7 @@ import {
   type HerInputs,
 } from '../engine'
 import { compactMoney, money, pct } from './format'
+import { SourceNote } from './SourceNote'
 import { factorSources } from './sources'
 
 export function WhySection({ inputs }: { inputs: HerInputs }) {
@@ -99,16 +100,7 @@ export function WhySection({ inputs }: { inputs: HerInputs }) {
                 </div>
                 <p style={{ fontSize: 14 }}>{explain[f].text}</p>
                 {sources[f] ? (
-                  <p className="source">
-                    Source:{' '}
-                    {sources[f].map((s, k) => (
-                      <span key={k}>
-                        {k > 0 && '; '}
-                        {s.text}
-                        {s.euAverage && <em className="eu"> (same for every country)</em>}
-                      </span>
-                    ))}
-                  </p>
+                  <SourceNote sources={sources[f]} />
                 ) : (
                   <p className="source">From the life event you added.</p>
                 )}
