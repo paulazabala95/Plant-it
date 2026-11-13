@@ -83,8 +83,16 @@ or crypto.
 
 ## UI
 
-- Website first (not a native app): mobile-first, and on wide screens the two gardens sit side by
-  side. Forest green (#1F4D3A) ink on pink, lilac, yellow and lime.
+- Website first (not a native app), deployed to GitHub Pages from the default branch.
+- Living-world design (owner decision): one illustrated landscape, the twins standing in their
+  gardens, sky from morning (today) to sunset (retirement), golden seeds as you save, both twins
+  age. Palette: Sunset Petal #E4568B (you), Evening Sky #A7C7E4 (twin), Golden Pollen #F6C94D,
+  Leaflit Green #5D7B3D, Rosebud Blush, Sorbet Stem, Petal Glaze, Dusty Orchid, Powdered Lilac Grey
+  background; Fraunces headlines, Inter text. Wide screens: both gardens side by side; phones:
+  stacked.
+- Time-lapse on open (and on every tab or life-event change): "why" tags appear when each cause
+  starts; illustrative promotion moments (expected number over the career, spread evenly); then the
+  reveal lights up the twin's extra plants grouped by cause (Shapley shares), then the result.
 - Flow: hook question ("Have you ever pictured your life with, and without, investing?"), "How your
   garden grows" (every euro is a seed, one plant per option, fruit = growth), then the questions.
   "Next" on every question, "See my garden" on the last. Country = where you pay income tax.

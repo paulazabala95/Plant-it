@@ -1,6 +1,6 @@
 import type { Plot } from '../engine'
 import { PLOT_LOOKS } from '../themes'
-import { PlotIcon } from './Scene'
+import { PlotIcon } from './art'
 
 const ORDER: Plot[] = [
   'cash',

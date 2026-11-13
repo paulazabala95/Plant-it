@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { COUNTRIES, GARDEN_OPTIONS, type CountryCode } from '../data'
 import { monthlySavings, splitFromWeights } from '../engine'
 import { OPTION_LOOKS } from '../themes'
-import { PlotIcon } from './Scene'
-import { Blob } from './Blob'
+import { PlotIcon } from './art'
 import type { Answers } from './answers'
 import { money, pct } from './format'
 
@@ -70,9 +69,6 @@ export function Onboarding({
         {step === 'age' && (
           <>
             <h1 className="display l">How old are you?</h1>
-            <div style={{ width: 140, alignSelf: 'center' }}>
-              <Blob color="#FFF8EE" shape="drop" stage={1} />
-            </div>
             <div className="big-number">{a.age}</div>
             <input
               type="range"
