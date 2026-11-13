@@ -197,6 +197,26 @@ Source PDF: https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/1
   for fathers: NL 15 wks at 75.5%, DE 8.7 at 55.3%, FR 30.2 at 25.6%, IT 15 at 39.3%, IE 9 at
   23.4%, EU 13.3 wks; ES 19 wks at 100% (Real Decreto-ley 9/2025).
 
+## 7c. Net pay estimate ✅
+
+OECD _Taxing Wages 2025_ (data explorer DF_TW_COU), net personal average tax rate (income tax +
+employee social security contributions − cash benefits), single person without children, 2025.
+Gross earnings in EUR at 67% / 100% / 167% of the average wage and the rate at each:
+
+| Country                                  | 67% AW          | 100% AW         | 167% AW          |
+| ---------------------------------------- | --------------- | --------------- | ---------------- |
+| NL                                       | €46,249 · 18.3% | €69,028 · 27.9% | €115,278 · 37.2% |
+| ES                                       | €21,895 · 18.9% | €32,678 · 23.5% | €54,573 · 29.7%  |
+| DE                                       | €44,689 · 34.1% | €66,700 · 38.7% | €111,389 · 42.3% |
+| FR                                       | €30,796 · 23.7% | €45,964 · 28.0% | €76,761 · 33.8%  |
+| IT                                       | €24,518 · 19.1% | €36,594 · 28.6% | €61,112 · 39.9%  |
+| IE                                       | €40,373 · 16.1% | €60,258 · 25.1% | €100,630 · 35.5% |
+| EU (mean of 17 euro-area OECD countries) | €29,396 · 23.7% | €43,875 · 29.8% | €73,271 · 35.5%  |
+
+The engine interpolates linearly between these points and keeps the end rates flat outside them.
+It is an estimate for a single person; real net pay depends on household and deductions.
+https://www.oecd.org/en/publications/taxing-wages-2025_b3a95829-en.html
+
 ## 8. Real wage growth ✅
 
 Hourly labour productivity growth, average 2022–2070, EC 2024 Ageing Report (Institutional Paper

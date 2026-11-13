@@ -1,6 +1,8 @@
-import type { Plot } from '../engine'
+import { amountsBySplit, splitFromWeights, type GardenOption, type Plot } from '../engine'
 import { PLOT_LOOKS } from '../themes'
+import type { Answers } from './answers'
 import { PlotIcon } from './art'
+import { money, pct } from './format'
 
 const ORDER: Plot[] = [
   'cash',
@@ -15,46 +17,55 @@ const ORDER: Plot[] = [
   'pension',
 ]
 
-export function HowItWorks({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+/** After the questions: the metaphor, with her own mix highlighted first. */
+export function HowItWorks({
+  answers,
+  onNext,
+  onBack,
+}: {
+  answers: Answers
+  onNext: () => void
+  onBack: () => void
+}) {
+  const split = splitFromWeights(answers.weights)
+  const euros = amountsBySplit(answers.monthlySavings, split)
+  const mine = (p: Plot): p is GardenOption => p !== 'pension' && split[p] > 0
+  const ordered = [...ORDER.filter(mine), ...ORDER.filter((p) => !mine(p))]
   return (
-    <>
+    <div className="how">
       <button className="link" style={{ alignSelf: 'flex-start' }} onClick={onBack}>
         ← Back
       </button>
-      <section className="card yellow stack">
+      <section className="sheet-card how-intro">
         <p className="eyebrow">How your garden grows</p>
-        <h1 className="display l">Every euro you save is a seed.</h1>
-        <p style={{ fontSize: 17 }}>
-          Where you plant it decides how much it grows. You and your twin each get a garden, and you
-          can watch both grow until you retire.
+        <h1>Every euro you save is a seed.</h1>
+        <p className="lead">
+          Where you plant it decides how much it grows. Here is what your money becomes in the
+          garden. The fruit on a plant is what it has grown on top of what you put in.
         </p>
       </section>
-      <div className="stack">
-        {ORDER.map((p) => (
-          <div
-            key={p}
-            className="assumption row"
-            style={{ background: PLOT_LOOKS[p].color, gap: 12 }}
-          >
-            <PlotIcon plot={p} />
-            <div className="grow">
-              <b>
-                {PLOT_LOOKS[p].plain} = {PLOT_LOOKS[p].metaphor.toLowerCase()}
-              </b>
-              <p style={{ fontSize: 14 }}>{PLOT_LOOKS[p].meaning}</p>
+      <div className="how-grid">
+        {ordered.map((p) => (
+          <article key={p} className={`how-card ${mine(p) ? 'mine' : ''}`}>
+            <div className="how-art" style={{ background: PLOT_LOOKS[p].color }}>
+              <PlotIcon plot={p} size={64} />
             </div>
-          </div>
+            <p className="how-badge">
+              {p !== 'pension' && mine(p)
+                ? `In your garden: ${pct(split[p])} · ${money(euros[p])} a month`
+                : p === 'pension'
+                  ? 'Filled in from your pay'
+                  : 'Not in your garden yet'}
+            </p>
+            <h3>{PLOT_LOOKS[p].plain}</h3>
+            <p className="how-metaphor">{PLOT_LOOKS[p].metaphor}</p>
+            <p className="how-meaning">{PLOT_LOOKS[p].meaning}</p>
+          </article>
         ))}
       </div>
-      <section className="card lilac-soft">
-        <p>
-          <b>Fruit = growth.</b> The more a plant has grown on top of what you put in, the more
-          fruit it carries.
-        </p>
-      </section>
-      <button className="btn block" onClick={onNext}>
-        Next
+      <button className="btn how-next" onClick={onNext}>
+        See my garden
       </button>
-    </>
+    </div>
   )
 }

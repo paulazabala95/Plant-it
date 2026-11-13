@@ -93,6 +93,14 @@ or crypto.
 - Time-lapse on open (and on every tab or life-event change): "why" tags appear when each cause
   starts; illustrative promotion moments (expected number over the career, spread evenly); then the
   reveal lights up the twin's extra plants grouped by cause (Shapley shares), then the result.
+- Net pay (owner decision): gross salary is asked, net pay is estimated with OECD Taxing Wages 2025
+  (income tax + employee social contributions, single, no children, interpolated between 67%, 100%
+  and 167% of the average wage, flat outside). Savings are asked in euros a month from net pay and
+  shown as a share of net pay; the split shows euros per option. In the engine, saving is a share of
+  net pay every month (recomputed as pay changes); pensions stay on gross pay. The twin saves the
+  same share of his (higher) net pay.
+- Order: welcome (card centred on every screen), the five questions, then "How your garden grows"
+  as a grid of equal cards (3 / 2 / 1 columns) with her own mix highlighted, then the garden.
 - Flow: hook question ("Have you ever pictured your life with, and without, investing?"), "How your
   garden grows" (every euro is a seed, one plant per option, fruit = growth), then the questions.
   "Next" on every question, "See my garden" on the last. Country = where you pay income tax.

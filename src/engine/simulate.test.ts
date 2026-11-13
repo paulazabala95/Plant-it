@@ -22,6 +22,7 @@ const base: Profile = {
   childPenaltyYears: 99,
   maternityLeave: { weeks: 0, paymentRate: 0 },
   pension: [{ fromYear: 2000, rate: 0 }],
+  tax: [],
   tradingDrag: 0,
   returns: { ...zeros },
   pensionReturn: 0,
@@ -163,6 +164,26 @@ describe('simulate', () => {
       6,
     )
     expect(t.final.total).toBeCloseTo(t.final.retirement, 6)
+  })
+
+  it('saves a share of net pay and pays pension on gross pay', () => {
+    // 12,000 gross, 25% tax -> 750 net a month; 10% saved = 75; pension 5% of gross = 50.
+    const t = run({
+      tax: [{ gross: 12_000, rate: 0.25 }],
+      pension: [{ fromYear: 2000, rate: 0.05 }],
+    })
+    expect(t.final.garden.cash).toBeCloseTo(900, 6)
+    expect(t.final.retirement).toBeCloseTo(600, 6)
+  })
+
+  it('uses the tax rate of the pay actually earned that year', () => {
+    // Part-time 50%: 6,000 a year falls under a lower rate than full-time 12,000.
+    const tax = [
+      { gross: 6_000, rate: 0.1 },
+      { gross: 12_000, rate: 0.3 },
+    ]
+    const t = run({ tax, events: [{ kind: 'partTime', fromAge: 30, toAge: 31, hoursShare: 0.5 }] })
+    expect(t.final.garden.cash).toBeCloseTo(6_000 * 0.9 * 0.1, 6)
   })
 
   it('stops at a fractional retirement age', () => {

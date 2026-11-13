@@ -22,6 +22,12 @@ describe('country defaults', () => {
       }
       expect(c.childPenalty.value.drop, c.code).toBeLessThan(1)
       expect(c.childPenalty.value.years, c.code).toBeGreaterThan(0)
+      const tax = c.netPayTax.value
+      expect(
+        tax.map((p) => p.gross),
+        c.code,
+      ).toEqual([...tax.map((p) => p.gross)].sort((a, b) => a - b))
+      for (const p of tax) expect(p.rate, c.code).toBeLessThan(0.6)
       const { women, men } = c.promotionRate.value
       expect(men, c.code).toBeGreaterThan(women)
     }

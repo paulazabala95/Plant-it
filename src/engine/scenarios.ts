@@ -17,6 +17,7 @@ export interface HerInputs {
   country: Region
   /** Gross yearly salary, full-time. */
   grossSalary: number
+  /** Share of estimated net pay saved each month. */
   savingsRate: number
   split: Split
   /** Current calendar year, passed in by the UI. */
@@ -44,6 +45,7 @@ export function herProfile(inputs: HerInputs): Profile {
     startYear: inputs.startYear,
     annualSalary: inputs.grossSalary,
     savingsRate: inputs.savingsRate,
+    tax: c.netPayTax.value,
     split: inputs.split,
     realWageGrowth: c.realWageGrowth.value,
     promotionRate: c.promotionRate.value.women,
@@ -152,10 +154,6 @@ export function levelTheField(inputs: HerInputs): { her: Profile; twin: Profile 
   const her = applyFactors(atHerBest(inputs), STRUCTURAL_FACTORS, inputs)
   return { her, twin: FACTORS.tradingDrag(her) }
 }
-
-/** What she puts aside each month today (for display in onboarding). */
-export const monthlySavings = (grossSalary: number, savingsRate: number): number =>
-  (grossSalary * savingsRate) / 12
 
 /** Turns relative weights per option into a split that sums to 1. */
 export function splitFromWeights(weights: Partial<Split>): Split {

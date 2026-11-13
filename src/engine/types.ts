@@ -1,4 +1,4 @@
-import type { GardenOption, PensionStep } from '../data'
+import type { GardenOption, PensionStep, TaxPoint } from '../data'
 
 export type { GardenOption }
 
@@ -18,8 +18,10 @@ export interface Profile {
   startYear: number
   /** Gross yearly salary at startAge, full-time. */
   annualSalary: number
-  /** Share of gross pay saved every month. */
+  /** Share of net pay saved every month. */
   savingsRate: number
+  /** Tax and employee contribution rates by gross pay, to turn gross into net (empty = none). */
+  tax: TaxPoint[]
   /** How monthly savings are split across garden options (sums to 1). */
   split: Split
   realWageGrowth: number

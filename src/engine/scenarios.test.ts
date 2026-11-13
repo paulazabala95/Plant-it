@@ -140,8 +140,4 @@ describe('onboarding helpers', () => {
     expect(s.indexFund).toBe(0.75)
     expect(splitFromWeights({}).cash).toBe(1)
   })
-  it('gives monthly savings', async () => {
-    const { monthlySavings } = await import('./scenarios')
-    expect(monthlySavings(48_000, 0.1)).toBe(400)
-  })
 })

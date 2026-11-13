@@ -732,3 +732,120 @@ input[type='range'] {
     padding: 14px 16px;
   }
 }
+
+/* Welcome: card in the centre of every screen */
+.app.intro.centred {
+  min-height: 100svh;
+}
+.app.intro.centred > .welcome {
+  margin-block: auto;
+}
+.welcome {
+  gap: clamp(8px, 1.6vh, 14px);
+  padding: clamp(20px, 3.5vh, 30px) clamp(20px, 4vw, 32px);
+}
+.welcome h1 {
+  font-size: clamp(26px, min(4.4vw, 5.2vh), 44px);
+}
+.welcome .twins {
+  max-height: clamp(110px, 26vh, 260px);
+}
+.welcome .lead {
+  font-size: clamp(15px, 2vh, 18px);
+}
+
+/* Net pay estimate */
+.estimate {
+  display: block;
+  text-align: center;
+  font-size: 17px;
+  background: #fdf1d3;
+  border-radius: 16px;
+  padding: 10px 14px;
+}
+.estimate span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+/* How your garden grows: a grid of equal cards */
+.app.intro > .how {
+  width: min(1120px, 100%);
+}
+.how {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.how-intro {
+  max-width: 720px;
+  align-self: center;
+  text-align: center;
+}
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.how-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr;
+  gap: 6px;
+  opacity: 0.72;
+}
+.how-card.mine {
+  opacity: 1;
+  outline: 3px solid var(--petal);
+}
+.how-art {
+  height: 96px;
+  border-radius: 16px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+.how-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.how-card.mine .how-badge {
+  color: var(--petal);
+}
+.how-card h3 {
+  font-size: 20px;
+}
+.how-metaphor {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--leaf);
+}
+.how-meaning {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.how-next {
+  align-self: center;
+  min-width: 260px;
+}
+@media (max-width: 900px) {
+  .how-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .how-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.split-amount {
+  font-weight: 700;
+  color: var(--petal);
+}

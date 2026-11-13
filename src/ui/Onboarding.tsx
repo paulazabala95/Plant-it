@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { COUNTRIES, GARDEN_OPTIONS, type CountryCode } from '../data'
-import { monthlySavings, splitFromWeights } from '../engine'
+import { amountsBySplit, netMonthly, savingsShare, splitFromWeights } from '../engine'
 import { OPTION_LOOKS } from '../themes'
 import { PlotIcon } from './art'
 import type { Answers } from './answers'
@@ -48,6 +48,9 @@ export function Onboarding({
   const next = () => (i === steps.length - 1 ? onDone(a) : setI(i + 1))
   const canNext = step !== 'italy' || a.italyTfrToFund !== undefined
   const split = splitFromWeights(a.weights)
+  const net = netMonthly(a.grossSalary, a.country)
+  const share = savingsShare(a.monthlySavings, a.grossSalary, a.country)
+  const euros = amountsBySplit(Math.min(a.monthlySavings, net), split)
 
   return (
     <>
@@ -154,33 +157,55 @@ export function Onboarding({
               onChange={(e) => set({ grossSalary: Number(e.target.value) })}
               aria-label="Gross yearly salary"
             />
+            <div className="estimate">
+              ≈ <b>{money(net)}</b> a month after tax and social contributions
+              <span className="muted">
+                Estimate for {COUNTRIES[a.country].inName ?? COUNTRIES[a.country].name}, single, no
+                children (OECD Taxing Wages 2025).
+              </span>
+            </div>
           </>
         )}
 
         {step === 'savings' && (
           <>
-            <h1 className="display l">How much do you put aside each month?</h1>
-            <div className="big-number">{pct(a.savingsRate)}</div>
-            <p style={{ textAlign: 'center' }}>
-              of your gross pay ≈ <b>{money(monthlySavings(a.grossSalary, a.savingsRate))}</b> a
-              month
+            <h1 className="display l">How much of your net pay do you put aside each month?</h1>
+            <p>
+              Your net pay is about <b>{money(net)}</b> a month.
             </p>
+            <label className="money-input">
+              €
+              <input
+                inputMode="numeric"
+                value={a.monthlySavings.toLocaleString('en-IE')}
+                onChange={(e) =>
+                  set({ monthlySavings: Number(e.target.value.replace(/\D/g, '')) || 0 })
+                }
+                aria-label="Euros put aside each month"
+              />
+            </label>
             <input
               type="range"
               min={0}
-              max={0.5}
-              step={0.01}
-              value={a.savingsRate}
-              onChange={(e) => set({ savingsRate: Number(e.target.value) })}
-              aria-label="Share of pay saved"
+              max={Math.max(10, Math.round(net / 10) * 10)}
+              step={10}
+              value={Math.min(a.monthlySavings, Math.round(net / 10) * 10)}
+              onChange={(e) => set({ monthlySavings: Number(e.target.value) })}
+              aria-label="Euros put aside each month"
             />
+            <p className="estimate">
+              = <b>{pct(share)}</b> of your net pay
+            </p>
           </>
         )}
 
         {step === 'split' && (
           <>
             <h1 className="display l">Where do your savings go?</h1>
-            <p>Tap everything you use, then slide roughly how much goes to each.</p>
+            <p>
+              Of your <b>{money(Math.min(a.monthlySavings, net))}</b> a month: tap everything you
+              use, then slide roughly how much goes to each.
+            </p>
             <div className="chips">
               {GARDEN_OPTIONS.map((o) => (
                 <button
@@ -203,10 +228,10 @@ export function Onboarding({
                   <div className="row" style={{ gap: 10 }}>
                     <PlotIcon plot={o} />
                     <div className="grow">
-                      <div className="row between">
-                        <b>{OPTION_LOOKS[o].plain}</b>
-                        <b>{pct(split[o])}</b>
-                      </div>
+                      <b>{OPTION_LOOKS[o].plain}</b>
+                      <p className="split-amount">
+                        {pct(split[o])} · {money(euros[o])} a month
+                      </p>
                       <p style={{ fontSize: 13 }}>
                         {OPTION_LOOKS[o].metaphor} · {OPTION_LOOKS[o].meaning}
                       </p>
@@ -230,7 +255,7 @@ export function Onboarding({
       </section>
 
       <button className="btn block" onClick={next} disabled={!canNext}>
-        {i === steps.length - 1 ? 'See my garden' : 'Next'}
+        Next
       </button>
     </>
   )

@@ -35,6 +35,12 @@ export interface PartTime {
   men: number
 }
 
+/** Share of gross pay lost to income tax and employee social contributions, at a gross salary. */
+export interface TaxPoint {
+  gross: number
+  rate: number
+}
+
 export interface ChildPenalty {
   drop: number
   years: number
@@ -63,6 +69,9 @@ export interface CountryDefaults {
   lifeExpectancy: Sourced<number>
   /** Paid leave a partner can take for a new baby (fathers' entitlement). */
   partnerLeave: Sourced<{ weeks: number; paymentRate?: number }>
+  /** Net personal average tax rate (income tax + employee social contributions) at 67%, 100%
+   * and 167% of the average wage, single person without children. Used to estimate net pay. */
+  netPayTax: Sourced<TaxPoint[]>
   /** Real (after inflation) wage growth per year. */
   realWageGrowth: Sourced<number>
   /** Yearly promotion probability, women vs men with the same background. */
@@ -101,6 +110,7 @@ const SRC = {
     'Finnish Centre for Pensions, retirement ages 2026: general age set in law, incl. scheduled rises',
   lifeExpectancy: 'Eurostat demo_mlexpec, life expectancy at retirement age, men and women, 2024',
   partnerLeave: 'OECD Family Database PF2.1, Table PF2.1.B: paid leave for fathers (April 2025)',
+  tax: 'OECD Taxing Wages 2025: net personal average tax rate, single, no children, 67/100/167% of average wage',
   ageing: 'European Commission 2024 Ageing Report, hourly labour productivity growth 2022-2070',
   promotion:
     'Kauhanen & Napari (2012), ETLA DP 1244: in-firm promotion raises wages by 4% (Finnish linked data)',
@@ -165,6 +175,14 @@ export const EU: CountryDefaults = {
   ),
   lifeExpectancy: country(19.4, `${SRC.lifeExpectancy}, EU27 at 66`),
   partnerLeave: country({ weeks: 13.3 }, `${SRC.partnerLeave}, EU average`),
+  netPayTax: country(
+    [
+      { gross: 29396, rate: 0.2368 },
+      { gross: 43875, rate: 0.2977 },
+      { gross: 73271, rate: 0.3553 },
+    ],
+    `${SRC.tax}, mean of 17 euro-area OECD countries`,
+  ),
   realWageGrowth: country(0.014, `${SRC.ageing}, EU`),
   promotionRate,
   promotionRaise,
@@ -202,6 +220,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     lifeExpectancy: country(18.3, `${SRC.lifeExpectancy}, at 67`),
     partnerLeave: country({ weeks: 15, paymentRate: 0.755 }, SRC.partnerLeave),
+    netPayTax: country(
+      [
+        { gross: 46249, rate: 0.1834 },
+        { gross: 69028, rate: 0.2786 },
+        { gross: 115278, rate: 0.3723 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.011, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -235,6 +261,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
       { weeks: 19, paymentRate: 1 },
       'Real Decreto-ley 9/2025: 19 weeks for each parent at 100%',
     ),
+    netPayTax: country(
+      [
+        { gross: 21895, rate: 0.1886 },
+        { gross: 32678, rate: 0.2354 },
+        { gross: 54573, rate: 0.2972 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -258,6 +292,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     retirementAge: country(67, SRC.retirement, '66 years 4 months in 2026, rising to 67 by 2031.'),
     lifeExpectancy: country(18.1, `${SRC.lifeExpectancy}, at 67`),
     partnerLeave: country({ weeks: 8.7, paymentRate: 0.553 }, SRC.partnerLeave),
+    netPayTax: country(
+      [
+        { gross: 44689, rate: 0.3414 },
+        { gross: 66700, rate: 0.3868 },
+        { gross: 111389, rate: 0.4231 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.013, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -285,6 +327,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     lifeExpectancy: country(22.7, `${SRC.lifeExpectancy}, at 64`),
     partnerLeave: country({ weeks: 30.2, paymentRate: 0.256 }, SRC.partnerLeave),
+    netPayTax: country(
+      [
+        { gross: 30796, rate: 0.237 },
+        { gross: 45964, rate: 0.2798 },
+        { gross: 76761, rate: 0.3376 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.01, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -319,6 +369,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     ),
     lifeExpectancy: country(19.7, `${SRC.lifeExpectancy}, at 67`),
     partnerLeave: country({ weeks: 15, paymentRate: 0.393 }, SRC.partnerLeave),
+    netPayTax: country(
+      [
+        { gross: 24518, rate: 0.1912 },
+        { gross: 36594, rate: 0.2863 },
+        { gross: 61112, rate: 0.3985 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.012, SRC.ageing),
     promotionRate,
     promotionRaise,
@@ -351,6 +409,14 @@ export const COUNTRIES: Record<CountryCode, CountryDefaults> = {
     retirementAge: country(66, SRC.retirement, 'Flexible from 66 to 70.'),
     lifeExpectancy: country(20.2, `${SRC.lifeExpectancy}, at 66`),
     partnerLeave: country({ weeks: 9, paymentRate: 0.234 }, SRC.partnerLeave),
+    netPayTax: country(
+      [
+        { gross: 40373, rate: 0.1607 },
+        { gross: 60258, rate: 0.251 },
+        { gross: 100630, rate: 0.3545 },
+      ],
+      SRC.tax,
+    ),
     realWageGrowth: country(0.018, SRC.ageing),
     promotionRate,
     promotionRaise,

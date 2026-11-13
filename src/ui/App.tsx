@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { PlotCount } from '../engine'
 import { World, type Side } from './World'
 import { Garden } from './Garden'
@@ -51,26 +51,39 @@ const BACKDROP: { her: Side; twin: Side } = {
 export default function App() {
   const [screen, setScreen] = useState<Screen>('welcome')
   const [answers, setAnswers] = useState<Answers>(DEFAULT_ANSWERS)
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [screen])
 
   return (
-    <main className={screen === 'garden' ? 'app garden-app' : 'app intro'}>
+    <main
+      className={
+        screen === 'garden'
+          ? 'app garden-app'
+          : `app intro ${screen === 'welcome' ? 'centred' : ''}`
+      }
+    >
       {screen !== 'garden' && (
         <div className="backdrop" aria-hidden>
           <World mode="wide" progress={0.3} her={BACKDROP.her} twin={BACKDROP.twin} tick={0} />
         </div>
       )}
-      {screen === 'welcome' && <Welcome onStart={() => setScreen('how')} />}
-      {screen === 'how' && (
-        <HowItWorks onNext={() => setScreen('onboarding')} onBack={() => setScreen('welcome')} />
-      )}
+      {screen === 'welcome' && <Welcome onStart={() => setScreen('onboarding')} />}
       {screen === 'onboarding' && (
         <Onboarding
           initial={answers}
-          onBack={() => setScreen('how')}
+          onBack={() => setScreen('welcome')}
           onDone={(a) => {
             setAnswers(a)
-            setScreen('garden')
+            setScreen('how')
           }}
+        />
+      )}
+      {screen === 'how' && (
+        <HowItWorks
+          answers={answers}
+          onNext={() => setScreen('garden')}
+          onBack={() => setScreen('onboarding')}
         />
       )}
       {screen === 'garden' && <Garden answers={answers} onEdit={() => setScreen('onboarding')} />}

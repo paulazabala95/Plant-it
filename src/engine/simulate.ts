@@ -1,4 +1,5 @@
 import { GARDEN_OPTIONS, OVERTRADED_OPTIONS, type GardenOption, type PensionStep } from '../data'
+import { taxRateAt } from './net'
 import type { LifeEvent, Profile, Split, Timeline, YearPoint } from './types'
 
 const monthlyRate = (yearly: number) => (1 + yearly) ** (1 / 12) - 1
@@ -77,8 +78,10 @@ export function simulate(p: Profile): Timeline {
 
   for (let m = 0; m < months; m++) {
     const year = Math.floor(m / 12)
-    const pay = ((p.annualSalary * (1 + yearlyPayGrowth) ** year) / 12) * earningsFactor(p, m)
-    const saved = pay * p.savingsRate
+    const factor = earningsFactor(p, m)
+    const yearlyPay = p.annualSalary * (1 + yearlyPayGrowth) ** year * factor
+    const pay = yearlyPay / 12
+    const saved = pay * (1 - taxRateAt(p.tax, yearlyPay)) * p.savingsRate
     const pensionIn = pay * pensionRate(p.pension, p.startYear + year)
 
     for (const o of GARDEN_OPTIONS) {
