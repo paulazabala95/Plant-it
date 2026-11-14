@@ -50,7 +50,7 @@ export function shapley<K extends string>(
 }
 
 export interface Breakdown {
-  /** Twin's final total minus hers, today's euros. */
+  /** Twin's own savings at retirement minus hers (pension apart), today's euros. */
   gap: number
   factors: Record<Factor, number>
   structural: number
@@ -64,12 +64,13 @@ export interface Breakdown {
 export function fairWorldGain(inputs: HerInputs): number {
   const her = herProfile(inputs)
   return (
-    simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.total - simulate(her).final.total
+    simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.savings -
+    simulate(her).final.savings
   )
 }
 
 export interface InvestingVsTwin {
-  /** Money she puts in over her career (savings and invested pension), today's money. */
+  /** Money she puts into her own savings over her career, today's money. */
   herPaidIn: number
   twinPaidIn: number
   /** Her garden at retirement when she invests ("her at her best"). */
@@ -78,6 +79,9 @@ export interface InvestingVsTwin {
   twinTotal: number
   /** The twin's garden if he invested with her mix: the structural gaps stay. */
   twinLikeHer: number
+  /** Workplace pensions at retirement, shown apart from the gardens. */
+  herPension: number
+  twinPension: number
 }
 
 /** Why she can end ahead of the typical-man twin when she invests, and why the gaps remain. */
@@ -87,11 +91,13 @@ export function investingVsTwin(inputs: HerInputs): InvestingVsTwin {
   const her = simulate(best).final
   const twin = simulate(twinP).final
   return {
-    herPaidIn: her.contributed,
-    twinPaidIn: twin.contributed,
-    herTotal: her.total,
-    twinTotal: twin.total,
-    twinLikeHer: simulate({ ...twinP, split: best.split }).final.total,
+    herPaidIn: her.savingsPaidIn,
+    twinPaidIn: twin.savingsPaidIn,
+    herTotal: her.savings,
+    twinTotal: twin.savings,
+    twinLikeHer: simulate({ ...twinP, split: best.split }).final.savings,
+    herPension: her.retirement,
+    twinPension: twin.retirement,
   }
 }
 
@@ -100,7 +106,7 @@ export function breakdown(inputs: HerInputs): Breakdown {
   const her = herProfile(inputs)
   const factors = shapley(
     ALL_FACTORS,
-    (set) => simulate(applyFactors(her, set, inputs)).final.total,
+    (set) => simulate(applyFactors(her, set, inputs)).final.savings,
   )
   const sum = (keys: readonly Factor[]) => keys.reduce((s, k) => s + factors[k], 0)
   const structural = sum(STRUCTURAL_FACTORS)
@@ -127,6 +133,6 @@ export function monthlyIncome(amount: number, region: Region): number {
   return (amount * m) / (1 - (1 + m) ** -months)
 }
 
-/** How much bigger the twin's garden ends than hers (negative when hers is bigger). */
+/** How much bigger the twin's savings end than hers (negative when hers are bigger). */
 export const gardenGap = (her: Timeline, twin: Timeline): number =>
-  twin.final.total - her.final.total
+  twin.final.savings - her.final.savings

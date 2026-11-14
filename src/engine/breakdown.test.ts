@@ -46,7 +46,9 @@ describe('breakdown', () => {
   const b = breakdown(inputs)
 
   it('explains the whole gap between the twin and her', () => {
-    const gap = simulate(twinProfile(inputs)).final.total - simulate(herProfile(inputs)).final.total
+    // The gardens compare her own savings; the workplace pension is shown apart.
+    const gap =
+      simulate(twinProfile(inputs)).final.savings - simulate(herProfile(inputs)).final.savings
     expect(b.gap).toBeCloseTo(gap, 6)
     const sum = Object.values(b.factors).reduce((s, x) => s + x, 0)
     expect(sum).toBeCloseTo(gap, 6)
@@ -82,8 +84,8 @@ describe('breakdown', () => {
       const { fairWorldGain } = await import('./breakdown')
       const { applyFactors, STRUCTURAL_FACTORS } = await import('./scenarios')
       const her = herProfile(inputs)
-      const fair = simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.total
-      expect(fairWorldGain(inputs)).toBeCloseTo(fair - simulate(her).final.total, 6)
+      const fair = simulate(applyFactors(her, STRUCTURAL_FACTORS, inputs)).final.savings
+      expect(fairWorldGain(inputs)).toBeCloseTo(fair - simulate(her).final.savings, 6)
       expect(fairWorldGain(inputs)).toBeGreaterThan(0)
     })
   })
@@ -107,11 +109,13 @@ describe('investingVsTwin', () => {
     const twin = simulate(twinProfile(inputs)).final
     const twinLikeHer = simulate({ ...twinProfile(inputs), split: best.split }).final
     const r = investingVsTwin(inputs)
-    expect(r.herPaidIn).toBeCloseTo(her.contributed, 6)
-    expect(r.twinPaidIn).toBeCloseTo(twin.contributed, 6)
-    expect(r.herTotal).toBeCloseTo(her.total, 6)
-    expect(r.twinTotal).toBeCloseTo(twin.total, 6)
-    expect(r.twinLikeHer).toBeCloseTo(twinLikeHer.total, 6)
+    expect(r.herPaidIn).toBeCloseTo(her.savingsPaidIn, 6)
+    expect(r.twinPaidIn).toBeCloseTo(twin.savingsPaidIn, 6)
+    expect(r.herTotal).toBeCloseTo(her.savings, 6)
+    expect(r.twinTotal).toBeCloseTo(twin.savings, 6)
+    expect(r.twinLikeHer).toBeCloseTo(twinLikeHer.savings, 6)
+    expect(r.herPension).toBeCloseTo(her.retirement, 6)
+    expect(r.twinPension).toBeCloseTo(twin.retirement, 6)
   })
 
   it('shows the gaps are still there: he puts in more, and with her mix he ends ahead', async () => {

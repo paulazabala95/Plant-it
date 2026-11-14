@@ -51,6 +51,11 @@ export interface YearPoint {
   retirement: number
   /** Paid into the retirement field so far, without growth. */
   retirementPaidIn: number
+  /** Her own savings (all garden options), without the workplace pension. */
+  savings: number
+  /** Paid into her own savings so far, without growth. */
+  savingsPaidIn: number
+  /** Savings plus the workplace pension. */
   total: number
   /** Total paid in so far (savings + pension), without growth. */
   contributed: number

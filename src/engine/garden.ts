@@ -24,16 +24,16 @@ export function plantUnit(biggestTotal: number, maxPlants = 16): number {
   return NICE_UNITS.find((u) => u >= needed) ?? NICE_UNITS[NICE_UNITS.length - 1]
 }
 
-/** How many plants each plot gets at one age. Plots with nothing in them are left out. */
+/**
+ * How many plants each plot gets at one age. Plots with nothing in them are left out.
+ * The garden grows only her own savings; the workplace pension is shown apart.
+ */
 export function plantCounts(point: YearPoint, unit: number): PlotCount[] {
-  const plots: { plot: Plot; value: number; paid: number }[] = [
-    ...GARDEN_OPTIONS.map((o) => ({
-      plot: o as Plot,
-      value: point.garden[o],
-      paid: point.paidIn[o],
-    })),
-    { plot: 'pension', value: point.retirement, paid: point.retirementPaidIn },
-  ]
+  const plots: { plot: Plot; value: number; paid: number }[] = GARDEN_OPTIONS.map((o) => ({
+    plot: o as Plot,
+    value: point.garden[o],
+    paid: point.paidIn[o],
+  }))
   return plots
     .filter((p) => p.paid > 0)
     .map((p) => ({
@@ -43,12 +43,18 @@ export function plantCounts(point: YearPoint, unit: number): PlotCount[] {
     }))
 }
 
-/** How much smaller her garden ends at retirement because of one life event card. */
-export function eventImpact(inputs: HerInputs, event: LifeEvent): number {
+/** How much smaller her own savings and her workplace pension end because of one life event card. */
+export function eventImpact(
+  inputs: HerInputs,
+  event: LifeEvent,
+): { savings: number; pension: number } {
   const others = (inputs.events ?? []).filter((e) => e !== event)
-  const without = simulate(herProfile({ ...inputs, events: others })).final.total
-  const withIt = simulate(herProfile({ ...inputs, events: [...others, event] })).final.total
-  return without - withIt
+  const without = simulate(herProfile({ ...inputs, events: others })).final
+  const withIt = simulate(herProfile({ ...inputs, events: [...others, event] })).final
+  return {
+    savings: without.savings - withIt.savings,
+    pension: without.retirement - withIt.retirement,
+  }
 }
 
 /**
@@ -87,7 +93,7 @@ export function promotionAges(startAge: number, retirementAge: number, rate: num
 
 /** Seeds to show falling for one step of the time-lapse: what was paid in, in tenths of a plant. */
 export function seedsBetween(from: YearPoint, to: YearPoint, unit: number): number {
-  const paid = to.contributed - from.contributed
+  const paid = to.savingsPaidIn - from.savingsPaidIn
   if (paid <= 0) return 0
   return Math.min(14, Math.max(1, Math.round((paid / unit) * 10)))
 }

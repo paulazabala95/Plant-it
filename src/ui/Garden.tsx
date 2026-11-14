@@ -194,7 +194,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const twinNow = twin.points[i]
   const age = herNow.age
   const progress = last === 0 ? 1 : i / last
-  const unit = plantUnit(Math.max(her.final.total, twin.final.total), 42)
+  const unit = plantUnit(Math.max(her.final.savings, twin.final.savings), 42)
   const herCounts = plantCounts(herNow, unit)
   const twinCounts = plantCounts(twinNow, unit)
   const plots = [
@@ -242,7 +242,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     baby: babyYears(age),
     mood: herMood,
     label: 'You',
-    value: compactMoney(herNow.total),
+    value: compactMoney(herNow.savings),
     promoted: playing && herPromos.includes(Math.floor(age)),
     seeds: playing ? seedsBetween(her.points[prev], herNow, unit) : 0,
   }
@@ -252,7 +252,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     baby: babyYears(age),
     mood: 'happy',
     label: 'Your twin',
-    value: compactMoney(twinNow.total),
+    value: compactMoney(twinNow.savings),
     promoted: playing && twinPromos.includes(Math.floor(age)),
     highlight,
     seeds: playing ? seedsBetween(twin.points[prev], twinNow, unit) : 0,
@@ -326,23 +326,37 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         : `You end ${compactMoney(-gap)} ahead of your twin.`
   let headline: string
   let sub: string
+  const mine = compactMoney(her.final.savings)
   if (scenario === 'investing') {
-    headline = `Investing the same ${amount} a month gives you ${compactMoney(investGain)} more.`
-    sub = `That's about ${money(monthlyIncome(investGain, answers.country))} more every month of your retirement. ${twinLine}`
+    headline = `Invested, your ${amount} a month becomes ${mine}, not ${compactMoney(without.final.savings)}.`
+    sub = `That's ${compactMoney(investGain)} more, about ${money(monthlyIncome(investGain, answers.country))} extra every month of your retirement. ${twinLine}`
   } else {
-    headline =
+    const where = scenario === 'none' ? 'In a savings account, your' : 'Your'
+    headline = `${where} ${amount} a month becomes ${mine}.`
+    sub =
       Math.abs(gap) < 500
         ? 'You end level with your twin.'
         : gap > 0
-          ? `${scenario === 'none' ? 'Not investing, his' : 'His'} garden ends ${compactMoney(gap)} bigger than yours.`
+          ? `His garden ends ${compactMoney(gap)} bigger: about ${money(perMonth)} more for him every month of his retirement.`
           : `Your garden ends ${compactMoney(-gap)} bigger than his.`
-    sub =
-      gap > 0 ? `That's about ${money(perMonth)} more for him every month of his retirement.` : ''
     const better = gardenGap(her, simulate(atHerBest(inputs)))
     if (story && scenario === 'none')
       sub += ` Now watch what happens if you plant the same ${amount}.`
     else if (better > 500) sub += ` Investing the same money would add ${compactMoney(better)}.`
   }
+
+  const impactText = (impact: { savings: number; pension: number }, e: LifeEvent) => (
+    <>
+      At {Math.floor(retirementAge)}, your savings end <b>{compactMoney(impact.savings)}</b> smaller
+      {impact.pension >= 500 && (
+        <>
+          {' '}
+          and your workplace pension <b>{compactMoney(impact.pension)}</b> smaller
+        </>
+      )}
+      .{e.kind === 'child' ? " His don't change." : ''}
+    </>
+  )
 
   const ages = Array.from(
     { length: Math.floor(retirementAge) - answers.age },
@@ -491,6 +505,13 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           </p>
           <h1>{headline}</h1>
           <p>{sub}</p>
+          {(her.final.retirement > 0 || twin.final.retirement > 0) && (
+            <p className="pension-line">
+              Plus your workplace pension: <b>{compactMoney(her.final.retirement)}</b> (his:{' '}
+              {compactMoney(twin.final.retirement)}). It's invested for you either way, so it's
+              shown apart from the gardens.
+            </p>
+          )}
           {scenario === 'investing' && gap < 0 && (
             <button className="ask green" onClick={() => setPhase('reveal')}>
               <span className="ask-badge" aria-hidden>
@@ -639,11 +660,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
             <div key={k} className="event">
               <div>
                 <b>{describe(e)}</b>
-                <p>
-                  Your garden ends <b>{compactMoney(eventImpact(inputs, e))}</b> smaller at{' '}
-                  {Math.floor(retirementAge)}
-                  {e.kind === 'child' ? '. His stays the same.' : '.'}
-                </p>
+                <p>{impactText(eventImpact(inputs, e), e)}</p>
               </div>
               <button
                 className="chip"

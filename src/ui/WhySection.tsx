@@ -71,6 +71,9 @@ export function WhySection({ inputs }: { inputs: HerInputs }) {
             <b>{money(monthlyIncome(r.gap, inputs.country))} a month</b> through his retirement.
             Here is where that comes from:
           </p>
+          <p className="muted" style={{ fontSize: 13 }}>
+            The gardens compare your own savings. Workplace pensions are shown apart.
+          </p>
           <div className="gardens">
             <div className="card pink" style={{ padding: 14 }}>
               <p className="eyebrow">The system</p>

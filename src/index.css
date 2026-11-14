@@ -1140,3 +1140,9 @@ input[type='range'] {
 .edit-pill:hover {
   background: #fff;
 }
+
+.pension-line {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}

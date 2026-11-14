@@ -14,7 +14,6 @@ const ORDER: Plot[] = [
   'singleStocks',
   'crypto',
   'lifeInsurance',
-  'pension',
 ]
 
 /** After the questions: the metaphor, with her own mix highlighted first. */
@@ -41,7 +40,8 @@ export function HowItWorks({
         <h1>Every euro you save is a seed.</h1>
         <p className="lead">
           Where you plant it decides how much it grows. Here is what your money becomes in the
-          garden. The fruit on a plant is what it has grown on top of what you put in.
+          garden. The fruit on a plant is what it has grown on top of what you put in. Your
+          workplace pension is invested for you either way, so it's shown apart.
         </p>
       </section>
       <div className="how-grid">

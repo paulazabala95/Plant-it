@@ -57,6 +57,14 @@ describe('simulate', () => {
     expect(t.final.garden.indexFund).toBeGreaterThan(t.final.paidIn.indexFund)
   })
 
+  it('keeps her own savings apart from the workplace pension', () => {
+    const t = run({ pension: [{ fromYear: 2000, rate: 0.05 }] })
+    expect(t.final.savings).toBeCloseTo(1200, 6)
+    expect(t.final.savingsPaidIn).toBeCloseTo(1200, 6)
+    expect(t.final.retirement).toBeCloseTo(600, 6)
+    expect(t.final.total).toBeCloseTo(1800, 6)
+  })
+
   it('returns one point per whole age, starting empty', () => {
     const t = run({ retirementAge: 33 })
     expect(t.points.map((p) => p.age)).toEqual([30, 31, 32, 33])

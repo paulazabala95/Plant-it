@@ -68,7 +68,10 @@ export function simulate(p: Profile): Timeline {
 
   const point = (age: number): YearPoint => {
     const gardenTotal = GARDEN_OPTIONS.reduce((sum, o) => sum + garden[o], 0)
+    const savingsPaidIn = GARDEN_OPTIONS.reduce((sum, o) => sum + paidIn[o], 0)
     return {
+      savings: gardenTotal,
+      savingsPaidIn,
       age,
       garden: { ...garden },
       paidIn: { ...paidIn },

@@ -137,6 +137,13 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- Gardens show her own savings only (owner decision): the workplace pension is invested for both
+  twins whatever she chooses and was two thirds of each total, which hid the effect of investing.
+  Gardens, headlines, the "why" breakdown, the fair-world line and "why you end ahead" all compare
+  own savings; the pension is one line under the headline ("Plus your workplace pension: ...,
+  his: ..."). Life event cards show both: what the event costs her savings and her pension.
+  Headlines lead with what her monthly amount becomes ("Invested, your EUR 300 a month becomes
+  EUR 414k, not EUR 160k").
 - Questions on the garden screen are soft pills, never underlined links (owner decision): a round
   "?" badge, the question, an arrow; blush on "Not investing", light green on "Investing";
   "See the result" uses the same pill with a back arrow; "Edit answers" is a small white pill.
