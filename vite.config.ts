@@ -6,6 +6,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/Plant-it/',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      // The app, plus the sign-up landing page at /Plant-it/join/.
+      input: {
+        main: 'index.html',
+        join: 'join/index.html',
+      },
+    },
+  },
   test: {
     include: ['src/**/*.test.ts'],
     passWithNoTests: true,

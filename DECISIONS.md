@@ -137,6 +137,9 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- Sign-up landing page (owner decision): /Plant-it/join/, a standalone page (no app code) with the
+  message, Pip and a Tally form for emails (consent checkbox and privacy note). Until the Tally form
+  ID is set in `data-tally-id`, it shows "Sign-ups open very soon". The app stays at its own address.
 - Gardens show her own savings only (owner decision): the workplace pension is invested for both
   twins whatever she chooses and was two thirds of each total, which hid the effect of investing.
   Gardens, headlines, the "why" breakdown, the fair-world line and "why you end ahead" all compare
