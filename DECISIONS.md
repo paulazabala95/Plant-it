@@ -142,6 +142,9 @@ or crypto.
   dots, the twin's extra plants glow by reason), the pension line and "Plant it: see it invested".
   Smaller text, so the gardens and totals stay visible. "Investing" keeps its result card with the
   "Why do you end up ahead of him?" button.
+- Phones (owner decision): the result card shows only "At 67 · country", the headline, one short gap
+  line, a "Why?" toggle that unfolds the reasons, a one-line pension note and the button. The scenario
+  explanation pill hides once the result shows, and the plant key is a small round button.
 - Sign-up landing page (owner decision): /Plant-it/join/, a standalone page (no app code) with the
   message, Pip and a Tally form for emails (consent checkbox and privacy note). Until the Tally form
   ID is set in `data-tally-id`, it shows "Sign-ups open very soon" (form aO4eqW is connected). The

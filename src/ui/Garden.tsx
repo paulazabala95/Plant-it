@@ -106,6 +106,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const [playing, setPlaying] = useState(true)
   const [phase, setPhase] = useState<Phase>('growing')
   const [showNumbers, setShowNumbers] = useState(false)
+  // Phones: the reasons fold away behind "Why?" so the result card stays short.
+  const [whyOpen, setWhyOpen] = useState(false)
 
   const inputs: HerInputs = useMemo(
     () => ({
@@ -163,6 +165,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   // Reset the time-lapse in the same update, so the old result never flashes.
   function changeScenario(key: Scenario) {
     setScenario(key)
+    setWhyOpen(false)
     replay()
   }
   // She moves between scenarios herself: nothing switches tab on its own.
@@ -324,6 +327,14 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       sub += ` Investing the same money would add ${compactMoney(better)}.`
   }
 
+  // Phones: one short line under the headline.
+  const shortSub =
+    Math.abs(gap) < 500
+      ? 'You end level with your twin.'
+      : gap > 0
+        ? `His garden ends ${compactMoney(gap)} bigger.`
+        : `Your garden ends ${compactMoney(-gap)} bigger than his.`
+
   const impactText = (impact: { savings: number; pension: number }, e: LifeEvent) => (
     <>
       At {Math.floor(retirementAge)}, your savings end <b>{compactMoney(impact.savings)}</b> smaller
@@ -452,7 +463,9 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           </button>
         ))}
       </div>
-      <p className="explain">{SCENARIOS.find((s) => s.key === scenario)!.explain}</p>
+      {!(phone && phase === 'result') && (
+        <p className="explain">{SCENARIOS.find((s) => s.key === scenario)!.explain}</p>
+      )}
       {phase === 'growing' && scenario === 'investing' && (
         <div className="banner">Now plant the same {amount} a month</div>
       )}
@@ -465,12 +478,32 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       {phase === 'result' && (
         <div className={`headline ${scenario !== 'investing' ? 'compact' : ''}`}>
           <p className="eyebrow">
-            At {ageLabel(retirementAge)}, the retirement age in {c.inName ?? c.name}
+            {phone
+              ? `At ${Math.floor(retirementAge)} · ${c.name}`
+              : `At ${ageLabel(retirementAge)}, the retirement age in ${c.inName ?? c.name}`}
           </p>
           <h1>{headline}</h1>
-          <p>{sub}</p>
-          {showWhy && whyRows}
-          {(her.final.retirement > 0 || twin.final.retirement > 0) && (
+          <p>{phone && scenario !== 'investing' ? shortSub : sub}</p>
+          {showWhy && !phone && whyRows}
+          {showWhy && phone && (
+            <>
+              <button
+                className="why-toggle"
+                onClick={() => setWhyOpen(!whyOpen)}
+                aria-expanded={whyOpen}
+              >
+                Why? {whyOpen ? '▴' : '▾'}
+              </button>
+              {whyOpen && whyRows}
+            </>
+          )}
+          {phone && (her.final.retirement > 0 || twin.final.retirement > 0) && (
+            <p className="pension-line">
+              + workplace pension <b>{compactMoney(her.final.retirement)}</b> (his{' '}
+              {compactMoney(twin.final.retirement)})
+            </p>
+          )}
+          {!phone && (her.final.retirement > 0 || twin.final.retirement > 0) && (
             <p className="pension-line">
               Plus your workplace pension: <b>{compactMoney(her.final.retirement)}</b> (his:{' '}
               {compactMoney(twin.final.retirement)}). It's invested for you either way, so it's
@@ -512,7 +545,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
 
   const hudBottom = (
     <div className="hud-dock">
-      <GardenKey plots={plots} unit={unit} />
+      <GardenKey plots={plots} unit={unit} small={phone} />
       <div className="hud-bottom">
         <button className="play" onClick={replay} aria-label="Replay the time-lapse">
           ↻

@@ -1203,3 +1203,29 @@ input[type='range'] {
     font-size: 13px;
   }
 }
+
+/* Phones: "Why?" toggle and the round plant-key button */
+.why-toggle {
+  align-self: center;
+  border: none;
+  background: #fbe3ec;
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.key-box.key-round {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  padding: 0;
+  cursor: pointer;
+}

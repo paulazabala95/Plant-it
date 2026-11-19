@@ -8,8 +8,30 @@ import { compactMoney } from './format'
  * What every element of the garden means: a small folded box inside the garden, just above the
  * age slider. Only lists the plants that are in the two gardens.
  */
-export function GardenKey({ plots, unit }: { plots: Plot[]; unit: number }) {
+export function GardenKey({
+  plots,
+  unit,
+  small,
+}: {
+  plots: Plot[]
+  unit: number
+  /** Phones: a small round button instead of the labelled pill. */
+  small?: boolean
+}) {
   const [open, setOpen] = useState(false)
+
+  if (!open && small)
+    return (
+      <button
+        className="key-box key-round"
+        onClick={() => setOpen(true)}
+        aria-expanded={false}
+        aria-label="What do the plants mean?"
+        title="What do the plants mean?"
+      >
+        <span aria-hidden>🌱</span>
+      </button>
+    )
 
   if (!open)
     return (
