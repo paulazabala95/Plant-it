@@ -137,6 +137,11 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- One result card, no automatic pop-ups (owner decision): when "Not investing" or "Your mix today"
+  finishes growing, one compact card shows the result, the gap, the reasons (rows with coloured
+  dots, the twin's extra plants glow by reason), the pension line and "Plant it: see it invested".
+  Smaller text, so the gardens and totals stay visible. "Investing" keeps its result card with the
+  "Why do you end up ahead of him?" button.
 - Sign-up landing page (owner decision): /Plant-it/join/, a standalone page (no app code) with the
   message, Pip and a Tally form for emails (consent checkbox and privacy note). Until the Tally form
   ID is set in `data-tally-id`, it shows "Sign-ups open very soon" (form aO4eqW is connected). The

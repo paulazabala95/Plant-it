@@ -152,18 +152,13 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     if (!playing) return
     if (step >= last) {
       setPlaying(false)
-      setPhase(scenario !== 'investing' && gardenGap(her, twin) > 0 ? 'reveal' : 'result')
+      // Straight to one result card: no automatic pop-ups.
+      setPhase('result')
       return
     }
     const t = setTimeout(() => setStep((s) => s + 1), STEP_MS)
     return () => clearTimeout(t)
   }, [playing, step, last, scenario, her, twin])
-
-  useEffect(() => {
-    if (phase !== 'reveal' || scenario === 'investing') return
-    const t = setTimeout(() => setPhase('result'), 9000)
-    return () => clearTimeout(t)
-  }, [phase, scenario])
 
   // Reset the time-lapse in the same update, so the old result never flashes.
   function changeScenario(key: Scenario) {
@@ -189,10 +184,11 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const gap = gardenGap(her, twin)
   const perMonth = monthlyIncome(Math.abs(gap), answers.country)
 
-  // Reveal: light up the twin's extra plants, grouped by cause.
+  // Result: light up the twin's extra plants, grouped by cause.
   const highlight: Record<number, string> = {}
   const causes = causePlants(why.factors, 0)
-  if (phase === 'reveal') {
+  const showWhy = phase === 'result' && scenario !== 'investing' && gap > 0
+  if (showWhy) {
     const herN = herCounts.reduce((s, k) => s + k.plants, 0)
     const twinN = twinCounts.reduce((s, k) => s + k.plants, 0)
     const split = causePlants(why.factors, Math.max(0, twinN - herN))
@@ -321,12 +317,11 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       Math.abs(gap) < 500
         ? 'You end level with your twin.'
         : gap > 0
-          ? `His garden ends ${compactMoney(gap)} bigger: about ${money(perMonth)} more for him every month of his retirement.`
+          ? `His garden ends ${compactMoney(gap)} bigger: about ${money(perMonth)} more for him every month of his retirement. Here's why:`
           : `Your garden ends ${compactMoney(-gap)} bigger than his.`
     const better = gardenGap(her, simulate(atHerBest(inputs)))
-    if (scenario === 'none')
-      sub += ` See what happens if you plant the same ${amount}: tap Investing.`
-    else if (better > 500) sub += ` Investing the same money would add ${compactMoney(better)}.`
+    if (scenario === 'today' && better > 500)
+      sub += ` Investing the same money would add ${compactMoney(better)}.`
   }
 
   const impactText = (impact: { savings: number; pension: number }, e: LifeEvent) => (
@@ -365,9 +360,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   const markers = new Set(events.map((e) => (e.kind === 'child' ? e.age : e.fromAge)))
   const thinkingOfBaby = picking === 'child' || events.some((e) => e.kind === 'child')
 
-  const legend = (
-    <div className="legend">
-      <h3>His garden is worth {compactMoney(gap)} more. Here's why:</h3>
+  const whyRows = (
+    <div className="why-rows">
       {(Object.keys(CAUSE_NAMES) as Factor[])
         .filter((f) => why.factors[f] >= 1)
         .sort((a, b) => why.factors[b] - why.factors[a])
@@ -385,20 +379,6 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
             </b>
           </div>
         ))}
-      <div className="shares">
-        <div className="pink-soft">
-          <strong>{pct(why.structuralShare)}</strong>the system
-        </div>
-        <div className="lime-soft">
-          <strong>{pct(why.choiceShare)}</strong>your choices
-        </div>
-      </div>
-      <button className="ask back" onClick={() => setPhase('result')}>
-        <span className="ask-badge" aria-hidden>
-          ←
-        </span>
-        See the result
-      </button>
     </div>
   )
 
@@ -481,14 +461,15 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           Watching {Math.round(retirementAge - answers.age)} years · age {Math.floor(age)}
         </div>
       )}
-      {phase === 'reveal' && (scenario === 'investing' ? aheadLegend : legend)}
+      {phase === 'reveal' && aheadLegend}
       {phase === 'result' && (
-        <div className="headline">
+        <div className={`headline ${scenario !== 'investing' ? 'compact' : ''}`}>
           <p className="eyebrow">
             At {ageLabel(retirementAge)}, the retirement age in {c.inName ?? c.name}
           </p>
           <h1>{headline}</h1>
           <p>{sub}</p>
+          {showWhy && whyRows}
           {(her.final.retirement > 0 || twin.final.retirement > 0) && (
             <p className="pension-line">
               Plus your workplace pension: <b>{compactMoney(her.final.retirement)}</b> (his:{' '}
@@ -502,17 +483,6 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
                 ?
               </span>
               Why do you end up ahead of him?
-              <span className="ask-arrow" aria-hidden>
-                →
-              </span>
-            </button>
-          )}
-          {scenario !== 'investing' && gap > 0 && (
-            <button className="ask pink" onClick={() => setPhase('reveal')}>
-              <span className="ask-badge" aria-hidden>
-                ?
-              </span>
-              Why is his garden bigger?
               <span className="ask-arrow" aria-hidden>
                 →
               </span>
