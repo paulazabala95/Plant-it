@@ -36,9 +36,9 @@ Product and modelling decisions agreed with the project owner. Read before chang
   HFCS 2021). Listed shares count as single stocks, so his overtrading drag applies to them.
 - Story (owner decision, main goal: show women why they need to invest): the garden opens on "Not
   investing" (all her savings in a savings account) against the typical-man twin, plays the
-  reveal, then automatically replays as "Investing" (her at her best: the same euros a month,
-  invested). Tabs: "Not investing", "Your mix today", "Investing", each explained in one line.
-  Tapping a tab stops the automatic story. "A fair world" is no longer a tab: it is one line in
+  reveal and stops on the result. She moves on herself (owner decision): the "Investing" tab or the
+  "Plant it: see it invested" button replays her life with the same euros a month, invested. Tabs: "Not investing", "Your mix today", "Investing", each explained in one line.
+  "A fair world" is no longer a tab: it is one line in
   "Why is his garden bigger?" (how much bigger her garden would be with no pay gap, motherhood
   penalty or promotion gap). The engine keeps `levelTheField` and its test.
 - Investing result (owner decision): the same box as the other tabs (headline, one line, a link).

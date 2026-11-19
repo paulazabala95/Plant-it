@@ -98,8 +98,6 @@ const STEP_MS = 300
 export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => void }) {
   const phone = useIsPhone()
   const [scenario, setScenario] = useState<Scenario>('none')
-  // The story plays "Not investing" then "Investing" until she picks a tab herself.
-  const [story, setStory] = useState(true)
   const [events, setEvents] = useState<LifeEvent[]>([])
   const [picking, setPicking] = useState<Kind | null>(null)
   const [days, setDays] = useState(4)
@@ -167,27 +165,13 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
     return () => clearTimeout(t)
   }, [phase, scenario])
 
-  // Story: after the "Not investing" result, replant the same money invested.
-  useEffect(() => {
-    if (!story || scenario !== 'none' || phase !== 'result') return
-    const t = setTimeout(() => {
-      setScenario('investing')
-      setStep(0)
-      setPhase('growing')
-      setPlaying(true)
-    }, 5000)
-    return () => clearTimeout(t)
-  }, [story, scenario, phase])
-
   // Reset the time-lapse in the same update, so the old result never flashes.
   function changeScenario(key: Scenario) {
     setScenario(key)
     replay()
   }
-  const pickTab = (key: Scenario) => {
-    setStory(false)
-    changeScenario(key)
-  }
+  // She moves between scenarios herself: nothing switches tab on its own.
+  const pickTab = (key: Scenario) => changeScenario(key)
 
   const i = Math.min(step, last)
   const herNow = her.points[i]
@@ -340,8 +324,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
           ? `His garden ends ${compactMoney(gap)} bigger: about ${money(perMonth)} more for him every month of his retirement.`
           : `Your garden ends ${compactMoney(-gap)} bigger than his.`
     const better = gardenGap(her, simulate(atHerBest(inputs)))
-    if (story && scenario === 'none')
-      sub += ` Now watch what happens if you plant the same ${amount}.`
+    if (scenario === 'none')
+      sub += ` See what happens if you plant the same ${amount}: tap Investing.`
     else if (better > 500) sub += ` Investing the same money would add ${compactMoney(better)}.`
   }
 
@@ -489,7 +473,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
         ))}
       </div>
       <p className="explain">{SCENARIOS.find((s) => s.key === scenario)!.explain}</p>
-      {phase === 'growing' && story && scenario === 'investing' && (
+      {phase === 'growing' && scenario === 'investing' && (
         <div className="banner">Now plant the same {amount} a month</div>
       )}
       {phase === 'growing' && (
@@ -534,7 +518,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
               </span>
             </button>
           )}
-          {scenario !== 'investing' && !story && (
+          {scenario !== 'investing' && (
             <button className="btn small" onClick={() => pickTab('investing')}>
               Plant it: see it invested
             </button>
