@@ -1552,3 +1552,76 @@ input[type='range'] {
     grid-template-columns: 1fr;
   }
 }
+
+/* Plan for something: goals */
+.plan-card.goal {
+  grid-column: 1 / -1;
+  background: #fdf1d3;
+}
+.goal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.goal-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  align-items: end;
+}
+.goal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+  min-width: 0;
+}
+.goal-field input[type='range'] {
+  width: 100%;
+}
+.goal-money {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 18px;
+}
+.goal-money input {
+  border: none;
+  outline: none;
+  font: inherit;
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.goal-money:focus-within {
+  outline: 3px solid var(--pollen);
+}
+.goal-result {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
+}
+.goal-result p {
+  margin: 0;
+}
+.goal-big {
+  font-size: 17px;
+}
+.goal-result .bad {
+  color: var(--petal);
+  font-weight: 600;
+}
+@media (max-width: 640px) {
+  .goal-inputs {
+    grid-template-columns: 1fr;
+  }
+}

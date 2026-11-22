@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { DEFAULT_CASH_BUFFER, FUND_COSTS, PUBLIC_CLIENT, type ClientConfig } from '../data'
 import { defaultsFor, investMore, pensionRate, waitingCost, type HerInputs } from '../engine'
 import { Checklist } from './Checklist'
+import { GoalPlanner } from './GoalPlanner'
 import { WhyLink } from './WhyLink'
 import { compactMoney, money, pct } from './format'
 
@@ -17,11 +18,15 @@ export function YourPlan({
   monthly,
   client = PUBLIC_CLIENT,
   onLifeHappens,
+  onAddBaby,
+  onTryBreak,
 }: {
   inputs: HerInputs
   monthly: number
   client?: ClientConfig
   onLifeHappens: () => void
+  onAddBaby: (age: number) => void
+  onTryBreak: () => void
 }) {
   const [extra, setExtra] = useState(50)
   const [wait, setWait] = useState(5)
@@ -134,6 +139,8 @@ export function YourPlan({
             {showChecklist ? 'Hide my checklist' : 'Turn my plan into a checklist ✓'}
           </button>
         </div>
+
+        <GoalPlanner inputs={inputs} onAddBaby={onAddBaby} onTryBreak={onTryBreak} />
 
         <div className="plan-card start">
           <h3>{client.whereToStart.title}</h3>

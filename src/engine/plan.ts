@@ -1,6 +1,9 @@
+import { REAL_RETURNS } from '../data'
 import { netMonthly } from './net'
 import { atHerBest, notInvesting, type HerInputs } from './scenarios'
 import { simulate } from './simulate'
+
+const monthlyRate = (yearly: number) => (1 + yearly) ** (1 / 12) - 1
 
 /** Her own savings at retirement when invested, with and without a what-if change. */
 export interface WhatIf {
@@ -32,4 +35,42 @@ export function waitingCost(inputs: HerInputs, years: number): WhatIf & { cost: 
   const later = simulate({ ...best, saveFromMonth: months }).final.savings
   const savings = waiting + later
   return { savings, cost: base - savings }
+}
+
+export interface GoalPlan {
+  /** What she sets aside each month, in a savings account, to have the amount in time. */
+  monthly: number
+  /** What she saves each month today. */
+  currentMonthly: number
+  /** How much more than she saves today the goal needs each month (0 if it fits). */
+  shortfall: number
+  /**
+   * How much smaller her invested retirement garden ends if the goal money comes out of what
+   * she saves now (what those euros would have grown into, invested).
+   */
+  retirementCost: number
+}
+
+/**
+ * A goal (a home, a baby buffer, a sabbatical...): `amount` euros in `years`. Money needed within
+ * a few years stays in a savings account, so it uses the savings-account return.
+ */
+export function goalPlan(inputs: HerInputs, amount: number, years: number): GoalPlan {
+  const months = Math.max(1, Math.round(years * 12))
+  const m = monthlyRate(REAL_RETURNS.greenhouse)
+  const monthly = m === 0 ? amount / months : (amount * m) / ((1 + m) ** months - 1)
+  const net = netMonthly(inputs.grossSalary, inputs.country)
+  const currentMonthly = inputs.savingsRate * net
+  const fromPlan = Math.min(monthly, currentMonthly)
+  const retirementCost = simulate({
+    ...atHerBest(inputs),
+    savingsRate: fromPlan / net,
+    saveUntilMonth: months,
+  }).final.savings
+  return {
+    monthly,
+    currentMonthly,
+    shortfall: Math.max(0, monthly - currentMonthly),
+    retirementCost,
+  }
 }

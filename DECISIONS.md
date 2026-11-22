@@ -137,6 +137,12 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- "Plan for something" (owner decision): goals (a home, a baby, time off, studies, own business,
+  something else). She types the amount herself (no guessed house prices) and picks 1 to 10 years.
+  The engine (`goalPlan`) works out the monthly amount kept in a savings account (savings-account
+  return, because the money is needed soon), and what her retirement garden loses if that comes out of
+  what she saves now (never more than she saves; any shortfall is shown). A baby goal can add the baby
+  to her garden; time off links to the career-break card.
 - "How Plant It thinks" (owner decision): nine principles with their evidence and its limits, shown
   under "Your plan". Each plan tip and checklist group has a "Why?" link that opens its principle.
   Framing stays "invest more, behave like you", never "invest like men".

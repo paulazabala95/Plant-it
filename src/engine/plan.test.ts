@@ -56,3 +56,44 @@ describe('waitingCost', () => {
     expect(waitingCost(inputs, 10).cost).toBeGreaterThan(waitingCost(inputs, 5).cost)
   })
 })
+
+describe('goalPlan', () => {
+  it('sets aside a monthly amount in a savings account that reaches the goal in time', async () => {
+    const { goalPlan } = await import('./plan')
+    const { REAL_RETURNS } = await import('../data')
+    const m = (1 + REAL_RETURNS.greenhouse) ** (1 / 12) - 1
+    const n = 3 * 12
+    const r = goalPlan(inputs, 20_000, 3)
+    expect(r.monthly).toBeCloseTo((20_000 * m) / ((1 + m) ** n - 1), 6)
+  })
+
+  it('costs her retirement garden what those euros would have grown into, invested', async () => {
+    const { goalPlan } = await import('./plan')
+    // 8,000 in 3 years fits inside what she saves now, so nothing is capped.
+    const r = goalPlan(inputs, 8_000, 3)
+    expect(r.shortfall).toBe(0)
+    const net = netMonthly(40_000, 'NL')
+    const expected = simulate({
+      ...atHerBest(inputs),
+      savingsRate: r.monthly / net,
+      saveUntilMonth: 36,
+    }).final.savings
+    expect(r.retirementCost).toBeCloseTo(expected, 6)
+    expect(r.retirementCost).toBeGreaterThan(8_000)
+  })
+
+  it('never takes more than she saves, and says how much is missing', async () => {
+    const { goalPlan } = await import('./plan')
+    const saving = 0.1 * netMonthly(40_000, 'NL')
+    const big = goalPlan(inputs, 100_000, 1)
+    expect(big.currentMonthly).toBeCloseTo(saving, 6)
+    expect(big.shortfall).toBeCloseTo(big.monthly - saving, 6)
+    const capped = simulate({
+      ...atHerBest(inputs),
+      savingsRate: 0.1,
+      saveUntilMonth: 12,
+    }).final.savings
+    expect(big.retirementCost).toBeCloseTo(capped, 6)
+    expect(goalPlan(inputs, 1_000, 5).shortfall).toBe(0)
+  })
+})

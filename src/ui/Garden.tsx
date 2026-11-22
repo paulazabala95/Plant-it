@@ -607,6 +607,15 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
             onLifeHappens={() =>
               document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
             }
+            onAddBaby={(age) => {
+              if (age < Math.floor(retirementAge) && !events.some((e) => e.kind === 'child'))
+                setEvents([...events, { kind: 'child', age }])
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            onTryBreak={() => {
+              setPicking('careerBreak')
+              document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
+            }}
           />
         </section>
 
