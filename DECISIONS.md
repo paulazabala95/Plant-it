@@ -143,7 +143,12 @@ or crypto.
   return, because the money is needed soon), and what her retirement garden loses if that comes out of
   what she saves now (never more than she saves; any shortfall is shown). A baby goal can add the baby
   to her garden; time off links to the career-break card.
-- "How Plant It thinks" (owner decision): nine principles with their evidence and its limits, shown
+- "How Plant It thinks" (owner decision, revised): two groups. "Why the gap exists" draws on feminist
+  economics (Waring, Folbre, Goldin, Kleven, Chang, Criado Perez, Orgad & Gill); "How to grow your
+  money" on investing research (plus Zelizer and Lusardi & Mitchell). Desktop: a list beside the
+  selected principle; phones: one accordion, one open at a time, 52px rows. Each source shows its type
+  (book, study, report, data), what it found and its limits.
+- (Earlier version:) nine principles with their evidence and its limits, shown
   under "Your plan". Each plan tip and checklist group has a "Why?" link that opens its principle.
   Framing stays "invest more, behave like you", never "invest like men".
 - "My checklist" (owner decision): "Your plan" turns into a 14-item essentials checklist in six groups

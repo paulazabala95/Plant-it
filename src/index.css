@@ -1455,78 +1455,6 @@ input[type='range'] {
   color: var(--petal);
 }
 
-/* How Plant It thinks: principles with evidence */
-.principles {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.principle-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-.principle {
-  background: var(--lilac);
-  border-radius: 18px;
-  padding: 14px 16px;
-  min-width: 0;
-}
-.principle[open] {
-  background: #eaf3d6;
-}
-.principle summary {
-  cursor: pointer;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.principle summary::-webkit-details-marker {
-  display: none;
-}
-.principle summary::after {
-  content: 'See the evidence ▾';
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--leaf);
-  margin-top: 4px;
-}
-.principle[open] summary::after {
-  content: 'Hide ▴';
-}
-.principle-title {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 18px;
-}
-.principle-idea {
-  font-size: 14.5px;
-  line-height: 1.45;
-}
-.principle-body {
-  margin-top: 10px;
-  font-size: 14px;
-  line-height: 1.45;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.principle-body p {
-  margin: 0;
-}
-.principle-body ul {
-  margin: 0;
-  padding-left: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.principle-body a {
-  color: var(--petal);
-  font-weight: 600;
-}
 .why-link {
   border: none;
   background: #fbe3ec;
@@ -1541,16 +1469,6 @@ input[type='range'] {
 }
 .checklist-group legend .why-link {
   font-family: var(--body);
-}
-@media (max-width: 1000px) {
-  .principle-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 640px) {
-  .principle-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* Plan for something: goals */
@@ -1623,5 +1541,259 @@ input[type='range'] {
 @media (max-width: 640px) {
   .goal-inputs {
     grid-template-columns: 1fr;
+  }
+}
+
+/* How Plant It thinks: list + detail on desktop, accordion on phones */
+.principles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.pr-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 68ch;
+}
+.pr-header h2,
+.pr-header p {
+  margin: 0;
+}
+.pr-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.pr-group-title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 17px;
+}
+.pr-group-intro {
+  margin: 2px 0 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+/* Desktop */
+.pr-split {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.pr-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: sticky;
+  top: 16px;
+}
+.pr-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pr-nav-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.pr-nav-item:hover {
+  background: var(--lilac);
+}
+.pr-nav-item.on {
+  background: #eaf3d6;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--leaf);
+}
+.pr-nav-item:focus-visible,
+.pr-row:focus-visible {
+  outline: 3px solid var(--pollen);
+  outline-offset: 1px;
+}
+.pr-detail {
+  position: sticky;
+  top: 16px;
+  background: var(--lilac);
+  border-radius: 24px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.pr-detail-group {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--petal);
+}
+.pr-detail-title {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 2.4vw, 32px);
+  text-wrap: balance;
+}
+
+/* Shared detail content */
+.pr-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 70ch;
+}
+.pr-idea {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.pr-inplant {
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pr-inplant p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.pr-evidence {
+  list-style: none;
+  margin: -6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pr-source {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pr-source-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pr-kind {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #eaf3d6;
+  color: var(--leaf);
+}
+.pr-kind.book {
+  background: #fbe3ec;
+  color: #b23a68;
+}
+.pr-kind.data,
+.pr-kind.report {
+  background: #fdf1d3;
+  color: #7a5a12;
+}
+.pr-who {
+  font-weight: 700;
+  font-size: 15px;
+}
+.pr-finding {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.pr-cite {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.pr-cite:hover {
+  color: var(--petal);
+}
+
+/* Phones */
+.pr-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.pr-item {
+  border-top: 1px solid #ece4ea;
+}
+.pr-group .pr-item:last-child {
+  border-bottom: 1px solid #ece4ea;
+}
+.pr-row {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: none;
+  background: none;
+  padding: 10px 2px;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+.pr-row-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.pr-chevron {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--lilac);
+  font-size: 18px;
+  font-weight: 600;
+}
+.pr-item.open .pr-chevron {
+  background: #eaf3d6;
+}
+.pr-item-body {
+  padding: 2px 0 16px;
+}
+.pr-item-body .pr-idea {
+  font-size: 16px;
+}
+.pr-item-body .pr-inplant,
+.pr-item-body .pr-source {
+  background: var(--lilac);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pr-nav-item {
+    transition: none;
   }
 }
