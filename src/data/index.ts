@@ -2,3 +2,4 @@
 export * from './countries'
 export * from './assumptions'
 export * from './clients'
+export * from './regulators'

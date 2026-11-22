@@ -249,3 +249,21 @@ Rent: no official source publishes a comparable national average rent in euros (
 OECD Affordable Housing Database only give rent as a share of income). These are capital-city market
 rents, higher than a typical national rent. Owner decision: keep them, labelled "rent of a 1-bed
 flat in <capital>", because capital rents are what people feel today.
+
+## Financial regulators (checklist) ✅
+
+Used in "My checklist" ("I checked the provider is authorised with …"). The official national
+competent authorities for investment firms under MiFID II, linked to their own sites:
+
+| Region | Regulator                                       | Site                       |
+| ------ | ----------------------------------------------- | -------------------------- |
+| NL     | AFM (Autoriteit Financiële Markten)             | https://www.afm.nl         |
+| ES     | CNMV (Comisión Nacional del Mercado de Valores) | https://www.cnmv.es        |
+| DE     | BaFin                                           | https://www.bafin.de       |
+| FR     | AMF (Autorité des marchés financiers)           | https://www.amf-france.org |
+| IT     | CONSOB                                          | https://www.consob.it      |
+| IE     | Central Bank of Ireland                         | https://www.centralbank.ie |
+| EU     | ESMA (lists every national competent authority) | https://www.esma.europa.eu |
+
+Fund costs in "Your plan" and the checklist: ESMA 2025, MR-CP.14 (see the returns table above:
+0.21% ETFs, 1.28% active equity funds, 2024).

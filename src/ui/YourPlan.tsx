@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { DEFAULT_CASH_BUFFER, FUND_COSTS, PUBLIC_CLIENT, type ClientConfig } from '../data'
 import { defaultsFor, investMore, pensionRate, waitingCost, type HerInputs } from '../engine'
+import { Checklist } from './Checklist'
 import { compactMoney, money, pct } from './format'
 
 const JOIN_URL = `${import.meta.env.BASE_URL}join/`
@@ -23,6 +24,7 @@ export function YourPlan({
 }) {
   const [extra, setExtra] = useState(50)
   const [wait, setWait] = useState(5)
+  const [showChecklist, setShowChecklist] = useState(false)
   const c = defaultsFor(inputs.country)
   const retire = Math.floor(c.retirementAge.value)
   const invested = useMemo(() => investMore(inputs, 0).savings, [inputs])
@@ -121,6 +123,14 @@ export function YourPlan({
               .
             </li>
           </ol>
+          <button
+            className="btn small"
+            onClick={() => setShowChecklist(!showChecklist)}
+            aria-expanded={showChecklist}
+            aria-controls="my-checklist"
+          >
+            {showChecklist ? 'Hide my checklist' : 'Turn my plan into a checklist ✓'}
+          </button>
         </div>
 
         <div className="plan-card start">
@@ -142,6 +152,11 @@ export function YourPlan({
           <p className="pip-soon">🌱 Soon: ask Pip your questions about your garden.</p>
         </div>
       </div>
+      {showChecklist && (
+        <div id="my-checklist">
+          <Checklist inputs={inputs} monthly={monthly} />
+        </div>
+      )}
       <p className="muted plan-note">
         This is education, not financial advice. Compare providers and check they are regulated.
       </p>

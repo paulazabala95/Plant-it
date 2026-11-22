@@ -137,6 +137,11 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- "My checklist" (owner decision): "Your plan" turns into a 14-item essentials checklist in six groups
+  (buffer, workplace pension, where you invest, what you invest in, automate, life moments), filled
+  with her numbers from the engine (buffer and monthly invest amount, pension rate, leave weeks) and
+  her country's regulator. Ticks are saved on her device only (localStorage); copy as text and print
+  or save as PDF. Educational: what to check, never which product.
 - "Your plan" (owner decision): after the result, a plan panel (also reached by "See your plan" on the
   Investing result). What-if sliders computed by the engine: invest EUR X more a month (`investMore`,
   the extra as a share of today's net pay) and the cost of waiting N years (`waitingCost`: savings stay
