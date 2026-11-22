@@ -88,7 +88,8 @@ export function simulate(p: Profile): Timeline {
     const factor = earningsFactor(p, m)
     const yearlyPay = p.annualSalary * (1 + yearlyPayGrowth) ** year * factor
     const pay = yearlyPay / 12
-    const saved = pay * (1 - taxRateAt(p.tax, yearlyPay)) * p.savingsRate
+    const saving = m >= (p.saveFromMonth ?? 0) && m < (p.saveUntilMonth ?? Infinity)
+    const saved = saving ? pay * (1 - taxRateAt(p.tax, yearlyPay)) * p.savingsRate : 0
     const pensionIn = pay * pensionRate(p.pension, p.startYear + year)
 
     for (const o of GARDEN_OPTIONS) {

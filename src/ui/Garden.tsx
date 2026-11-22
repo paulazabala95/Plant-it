@@ -34,6 +34,7 @@ import { GardenKey } from './GardenKey'
 import { SourceNote } from './SourceNote'
 import { factorSources, type SourceLine } from './sources'
 import { WhySection } from './WhySection'
+import { YourPlan } from './YourPlan'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
 import type { Answers } from './answers'
@@ -510,6 +511,16 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
               shown apart from the gardens.
             </p>
           )}
+          {scenario === 'investing' && (
+            <button
+              className="btn small"
+              onClick={() =>
+                document.getElementById('your-plan')?.scrollIntoView({ behavior: 'smooth' })
+              }
+            >
+              See your plan ↓
+            </button>
+          )}
           {scenario === 'investing' && gap < 0 && (
             <button className="ask green" onClick={() => setPhase('reveal')}>
               <span className="ask-badge" aria-hidden>
@@ -588,7 +599,17 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       )}
 
       <div className="below">
-        <section className="panel stack">
+        <section className="panel wide" id="your-plan">
+          <YourPlan
+            inputs={inputs}
+            monthly={answers.monthlySavings}
+            onLifeHappens={() =>
+              document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
+            }
+          />
+        </section>
+
+        <section className="panel stack" id="life-happens">
           <h2>Life happens</h2>
           <p className="muted">Tap a card, then the age it happens. Your garden replays with it.</p>
           <div className="cards">

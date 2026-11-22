@@ -39,6 +39,9 @@ export interface Profile {
   tradingDrag: number
   returns: Record<GardenOption, number>
   pensionReturn: number
+  /** Saving window in months since startAge (optional): she saves only from / until these months. */
+  saveFromMonth?: number
+  saveUntilMonth?: number
 }
 
 /** Balances at one whole age, in today's euros. */

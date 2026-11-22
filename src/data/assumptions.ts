@@ -66,7 +66,12 @@ export const ASSUMPTION_SOURCES = {
   cashBuffer: 'Plant It default, editable',
   passiveShare:
     'ESMA 2025 costs and performance report: passive funds and ETFs were 41% of equity funds (4Q24)',
+  fundCosts:
+    'ESMA 2025 costs and performance report (MR-CP.14): ongoing costs of equity UCITS in 2024, ETFs 0.21% vs active funds 1.28% a year',
 } as const
+
+/** Yearly ongoing costs of equity funds in 2024 (ESMA 2025, MR-CP.14), shown in "Your plan". */
+export const FUND_COSTS = { indexFund: 0.0021, activeFund: 0.0128 } as const
 
 /** Share of equity funds that are passive (index funds and ETFs), ESMA 2025: 41% in 4Q24. */
 export const PASSIVE_FUND_SHARE = 0.41

@@ -137,6 +137,14 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- "Your plan" (owner decision): after the result, a plan panel (also reached by "See your plan" on the
+  Investing result). What-if sliders computed by the engine: invest EUR X more a month (`investMore`,
+  the extra as a share of today's net pay) and the cost of waiting N years (`waitingCost`: savings stay
+  in a savings account while she waits, new savings are invested after). A first-steps checklist that
+  is educational only (buffer, workplace pension from country data, fund costs from ESMA 2025, automate,
+  life moments), a "Where to start" block that is the only per-client part (`src/data/clients.ts`;
+  public = general guidance, no providers named) and "Email me my plan" to the sign-up page. A spot is
+  kept for "Ask Pip" (AI guide, next step: AI explains, the engine calculates, never product advice).
 - One result card, no automatic pop-ups (owner decision): when "Not investing" or "Your mix today"
   finishes growing, one compact card shows the result, the gap, the reasons (rows with coloured
   dots, the twin's extra plants glow by reason), the pension line and "Plant it: see it invested".

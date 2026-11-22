@@ -65,6 +65,16 @@ describe('simulate', () => {
     expect(t.final.total).toBeCloseTo(1800, 6)
   })
 
+  it('saves only inside the saving window; the pension keeps going', () => {
+    const pension = [{ fromYear: 2000, rate: 0.05 }]
+    const later = run({ saveFromMonth: 6, pension })
+    expect(later.final.savingsPaidIn).toBeCloseTo(600, 6)
+    expect(later.final.retirementPaidIn).toBeCloseTo(600, 6)
+    const earlier = run({ saveUntilMonth: 6, pension })
+    expect(earlier.final.savingsPaidIn).toBeCloseTo(600, 6)
+    expect(earlier.final.retirementPaidIn).toBeCloseTo(600, 6)
+  })
+
   it('returns one point per whole age, starting empty', () => {
     const t = run({ retirementAge: 33 })
     expect(t.points.map((p) => p.age)).toEqual([30, 31, 32, 33])
