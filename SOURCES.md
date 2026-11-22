@@ -267,3 +267,20 @@ competent authorities for investment firms under MiFID II, linked to their own s
 
 Fund costs in "Your plan" and the checklist: ESMA 2025, MR-CP.14 (see the returns table above:
 0.21% ETFs, 1.28% active equity funds, 2024).
+
+## Principles ("How Plant It thinks") ✅
+
+Text lives in `src/data/principles.ts`; each principle cites its evidence. Checked against the
+original papers or the authors' and publishers' own pages (November 2026).
+
+| Principle                    | Evidence                                                                                                                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Invest more, behave like you | Barber & Odean (2001), _Boys Will Be Boys_, QJE 116(1): men traded 45% more, net risk-adjusted returns ~1.4 pp/yr lower. Darvas & Ruer (2025), Bruegel WP 26/2025 (see section 6).                  |
+| Buffer first                 | Vanguard (2025), emergency savings and financial well-being: ≥$2,000 saved linked to 21% higher well-being (12,400 Vanguard investors, correlational). Eurosystem FLN (2026) on women's resilience. |
+| Match money to its time      | UBS Global Investment Returns Yearbook 2026: equities beat bonds, bills and inflation in every country with a continuous history since 1900; 6.6% vs 1.6% real a year (1900–2025).                  |
+| Start early                  | Plant It engine, monthly compounding, with the returns in this file.                                                                                                                                |
+| Keep costs low               | Sharpe (1991), _The Arithmetic of Active Management_, FAJ 47(1). ESMA 2025 MR-CP.14: ETFs 0.21% vs active 1.28% (2024).                                                                             |
+| Spread widely                | Bessembinder (2018), _Do Stocks Outperform Treasury Bills?_, JFE 129(3): most US stocks since 1926 trail T-bills; the best 4% explain the market's net gain.                                        |
+| Trade less                   | Barber & Odean (2000), _Trading Is Hazardous to Your Wealth_, JF 55(2): most active households 11.4%/yr vs market 17.9% (1991–96).                                                                  |
+| Make it automatic            | Madrian & Shea (2001), _The Power of Suggestion_, QJE 116(4). Thaler & Benartzi (2004), _Save More Tomorrow_, JPE 112(S1): 3.5% → 13.6% after four raises; US DoL CLEAR rates causal evidence low.  |
+| Education, not advice        | ESMA (2023) supervisory briefing on the definition of investment advice under MiFID II.                                                                                                             |

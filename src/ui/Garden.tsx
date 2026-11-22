@@ -35,6 +35,7 @@ import { SourceNote } from './SourceNote'
 import { factorSources, type SourceLine } from './sources'
 import { WhySection } from './WhySection'
 import { YourPlan } from './YourPlan'
+import { Principles } from './Principles'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
 import type { Answers } from './answers'
@@ -607,6 +608,10 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
               document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
             }
           />
+        </section>
+
+        <section className="panel wide" id="how-plant-it-thinks">
+          <Principles />
         </section>
 
         <section className="panel stack" id="life-happens">

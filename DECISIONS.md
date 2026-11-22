@@ -137,6 +137,9 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- "How Plant It thinks" (owner decision): nine principles with their evidence and its limits, shown
+  under "Your plan". Each plan tip and checklist group has a "Why?" link that opens its principle.
+  Framing stays "invest more, behave like you", never "invest like men".
 - "My checklist" (owner decision): "Your plan" turns into a 14-item essentials checklist in six groups
   (buffer, workplace pension, where you invest, what you invest in, automate, life moments), filled
   with her numbers from the engine (buffer and monthly invest amount, pension rate, leave weeks) and

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { DEFAULT_CASH_BUFFER, FUND_COSTS, REGULATORS } from '../data'
 import { amountsBySplit, atHerBest, defaultsFor, pensionRate, type HerInputs } from '../engine'
 import { money, pct } from './format'
+import { WhyLink } from './WhyLink'
 
 interface Item {
   id: string
@@ -9,6 +10,8 @@ interface Item {
 }
 interface Group {
   id: string
+  /** The principle behind this group (see "How Plant It thinks"). */
+  why: string
   title: string
   items: Item[]
 }
@@ -42,6 +45,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
   const groups: Group[] = [
     {
       id: 'buffer',
+      why: 'buffer',
       title: 'Your safety buffer',
       items: [
         { id: 'costs', text: 'I know what my essential costs are each month.' },
@@ -53,6 +57,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
     },
     {
       id: 'pension',
+      why: 'automate',
       title: 'Your workplace pension',
       items: [
         {
@@ -68,6 +73,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
     },
     {
       id: 'provider',
+      why: 'low-costs',
       title: 'Where you invest',
       items: [
         {
@@ -86,6 +92,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
     },
     {
       id: 'what',
+      why: 'spread',
       title: 'What you invest in',
       items: [
         { id: 'broad', text: 'I chose a broad, low-cost index fund or ETF.' },
@@ -97,6 +104,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
     },
     {
       id: 'automate',
+      why: 'automate',
       title: 'Make it automatic',
       items: [
         {
@@ -111,6 +119,7 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
     },
     {
       id: 'life',
+      why: 'time',
       title: 'Life moments',
       items: [
         {
@@ -177,7 +186,9 @@ export function Checklist({ inputs, monthly }: { inputs: HerInputs; monthly: num
       <div className="checklist-groups">
         {groups.map((g) => (
           <fieldset key={g.id} className="checklist-group">
-            <legend>{g.title}</legend>
+            <legend>
+              {g.title} <WhyLink id={g.why} />
+            </legend>
             {g.items.map((i) => {
               const key = `${g.id}.${i.id}`
               return (

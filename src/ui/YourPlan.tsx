@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { DEFAULT_CASH_BUFFER, FUND_COSTS, PUBLIC_CLIENT, type ClientConfig } from '../data'
 import { defaultsFor, investMore, pensionRate, waitingCost, type HerInputs } from '../engine'
 import { Checklist } from './Checklist'
+import { WhyLink } from './WhyLink'
 import { compactMoney, money, pct } from './format'
 
 const JOIN_URL = `${import.meta.env.BASE_URL}join/`
@@ -97,7 +98,8 @@ export function YourPlan({
           <ol className="steps">
             <li>
               <b>Keep a safety buffer.</b> Leave some savings in a savings account for surprises. In
-              Plant It, {pct(DEFAULT_CASH_BUFFER)} of what you save stays there.
+              Plant It, {pct(DEFAULT_CASH_BUFFER)} of what you save stays there.{' '}
+              <WhyLink id="buffer" />
             </li>
             <li>
               <b>Check your workplace pension.</b>{' '}
@@ -109,11 +111,11 @@ export function YourPlan({
               <b>Choose low cost and wide spread.</b> Index funds and ETFs hold thousands of
               companies. In 2024 they cost about {pct(FUND_COSTS.indexFund, 2)} a year, against{' '}
               {pct(FUND_COSTS.activeFund, 2)} for actively managed funds. Picking single stocks is a
-              gamble.
+              gamble. <WhyLink id="low-costs" />
             </li>
             <li>
               <b>Automate it.</b> Set up a monthly plan on payday, so investing happens without
-              thinking about it.
+              thinking about it. <WhyLink id="automate" />
             </li>
             <li>
               <b>Plan for life moments.</b> A baby, part-time years or a break change your garden.{' '}
