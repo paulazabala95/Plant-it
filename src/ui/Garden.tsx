@@ -14,10 +14,8 @@ import {
   plantCounts,
   plantUnit,
   promotionAges,
-  savingsShare,
   seedsBetween,
   simulate,
-  splitFromWeights,
   twinProfile,
   type Factor,
   type HerInputs,
@@ -34,11 +32,9 @@ import { GardenKey } from './GardenKey'
 import { SourceNote } from './SourceNote'
 import { factorSources, type SourceLine } from './sources'
 import { WhySection } from './WhySection'
-import { YourPlan } from './YourPlan'
-import { Principles } from './Principles'
 import { World, type Side } from './World'
 import { ageLabel, compactMoney, money, pct } from './format'
-import type { Answers } from './answers'
+import { toInputs, type Answers } from './answers'
 import { useIsPhone } from './useIsPhone'
 
 type Scenario = 'none' | 'today' | 'investing'
@@ -97,11 +93,34 @@ const describe = (e: LifeEvent) =>
 
 const STEP_MS = 300
 
-export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => void }) {
+export function Garden({
+  answers,
+  events,
+  setEvents,
+  onEdit,
+  onPlan,
+  focusBreak = false,
+}: {
+  answers: Answers
+  events: LifeEvent[]
+  setEvents: (events: LifeEvent[]) => void
+  onEdit: () => void
+  onPlan: () => void
+  /** Open the career-break card (when she comes from "Time off" in the planner). */
+  focusBreak?: boolean
+}) {
   const phone = useIsPhone()
   const [scenario, setScenario] = useState<Scenario>('none')
-  const [events, setEvents] = useState<LifeEvent[]>([])
   const [picking, setPicking] = useState<Kind | null>(null)
+  useEffect(() => {
+    if (!focusBreak) return
+    setPicking('careerBreak')
+    const t = setTimeout(
+      () => document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' }),
+      300,
+    )
+    return () => clearTimeout(t)
+  }, [focusBreak])
   const [days, setDays] = useState(4)
   const [length, setLength] = useState(2)
   const [step, setStep] = useState(0)
@@ -111,19 +130,7 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
   // Phones: the reasons fold away behind "Why?" so the result card stays short.
   const [whyOpen, setWhyOpen] = useState(false)
 
-  const inputs: HerInputs = useMemo(
-    () => ({
-      age: answers.age,
-      country: answers.country,
-      grossSalary: answers.grossSalary,
-      savingsRate: savingsShare(answers.monthlySavings, answers.grossSalary, answers.country),
-      split: splitFromWeights(answers.weights),
-      startYear: new Date().getFullYear(),
-      events,
-      italyTfrToFund: answers.italyTfrToFund,
-    }),
-    [answers, events],
-  )
+  const inputs: HerInputs = useMemo(() => toInputs(answers, events), [answers, events])
   const c = defaultsFor(answers.country)
   const retirementAge = c.retirementAge.value
 
@@ -513,13 +520,8 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
             </p>
           )}
           {scenario === 'investing' && (
-            <button
-              className="btn small"
-              onClick={() =>
-                document.getElementById('your-plan')?.scrollIntoView({ behavior: 'smooth' })
-              }
-            >
-              See your plan ↓
+            <button className="btn small" onClick={onPlan}>
+              Make my plan →
             </button>
           )}
           {scenario === 'investing' && gap < 0 && (
@@ -600,27 +602,18 @@ export function Garden({ answers, onEdit }: { answers: Answers; onEdit: () => vo
       )}
 
       <div className="below">
-        <section className="panel wide" id="your-plan">
-          <YourPlan
-            inputs={inputs}
-            monthly={answers.monthlySavings}
-            onLifeHappens={() =>
-              document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            onAddBaby={(age) => {
-              if (age < Math.floor(retirementAge) && !events.some((e) => e.kind === 'child'))
-                setEvents([...events, { kind: 'child', age }])
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            onTryBreak={() => {
-              setPicking('careerBreak')
-              document.getElementById('life-happens')?.scrollIntoView({ behavior: 'smooth' })
-            }}
-          />
-        </section>
-
-        <section className="panel wide" id="how-plant-it-thinks">
-          <Principles />
+        <section className="panel wide plan-cta">
+          <div>
+            <p className="eyebrow">Ready to plant it?</p>
+            <h2>Turn this into a plan</h2>
+            <p className="muted">
+              See what small changes do, plan for what's coming up, and get an action plan with
+              dates you can tick off.
+            </p>
+          </div>
+          <button className="btn" onClick={onPlan}>
+            Make my plan →
+          </button>
         </section>
 
         <section className="panel stack" id="life-happens">

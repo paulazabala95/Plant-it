@@ -137,6 +137,18 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- Two paths (owner decision): the Simulator (questions, garden, Not investing / Investing, Life happens,
+  why) stays a clean illustration and ends in "Make my plan". The Planner is its own screen in three
+  steps: Your numbers (what-if), Your goals (Plan for something), Action plan. "How Plant It thinks" sits
+  under the Planner. Answers, life events and the plan are saved on her device; a returning visitor who
+  made a plan opens on her action plan.
+- Action plan (owner decision, replaces the checklist): each step has a due date and a status (to do,
+  done with the date, not for me). Suggested dates: a week, two weeks, her next payday, a year (yearly
+  check-up repeats); she can change any date. Tabs: Next up (due within 30 days or late), Done, Later.
+  A "Next up" line and "N of M done" at the top; late steps in pink. Real progress is pre-ticked (she
+  saw what not investing costs; she already saves). Add to calendar (.ics) per step or for all, Copy to
+  Notion (Markdown to-dos), Email me reminders (sign-up). The Planner asks one extra question, which
+  day she's paid; it's optional and outside the five onboarding questions.
 - "Plan for something" (owner decision): goals (a home, a baby, time off, studies, own business,
   something else). She types the amount herself (no guessed house prices) and picks 1 to 10 years.
   The engine (`goalPlan`) works out the monthly amount kept in a savings account (savings-account

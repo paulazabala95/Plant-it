@@ -55,6 +55,7 @@ ESLint (`no-restricted-imports`) enforces the engine and theme boundaries.
 - Onboarding has exactly 5 inputs: age, country, gross salary, euros saved monthly from net pay,
   savings split.
   Only exception: Italian users get one yes/no follow-up (does your TFR go to a pension fund?).
+  The Planner (after the simulation) may ask one optional question: which day she's paid.
 - Never ask about children or for numbers users are unlikely to know.
 - Career break copy is reason-neutral.
 - Main screens show almost no numbers; numbers live in the assumptions panel and ending.
