@@ -255,7 +255,7 @@ export function Onboarding({
       </section>
 
       <button className="btn block" onClick={next} disabled={!canNext}>
-        Next
+        {i === steps.length - 1 ? 'See my garden' : 'Next'}
       </button>
     </>
   )

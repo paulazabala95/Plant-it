@@ -1,6 +1,20 @@
 import { Person } from './art'
 
-export function Welcome({ onStart }: { onStart: () => void }) {
+const STEPS = [
+  { n: 1, title: 'See', text: 'both gardens grow' },
+  { n: 2, title: 'Plan', text: 'what small changes do' },
+  { n: 3, title: 'Act', text: 'steps with dates' },
+]
+
+/** The first screen: the hook, what she'll get (See, Plan, Act) and one main action. */
+export function Welcome({
+  onStart,
+  onContinue,
+}: {
+  onStart: () => void
+  /** Shown when she already made a plan on this device. */
+  onContinue?: () => void
+}) {
   return (
     <section className="sheet-card welcome">
       <p className="eyebrow">Plant it</p>
@@ -15,12 +29,38 @@ export function Welcome({ onStart }: { onStart: () => void }) {
         Meet your <b>identical twin brother</b>. Same job, same savings, same life. The only
         difference: he's a man.
       </p>
-      <p className="lead">
-        See whose money grows more by the time you both retire, and what you can do about it.
+
+      <ol className="welcome-steps" aria-label="What you'll do">
+        {STEPS.map((s) => (
+          <li key={s.n}>
+            <span className="welcome-step-n" aria-hidden>
+              {s.n}
+            </span>
+            <span>
+              <b>{s.title}</b> {s.text}
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <div className="welcome-actions">
+        <button className="btn" onClick={onStart}>
+          Show me the difference
+        </button>
+        {onContinue && (
+          <button className="ask back" onClick={onContinue}>
+            Continue my plan
+            <span className="ask-arrow" aria-hidden>
+              →
+            </span>
+          </button>
+        )}
+      </div>
+
+      <p className="welcome-trust">
+        2 minutes · 5 questions · Free, no sign-up · Your answers stay on your device · Every number
+        has a source
       </p>
-      <button className="btn" onClick={onStart}>
-        Show me the difference
-      </button>
     </section>
   )
 }

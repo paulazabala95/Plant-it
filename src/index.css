@@ -2120,3 +2120,87 @@ input[type='range'] {
 .ap-actions .why-link:hover {
   background: #fbe3ec;
 }
+
+/* Welcome: what she'll get, one main action, trust line */
+.welcome-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.welcome-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: var(--lilac);
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: left;
+  min-width: 0;
+}
+.welcome-step-n {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--leaf);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.welcome-steps b {
+  display: block;
+}
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.welcome-actions .ask.back {
+  align-self: center;
+  padding-left: 18px;
+}
+.welcome-trust {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-align: center;
+  line-height: 1.5;
+}
+@media (max-width: 640px) {
+  .welcome .twins {
+    max-height: 17vh;
+  }
+  .welcome h1 {
+    font-size: clamp(22px, 6.4vw, 28px);
+  }
+  .welcome .lead {
+    font-size: 15px;
+  }
+  .welcome-steps {
+    gap: 6px;
+  }
+  .welcome-steps li {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  .welcome-step-n {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+  .welcome-trust {
+    font-size: 12px;
+  }
+}

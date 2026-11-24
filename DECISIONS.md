@@ -122,8 +122,8 @@ or crypto.
   shown as a share of net pay; the split shows euros per option. In the engine, saving is a share of
   net pay every month (recomputed as pay changes); pensions stay on gross pay. The twin saves the
   same share of his (higher) net pay.
-- Order: welcome (card centred on every screen), the five questions, then "How your garden grows"
-  as a grid of equal cards (3 / 2 / 1 columns) with her own mix highlighted, then the garden.
+- Order: welcome (card centred on every screen), the five questions, then the garden (the "How your
+  garden grows" screen was later removed, see below).
 - Flow: hook question ("Have you ever pictured your life with, and without, investing?"), "How your
   garden grows" (every euro is a seed, one plant per option, fruit = growth), then the questions.
   "Next" on every question, "See my garden" on the last. Country = where you pay income tax.
@@ -137,6 +137,13 @@ or crypto.
 - A baby card is framed positively with a "Planning a baby?" panel (leave, buffer, keep investing,
   share leave, the dip is temporary), as things to consider, not advice.
 - Owner rule: propose changes and get agreement before building them.
+- First screen (owner decision): the hook question and the twins, then See, Plan, Act (what she'll
+  get), one main button "Show me the difference", "Continue my plan" when she has a plan on this
+  device, and a trust line (2 minutes, 5 questions, free, no sign-up, answers stay on her device,
+  every number has a source). On phones the steps sit in one row so the button stays above the fold.
+- "How your garden grows" screen removed (owner decision): tutorials don't help (NN/g); the last
+  question's button says "See my garden" and goes straight there. The plant key and the boxes in
+  the garden explain things in context.
 - Two paths (owner decision): the Simulator (questions, garden, Not investing / Investing, Life happens,
   why) stays a clean illustration and ends in "Make my plan". The Planner is its own screen in three
   steps: Your numbers (what-if), Your goals (Plan for something), Action plan. "How Plant It thinks" sits

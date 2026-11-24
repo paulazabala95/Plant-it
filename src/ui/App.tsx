@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import type { LifeEvent, PlotCount } from '../engine'
 import { World, type Side } from './World'
 import { Garden } from './Garden'
-import { HowItWorks } from './HowItWorks'
 import { DEFAULT_ANSWERS, loadSession, saveSession, type Answers } from './answers'
 import { Planner } from './Planner'
 import { Onboarding } from './Onboarding'
 import { Welcome } from './Welcome'
 
-type Screen = 'welcome' | 'how' | 'onboarding' | 'garden' | 'planner'
+type Screen = 'welcome' | 'onboarding' | 'garden' | 'planner'
 
 const still = (counts: [PlotCount['plot'], number][]): PlotCount[] =>
   counts.map(([plot, plants]) => ({ plot, plants, growth: 0.6 }))
@@ -85,22 +84,20 @@ export default function App() {
           <World mode="wide" progress={0.3} her={BACKDROP.her} twin={BACKDROP.twin} tick={0} />
         </div>
       )}
-      {screen === 'welcome' && <Welcome onStart={() => setScreen('onboarding')} />}
+      {screen === 'welcome' && (
+        <Welcome
+          onStart={() => setScreen('onboarding')}
+          onContinue={planner ? openPlanner : undefined}
+        />
+      )}
       {screen === 'onboarding' && (
         <Onboarding
           initial={answers}
           onBack={() => setScreen('welcome')}
           onDone={(a) => {
             setAnswers(a)
-            setScreen('how')
+            setScreen('garden')
           }}
-        />
-      )}
-      {screen === 'how' && (
-        <HowItWorks
-          answers={answers}
-          onNext={() => setScreen('garden')}
-          onBack={() => setScreen('onboarding')}
         />
       )}
       {screen === 'garden' && (
