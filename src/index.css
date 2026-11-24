@@ -949,7 +949,7 @@ input[type='range'] {
   border-radius: 50%;
   justify-self: center;
 }
-.key-dot.seed {
+.key-dot.gold {
   width: 14px;
   height: 14px;
   background: var(--pollen, #f6c94d);
@@ -2202,5 +2202,93 @@ input[type='range'] {
   }
   .welcome-trust {
     font-size: 12px;
+  }
+}
+
+/* First visit: how to read the garden, before it grows */
+.welcome-garden {
+  margin: 0;
+  font-size: clamp(14px, 1.9vh, 16px);
+  background: #eaf3d6;
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: center;
+}
+.read-garden {
+  width: min(520px, 100%);
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: rise 0.4s ease;
+}
+.read-garden h2 {
+  margin: 0;
+  font-size: 22px;
+}
+.read-garden p {
+  margin: 0;
+  font-size: 15px;
+}
+.read-garden ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.read-garden li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 10px;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1.35;
+}
+.read-garden li > svg,
+.read-garden li > .key-dot {
+  justify-self: center;
+}
+.read-garden-later {
+  color: var(--ink-soft);
+  font-size: 13px !important;
+}
+.read-garden .btn.small {
+  align-self: stretch;
+  min-height: 48px;
+}
+@media (max-width: 640px) {
+  .read-garden {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+  .read-garden h2 {
+    font-size: 19px;
+  }
+  .read-garden li,
+  .read-garden p {
+    font-size: 14px;
+  }
+}
+/* Very short phones (e.g. iPhone SE): keep the main button above the fold */
+@media (max-width: 640px) and (max-height: 600px) {
+  .welcome {
+    gap: 6px;
+  }
+  .welcome .twins {
+    max-height: 11vh;
+  }
+  .welcome .lead,
+  .welcome-garden {
+    font-size: 13.5px;
+  }
+  .welcome-garden {
+    padding: 6px 10px;
   }
 }

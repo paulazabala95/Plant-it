@@ -58,7 +58,7 @@ export function GardenKey({
       </div>
       <ul className="key-list">
         <li>
-          <span className="key-dot seed" aria-hidden />
+          <span className="key-dot gold" aria-hidden />
           <div>
             <b>Golden seeds</b>
             <span>The euros you save every month, falling into your garden.</span>

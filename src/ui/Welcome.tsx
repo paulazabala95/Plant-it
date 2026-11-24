@@ -1,7 +1,7 @@
 import { Person } from './art'
 
 const STEPS = [
-  { n: 1, title: 'See', text: 'both gardens grow' },
+  { n: 1, title: 'See', text: 'your savings grow as a garden' },
   { n: 2, title: 'Plan', text: 'what small changes do' },
   { n: 3, title: 'Act', text: 'steps with dates' },
 ]
@@ -28,6 +28,10 @@ export function Welcome({
       <p className="lead">
         Meet your <b>identical twin brother</b>. Same job, same savings, same life. The only
         difference: he's a man.
+      </p>
+
+      <p className="welcome-garden">
+        Your garden is your savings. <b>Every euro you save is a seed.</b>
       </p>
 
       <ol className="welcome-steps" aria-label="What you'll do">

@@ -144,6 +144,10 @@ or crypto.
 - "How your garden grows" screen removed (owner decision): tutorials don't help (NN/g); the last
   question's button says "See my garden" and goes straight there. The plant key and the boxes in
   the garden explain things in context.
+- Garden meaning (owner decision): the first screen says "Your garden is your savings. Every euro you
+  save is a seed." and step 1 reads "See your savings grow as a garden". The first time the garden
+  opens on a device, a "How to read your garden" box explains you/twin, golden seeds, plants, fruit and
+  the sky, and the garden waits until she taps "Start growing". It shows once per device.
 - Two paths (owner decision): the Simulator (questions, garden, Not investing / Investing, Life happens,
   why) stays a clean illustration and ends in "Make my plan". The Planner is its own screen in three
   steps: Your numbers (what-if), Your goals (Plan for something), Action plan. "How Plant It thinks" sits

@@ -26,7 +26,7 @@ import {
 import { REAL_RETURNS } from '../data'
 import { PALETTE, lookAtAge } from '../themes'
 import { Assumptions } from './Assumptions'
-import { LifeIcon } from './art'
+import { LifeIcon, PlotIcon } from './art'
 import { BabyPlanning } from './BabyPlanning'
 import { GardenKey } from './GardenKey'
 import { SourceNote } from './SourceNote'
@@ -92,6 +92,7 @@ const describe = (e: LifeEvent) =>
       : `Break at ${e.fromAge}, ${e.years} yr`
 
 const STEP_MS = 300
+const HINT_KEY = 'plant-it-garden-hint-v1'
 
 export function Garden({
   answers,
@@ -126,6 +127,22 @@ export function Garden({
   const [step, setStep] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [phase, setPhase] = useState<Phase>('growing')
+  // First visit on this device: explain how to read the garden before it grows.
+  const [hint, setHint] = useState(() => {
+    try {
+      return !localStorage.getItem(HINT_KEY)
+    } catch {
+      return true
+    }
+  })
+  const startGrowing = () => {
+    setHint(false)
+    try {
+      localStorage.setItem(HINT_KEY, '1')
+    } catch {
+      /* private window: the hint may show again next time */
+    }
+  }
   const [showNumbers, setShowNumbers] = useState(false)
   // Phones: the reasons fold away behind "Why?" so the result card stays short.
   const [whyOpen, setWhyOpen] = useState(false)
@@ -160,7 +177,7 @@ export function Garden({
   useEffect(replay, [events])
 
   useEffect(() => {
-    if (!playing) return
+    if (!playing || hint) return
     if (step >= last) {
       setPlaying(false)
       // Straight to one result card: no automatic pop-ups.
@@ -169,7 +186,7 @@ export function Garden({
     }
     const t = setTimeout(() => setStep((s) => s + 1), STEP_MS)
     return () => clearTimeout(t)
-  }, [playing, step, last, scenario, her, twin])
+  }, [playing, hint, step, last, scenario, her, twin])
 
   // Reset the time-lapse in the same update, so the old result never flashes.
   function changeScenario(key: Scenario) {
@@ -306,7 +323,7 @@ export function Garden({
     }
     tags.sort((a, b) => a.at - b.at)
   }
-  const visibleTags = phase === 'growing' ? tags.filter((t) => age >= t.at) : []
+  const visibleTags = phase === 'growing' && !hint ? tags.filter((t) => age >= t.at) : []
 
   const amount = money(answers.monthlySavings)
   const investGain = gardenGap(without, her)
@@ -478,7 +495,39 @@ export function Garden({
       {phase === 'growing' && scenario === 'investing' && (
         <div className="banner">Now plant the same {amount} a month</div>
       )}
-      {phase === 'growing' && (
+      {phase === 'growing' && hint && (
+        <div className="read-garden" role="dialog" aria-labelledby="read-garden-title">
+          <h2 id="read-garden-title">How to read your garden</h2>
+          <p className="read-garden-who">
+            <b>You</b> on the left, <b>your twin</b> on the right. Your garden is your savings.
+          </p>
+          <ul>
+            <li>
+              <span className="key-dot gold" aria-hidden />{' '}
+              <span>Golden seeds: the euros you save each month</span>
+            </li>
+            <li>
+              <PlotIcon plot="indexFund" size={26} />{' '}
+              <span>Each plant: a kind of saving, like a savings account or an index fund</span>
+            </li>
+            <li>
+              <span className="key-dot fruit" aria-hidden />{' '}
+              <span>Fruit: what your money has grown on top of what you put in</span>
+            </li>
+            <li>
+              <span className="key-dot sky" aria-hidden />{' '}
+              <span>Morning is today, sunset is your retirement</span>
+            </li>
+          </ul>
+          <p className="read-garden-later">
+            Forgot? Tap {phone ? '🌱' : '“What do the plants mean?”'} any time.
+          </p>
+          <button className="btn small" onClick={startGrowing}>
+            Start growing
+          </button>
+        </div>
+      )}
+      {phase === 'growing' && !hint && (
         <div className="pill">
           Watching {Math.round(retirementAge - answers.age)} years · age {Math.floor(age)}
         </div>
